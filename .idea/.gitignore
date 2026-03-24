@@ -1,3 +1,14 @@
-# Default ignored files
-/shelf/
-/workspace.xml
+# Gradle
+.gradle/
+build/
+
+# Local configuration
+local.properties
+
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
