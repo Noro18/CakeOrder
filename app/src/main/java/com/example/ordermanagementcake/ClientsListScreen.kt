@@ -23,14 +23,26 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddShoppingCart
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Label
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -57,13 +69,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
+import com.google.android.engage.shopping.datamodel.ShoppingCart
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClientsListScreen(){
-    Scaffold(
-        topBar = {
+    Scaffold( // uza scafforl hodi fahe nia parte sira ex: topbar,containt, bottombar
+        topBar = { // ida ne'e mak nia topbar
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = {
@@ -82,7 +95,7 @@ fun ClientsListScreen(){
                             tint = Color.White
                         )
                         Spacer(modifier = Modifier.width(30.dp))
-                        Text(
+                        Text( // liafuan client
                             text = "Clients",
                             fontSize = 30.sp,
                             fontWeight = FontWeight.Bold,
@@ -100,12 +113,82 @@ fun ClientsListScreen(){
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFC23C12) // ← samakan warna
+                colors = TopAppBarDefaults.topAppBarColors(  // kor ne'e ba hotu topbar
+                    containerColor = Color(0xFFC23C12)
                 ),
-                windowInsets = WindowInsets(left = 0.dp)
+                windowInsets = WindowInsets(left = 0.dp) // tamba topbar ne'e iha nia padding ne'ebe default ita uza ida ne'e hpdi ita bele muda fali tuir ita nia hakarak
             )
-        }
+        },
+
+        // ne'e mak bottom bar
+        bottomBar = {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    NavigationBar {
+                        NavigationBarItem(
+                            selected = false,
+                            onClick = { },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.Dashboard,
+                                    contentDescription = "Dashboard"
+                                )
+                            },
+                            label = { Text("DASHBOARD") }
+                        )
+                        NavigationBarItem(
+                            selected = false,
+                            onClick = { },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.AddShoppingCart,
+                                    contentDescription = "Orders"
+                                )
+                            },
+                            label = { Text("ORDERS") }
+                        )
+
+                        NavigationBarItem(
+                            selected = false,
+                            onClick = { },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.People,
+                                    contentDescription = "Clients"
+                                )
+                            },
+                            label = { Text("CLIENTS") }
+                        )
+                        NavigationBarItem(
+                            selected = false,
+                            onClick = { },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.CalendarMonth,
+                                    contentDescription = "Schedule"
+                                )
+                            },
+                            label = { Text("SCHEDULES") }
+                        )
+                    }
+                }
+        },
+        // ida ne'e mak button add
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { },
+                containerColor = Color(0xFFC23C12)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Tambah",
+                    tint = Color.White
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End
+
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -121,7 +204,7 @@ fun ClientsListScreen(){
                 onValueChange = {searchText = it},
                 label = {Text(
                     text =  "search client by name or phone...",
-                    modifier = Modifier.padding(all = 0.dp)
+                    modifier = Modifier.padding(0.dp)
                 )},
                 leadingIcon = {
                     Icon(
@@ -188,7 +271,7 @@ fun ClientsListScreen(){
                                     .clip(CircleShape)
 
                             )
-                            
+
                             Spacer(modifier = Modifier.width(16.dp))
                             Column(
                                 modifier = Modifier.weight(1f)
@@ -203,6 +286,55 @@ fun ClientsListScreen(){
                                 )
                                 Text(
                                     text = "+670 76534263",
+                                    fontSize = 16.sp,
+                                    color = Color.Gray,
+                                )
+                            }
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                contentDescription = "hmmm",
+                                tint = Color.Gray
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+                }
+
+                item {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(12.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.foto_profile),
+                                contentDescription = "Foto Profile",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(60.dp)
+                                    .clip(CircleShape)
+
+                            )
+
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = "Chrismerry Carmo",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black,
+                                    modifier = Modifier
+                                        .padding(bottom = 0.dp)
+                                )
+                                Text(
+                                    text = "+670 76588263",
                                     fontSize = 16.sp,
                                     color = Color.Gray,
                                 )
