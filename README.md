@@ -1,5 +1,7 @@
 # OrderManagementCake
 
+*(Tetum iha kraik)*
+
 A basic Android application for managing cake orders, built with modern Android development practices.
 
 ## Description
@@ -51,3 +53,59 @@ For contribution guidance checkout out [Contribution guidance](docs/CONTRIBUTION
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details (if applicable).
+
+---
+
+# OrderManagementCake (Tetum)
+
+Aplicasaun Android báziku ida atu jere pedidu bolu (cake orders), harii ho prátika dezenvolvimentu Android modernu.
+
+## Deskrisaun
+
+OrderManagementCake mak aplicasaun Android ida ne'ebé dezenvolve atu ajuda uza-na'in (hanesan na'in ba padaria ka funsionáriu) atu jere pedidu bolu sira ho efisiente. Aplicasaun ne'e fornese interface ida ne'ebé simples atu kontrola pedidu, jere detallu kliente sira, no kontrola oráriu entrega sira.
+
+## Funsaun sira (Planeadu)
+
+*   **Kontrola Pedidu:** Kria, edita, no haree pedidu bolu sira.
+*   **Jere Kliente:** Mantein lista kliente sira no sira-nia informasaun kontaktu.
+*   **Detallu Personalizasaun Bolu:** Rejista rekerimentu espesífiku ba bolu ida-idak (sabor, medida, dekorasaun, nst).
+*   **Jere Status:** Kontrola progresu pedidu sira (ezemplu: Hein hela, Te'in hela, Prontu atu Entrega, Entrega ona).
+*   **Oráriu Entrega:** Haree entrega sira ne'ebé sei mai iha lista ne'ebé klaru ka vizaun kalendáriu.
+
+## Teknolojia ne'ebé Uza
+
+*   **Lian:** [Kotlin](https://kotlinlang.org/)
+*   **UI Framework:** [Jetpack Compose](https://developer.android.com/jetpack/compose)
+*   **Arkitetura:** Tuir Komponente Arkitetura Android modernu (planeadu).
+*   **Sistema Build:** Gradle (Kotlin DSL)
+*   **SDK Mínimu:** 24
+*   **SDK Alvu:** 36
+
+## Arkitetura
+haree [Arkitetura no Estrutura File](docs/ARCHITECTURE.md) ba esplikasaun detalladu liu kona-ba arkitetura.
+
+## Hahú Prosesu
+
+### Pre-rekizitu sira
+
+*   Android Studio Ladybug ka foun liu.
+*   JDK 11 ka aas liu.
+
+### Instalasaun
+
+1.  Clone repozitóriu:
+    ```bash
+    git clone https://github.com/yourusername/OrderManagementCake.git
+    ```
+2.  Loke projetu iha Android Studio.
+3.  Sincroniza projetu ho file Gradle sira.
+4.  Hala'o aplicasaun iha emulador ka dispozitivu fíziku.
+
+
+### KONTRIBUISAUN
+
+Ba guia kontribuisaun, haree [Guia Kontribuisaun](docs/CONTRIBUTION.md).
+
+## Lisensa
+
+Projetu ne'e lisensiadu okos Lisensa MIT - haree file [LICENSE](LICENSE) ba detallu sira (se iha).
