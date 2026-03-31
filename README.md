@@ -40,6 +40,11 @@ OrderManagementCake is an Android application designed to help users (likely bak
 3.  Sync the project with Gradle files.
 4.  Run the app on an emulator or a physical device.
 
+
+### CONTRIBUTION
+
+For contribution guidance checkout out [Contribution guidance](docs/CONTRIBUTION.md)
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details (if applicable).
