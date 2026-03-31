@@ -23,6 +23,9 @@ OrderManagementCake is an Android application designed to help users (likely bak
 *   **Minimum SDK:** 24
 *   **Target SDK:** 36
 
+## Architecture
+checkout [Archictecture and File structure](docs/ARCHITECTURE.md) for a more detailed explanation about the architecture 
+
 ## Getting Started
 
 ### Prerequisites
