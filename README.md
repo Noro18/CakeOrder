@@ -1,3 +1,5 @@
+![](https://api.visitorbadge.io/api/VisitorHit?user=Noro18f&repo=CakeOrder&countColor=%237B1E7A)
+
 # OrderManagementCake
 
 *(Tetum iha kraik)*
