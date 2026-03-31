@@ -1,5 +1,6 @@
-![](https://api.visitorbadge.io/api/VisitorHit?user=Noro18f&repo=CakeOrder&countColor=%237B1E7A)
-
+<p align="center">
+  <img src="https://api.visitorbadge.io/api/visitors?path=Noro18%2FCakeOrder&labelColor=%2337d67a&countColor=%23697689" />
+</p>
 # OrderManagementCake
 
 *(Tetum iha kraik)*
