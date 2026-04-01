@@ -1,4 +1,4 @@
-package com.example.ordermanagementcake.ui.theme
+package com.example.ordermanagementcake.ui.orders
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,7 +11,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ordermanagementcake.R
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.runtime.*
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
@@ -19,28 +18,19 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Button
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddShoppingCart
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.People
-import androidx.compose.material3.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.serialization.internal.throwMissingFieldException
+import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -596,7 +586,7 @@ fun OrderListScreen(){
 @Preview(showBackground = true)
 @Composable
 fun OrderListScreenPreview(){
-    OrderManagementCakeTheme {
+    _root_ide_package_.com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme {
         OrderListScreen()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.ordermanagementcake.ui.theme
+package com.example.ordermanagementcake.ui.components
 
 
 import androidx.compose.material.icons.Icons
