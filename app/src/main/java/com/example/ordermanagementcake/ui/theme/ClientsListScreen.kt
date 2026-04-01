@@ -1,17 +1,10 @@
-package com.example.ordermanagementcake
+package com.example.ordermanagementcake.ui.theme
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,36 +12,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddShoppingCart
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Dashboard
-import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Label
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -63,7 +46,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -73,8 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
-import com.google.android.engage.shopping.datamodel.ShoppingCart
+import com.example.ordermanagementcake.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,7 +64,7 @@ fun ClientsListScreen(){
     Scaffold( // uza scafforl hodi fahe nia parte sira ex: topbar,containt, bottombar
         topBar = {
             TopAppBar(
-                windowInsets = TopAppBarDefaults.windowInsets,
+                windowInsets = windowInsets,
                 modifier = Modifier.fillMaxWidth(),
                 title = {
                     Row(
@@ -131,85 +112,11 @@ fun ClientsListScreen(){
 
         // ne'e mak bottom bar
         bottomBar = {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    NavigationBar {
-                        NavigationBarItem(
-                            selected = false,
-                            onClick = { },
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Default.Dashboard,
-                                    contentDescription = "Dashboard"
-                                )
-                            },
-                            label = { Text("DASHBOARD") },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color(0xFFC23C12) ,        // ← icon nia kor wainhira ita hili
-                                selectedTextColor = Color(0xFFC23C12) ,  // ← teks nia kor wainhira ita hili
-                                unselectedIconColor = Color.Gray,       // ← icon nia kor wainhira ita la hili
-                                unselectedTextColor = Color.Gray,       // ← text nia kor wainhira ita la hili
-                                indicatorColor = Color(0xFFF39D82)      // ← kor kabuar ne'ebe sei mosu iha icon nia kotuk
-                            )
-                        )
-                        NavigationBarItem(
-                            selected = false,
-                            onClick = { },
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Default.AddShoppingCart,
-                                    contentDescription = "Orders"
-                                )
-                            },
-                            label = { Text("ORDERS") },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color(0xFFC23C12) ,        // ← icon nia kor wainhira ita hili
-                                selectedTextColor = Color(0xFFC23C12) ,  // ← teks nia kor wainhira ita hili
-                                unselectedIconColor = Color.Gray,       // ← icon nia kor wainhira ita la hili
-                                unselectedTextColor = Color.Gray,       // ← text nia kor wainhira ita la hili
-                                indicatorColor = Color(0xFFF39D82)      // ← kor kabuar ne'ebe sei mosu iha icon nia kotuk
-                            )
-                        )
-
-                        NavigationBarItem(
-                            selected = false,
-                            onClick = { },
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Default.People,
-                                    contentDescription = "Clients"
-                                )
-                            },
-                            label = { Text("CLIENTS") },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color(0xFFC23C12) ,        // ← icon nia kor wainhira ita hili
-                                selectedTextColor = Color(0xFFC23C12) ,  // ← teks nia kor wainhira ita hili
-                                unselectedIconColor = Color.Gray,       // ← icon nia kor wainhira ita la hili
-                                unselectedTextColor = Color.Gray,       // ← text nia kor wainhira ita la hili
-                                indicatorColor = Color(0xFFF39D82)      // ← kor kabuar ne'ebe sei mosu iha icon nia kotuk
-                            )
-                        )
-                        NavigationBarItem(
-                            selected = false,
-                            onClick = { },
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Default.CalendarMonth,
-                                    contentDescription = "Schedule"
-                                )
-                            },
-                            label = { Text("SCHEDULES") },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color(0xFFC23C12) ,        // ← icon nia kor wainhira ita hili
-                                selectedTextColor = Color(0xFFC23C12) ,  // ← teks nia kor wainhira ita hili
-                                unselectedIconColor = Color.Gray,       // ← icon nia kor wainhira ita la hili
-                                unselectedTextColor = Color.Gray,       // ← text nia kor wainhira ita la hili
-                                indicatorColor = Color(0xFFF39D82)     // ← kor kabuar ne'ebe sei mosu iha icon nia kotuk
-                            )
-                        )
-                    }
-                }
+            var selectedItem by remember { mutableStateOf(2) }
+            BottomNavigationBar(
+                selectedItem = selectedItem,
+                onItemSelected = { selectedItem = it }
+            )
         },
         // ida ne'e mak button add
         floatingActionButton = {
