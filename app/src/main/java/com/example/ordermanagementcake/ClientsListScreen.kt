@@ -19,7 +19,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -40,9 +42,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Label
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -63,6 +67,7 @@ import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,28 +81,32 @@ import com.google.android.engage.shopping.datamodel.ShoppingCart
 @Composable
 fun ClientsListScreen(){
     Scaffold( // uza scafforl hodi fahe nia parte sira ex: topbar,containt, bottombar
-        topBar = { // ida ne'e mak nia topbar
+        topBar = {
             TopAppBar(
+                windowInsets = TopAppBarDefaults.windowInsets,
                 modifier = Modifier.fillMaxWidth(),
                 title = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .fillMaxSize()
                             .fillMaxWidth()
                             .background(Color(0xFFC23C12))
                     ) {
-                        Icon( // icon menu
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            modifier = Modifier
-                                .size(30.dp),
-                            tint = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(30.dp))
-                        Text( // liafuan client
-                            text = "Clients",
-                            fontSize = 30.sp,
+                        IconButton(
+                            onClick = { /* asaun icon bele klik */ }
+                        ) {
+                            Icon( // icon menu
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "Menu",
+                                modifier = Modifier
+                                    .size(30.dp),
+                                tint = Color.White
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(15.dp))
+                        Text(
+                            text = stringResource(id = R.string.title_profile),
+                            fontSize = 33.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
@@ -113,10 +122,10 @@ fun ClientsListScreen(){
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(  // kor ne'e ba hotu topbar
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFFC23C12)
                 ),
-                windowInsets = WindowInsets(left = 0.dp) // tamba topbar ne'e iha nia padding ne'ebe default ita uza ida ne'e hpdi ita bele muda fali tuir ita nia hakarak
+//                windowInsets = WindowInsets(left = 0.dp)
             )
         },
 
@@ -135,7 +144,14 @@ fun ClientsListScreen(){
                                     contentDescription = "Dashboard"
                                 )
                             },
-                            label = { Text("DASHBOARD") }
+                            label = { Text("DASHBOARD") },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color(0xFFC23C12) ,        // ← icon nia kor wainhira ita hili
+                                selectedTextColor = Color(0xFFC23C12) ,  // ← teks nia kor wainhira ita hili
+                                unselectedIconColor = Color.Gray,       // ← icon nia kor wainhira ita la hili
+                                unselectedTextColor = Color.Gray,       // ← text nia kor wainhira ita la hili
+                                indicatorColor = Color(0xFFF39D82)      // ← kor kabuar ne'ebe sei mosu iha icon nia kotuk
+                            )
                         )
                         NavigationBarItem(
                             selected = false,
@@ -146,7 +162,14 @@ fun ClientsListScreen(){
                                     contentDescription = "Orders"
                                 )
                             },
-                            label = { Text("ORDERS") }
+                            label = { Text("ORDERS") },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color(0xFFC23C12) ,        // ← icon nia kor wainhira ita hili
+                                selectedTextColor = Color(0xFFC23C12) ,  // ← teks nia kor wainhira ita hili
+                                unselectedIconColor = Color.Gray,       // ← icon nia kor wainhira ita la hili
+                                unselectedTextColor = Color.Gray,       // ← text nia kor wainhira ita la hili
+                                indicatorColor = Color(0xFFF39D82)      // ← kor kabuar ne'ebe sei mosu iha icon nia kotuk
+                            )
                         )
 
                         NavigationBarItem(
@@ -158,7 +181,14 @@ fun ClientsListScreen(){
                                     contentDescription = "Clients"
                                 )
                             },
-                            label = { Text("CLIENTS") }
+                            label = { Text("CLIENTS") },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color(0xFFC23C12) ,        // ← icon nia kor wainhira ita hili
+                                selectedTextColor = Color(0xFFC23C12) ,  // ← teks nia kor wainhira ita hili
+                                unselectedIconColor = Color.Gray,       // ← icon nia kor wainhira ita la hili
+                                unselectedTextColor = Color.Gray,       // ← text nia kor wainhira ita la hili
+                                indicatorColor = Color(0xFFF39D82)      // ← kor kabuar ne'ebe sei mosu iha icon nia kotuk
+                            )
                         )
                         NavigationBarItem(
                             selected = false,
@@ -169,7 +199,14 @@ fun ClientsListScreen(){
                                     contentDescription = "Schedule"
                                 )
                             },
-                            label = { Text("SCHEDULES") }
+                            label = { Text("SCHEDULES") },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color(0xFFC23C12) ,        // ← icon nia kor wainhira ita hili
+                                selectedTextColor = Color(0xFFC23C12) ,  // ← teks nia kor wainhira ita hili
+                                unselectedIconColor = Color.Gray,       // ← icon nia kor wainhira ita la hili
+                                unselectedTextColor = Color.Gray,       // ← text nia kor wainhira ita la hili
+                                indicatorColor = Color(0xFFF39D82)     // ← kor kabuar ne'ebe sei mosu iha icon nia kotuk
+                            )
                         )
                     }
                 }
@@ -182,7 +219,7 @@ fun ClientsListScreen(){
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Tambah",
+                    contentDescription = "aumenta",
                     tint = Color.White
                 )
             }
@@ -202,9 +239,11 @@ fun ClientsListScreen(){
             OutlinedTextField(
                 value = searchText,
                 onValueChange = {searchText = it},
-                label = {Text(
-                    text =  "search client by name or phone...",
-                    modifier = Modifier.padding(0.dp)
+                placeholder = {Text(
+                    text =  stringResource(id = R.string.search_clients),
+                    modifier = Modifier
+                        .padding(0.dp),
+                    textAlign = TextAlign.Center
                 )},
                 leadingIcon = {
                     Icon(
@@ -218,13 +257,12 @@ fun ClientsListScreen(){
                 ),
                 modifier = Modifier
                     .width(400.dp)
-                    .height(50.dp)
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             Text(
-                text = "DIRECTORY",
+                text = stringResource(id = R.string.directory_clients),
                 color = Color(0xFFB2A9A7),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold
@@ -233,15 +271,15 @@ fun ClientsListScreen(){
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Loyal Patrons",
+                    text = stringResource(id = R.string.loyal_patrons),
                     fontSize = 30.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
 
-                Spacer(modifier = Modifier.width(100.dp))
+                Spacer(modifier = Modifier.width(70.dp))
 
                 Text(
-                    text = "120 total",
+                    text = stringResource(id = R.string.total_patrons),
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -277,7 +315,7 @@ fun ClientsListScreen(){
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = "Abinda Carmo",
+                                    text = stringResource(id = R.string.client1_name),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = Color.Black,
@@ -285,16 +323,20 @@ fun ClientsListScreen(){
                                         .padding(bottom = 0.dp)
                                 )
                                 Text(
-                                    text = "+670 76534263",
+                                    text = stringResource(id = R.string.nu_telefone1),
                                     fontSize = 16.sp,
                                     color = Color.Gray,
                                 )
                             }
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                contentDescription = "hmmm",
-                                tint = Color.Gray
-                            )
+                            IconButton(
+                                onClick = { /* asaun icon bele klik */ }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    contentDescription = "hmmm",
+                                    tint = Color.Gray
+                                )
+                            }
                         }
                     }
 
@@ -326,7 +368,7 @@ fun ClientsListScreen(){
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = "Chrismerry Carmo",
+                                    text = stringResource(id = R.string.client2_name),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = Color.Black,
@@ -334,16 +376,20 @@ fun ClientsListScreen(){
                                         .padding(bottom = 0.dp)
                                 )
                                 Text(
-                                    text = "+670 76588263",
+                                    text = stringResource(id = R.string.nu_telefone2),
                                     fontSize = 16.sp,
                                     color = Color.Gray,
                                 )
                             }
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                contentDescription = "hmmm",
-                                tint = Color.Gray
-                            )
+                            IconButton(
+                                onClick = { /* asaun icon bele klik */ }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    contentDescription = "hmmm",
+                                    tint = Color.Gray
+                                )
+                            }
                         }
                     }
                 }
