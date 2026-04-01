@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_profile">Clients</string>
+    <string name="search_clients">buka client liu husi naran no nu_tele...</string>
+    <string name="directory_clients">Lista</string>
+    <string name="loyal_patrons">Kliente fiel sira</string>
+    <string name="total_patrons">total 120</string>
+    
+    <string name="client1_name">Abinda Carmo</string>
+    <string name="nu_telefone1">+670 76534263</string>
+    
+    <string name="client2_name">Chrismerry Carmo</string>
+    <string name="nu_telefone2">+670 76588263</string>"
+    
+</resources>
