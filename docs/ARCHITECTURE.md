@@ -3,7 +3,7 @@
 This project follows the **MVVM (Model–View–ViewModel)** pattern.
 
 * **Model (`data/`)** → Defines data structures and handles persistence (Room, DAO, Repository)
-* **View (`ui/`)** → Fragments that render UI and handle user interaction
+* **View (`ui/`)** → Screens that render UI and handle user interaction
 * **ViewModel (`ui/...ViewModel.kt`)** → Holds UI state and coordinates between View and Model
 
 The folder structure directly reflects this separation:
@@ -16,52 +16,49 @@ The folder structure directly reflects this separation:
 ### Project Structure with Reasoning
 
 ```
-CakeOrderApp/
+OrderManagementCake/app/src/main/java/com/example/ordermanagementcake/
 ├── data/                              # Model layer (data + business logic)
-│   ├── model/
-│   │   ├── Customer.kt               # Represents customer entity (core app data)
-│   │   ├── Order.kt                  # Represents order entity (main business object)
-│   │   └── OrderStatus.kt            # Shared enum for order state across app
-│   │
 │   ├── local/
-│   │   ├── AppDatabase.kt            # Central database instance (single source of truth)
-│   │   └── dao/
-│   │       ├── CustomerDao.kt        # Defines database operations for customers
-│   │       └── OrderDao.kt           # Defines database operations for orders
+│   │   ├── OrderDatabase.kt          # Central database instance (single source of truth)
+│   │   ├── dao/                      # Defines database operations
+│   │   └── entities/                 # Database entities (tables)
 │   │
-│   └── repository/
-│       ├── CustomerRepository.kt     # Abstracts customer data access (decouples UI from DB)
-│       └── OrderRepository.kt        # Handles all order-related data logic
+│   └── repository/                    # Handles data logic and abstracts data access
 │
 └── ui/                               # View layer (UI + ViewModels)
+    ├── clients/
+    │   ├── ClientsListScreen.kt      # Displays list of clients
+    │   └── ClientsViewModel.kt       # Manages client-related UI state
+│
     ├── orders/
-    │   ├── OrderListFragment.kt      # Displays list of orders (summary view)
-    │   ├── OrderDetailFragment.kt    # Displays full details of a selected order
-    │   ├── AddEditOrderFragment.kt   # Handles creating and editing orders (form reuse)
-    │   └── OrderViewModel.kt         # Manages order UI state shared across fragments
+    │   ├── OrderListScreen.kt        # Displays list of orders (summary view)
+    │   └── OrderViewModel.kt         # Manages order UI state
 │
-    ├── customers/
-    │   ├── CustomerListFragment.kt   # Displays list of customers
-    │   ├── AddEditCustomerFragment.kt# Handles creating/editing customers
-    │   └── CustomerViewModel.kt      # Manages customer-related UI state
+    ├── components/                    # Reusable UI components
+    │   └── Components.kt
 │
-    └── delivery/
-        ├── DeliveryScheduleFragment.kt # Displays upcoming deliveries
-        └── DeliveryViewModel.kt       # Handles delivery-related UI logic
+    ├── navigation/                   # App navigation logic and routes
+│
+    ├── theme/                        # App styling and theme
+    │   ├── Color.kt
+    │   ├── Theme.kt
+    │   └── Type.kt
+│
+└── MainActivity.kt                    # Main entry point of the application
 ```
 
 ---
 
 ### Key Structural Decisions
 
-* **Feature-based grouping (`orders/`, `customers/`, `delivery/`)**
+* **Feature-based grouping (`orders/`, `clients/`)**
   Keeps related UI and logic together, improving maintainability and scalability.
 
 * **Single ViewModel per feature**
-  Each feature (`orders`, `customers`, `delivery`) has one ViewModel to centralize state and logic.
+  Each feature (`orders`, `clients`) has one ViewModel to centralize state and logic.
 
 * **Repository layer between UI and DAO**
   Prevents direct database access from UI, making the app easier to modify and test.
 
-* **Shared models in `data/model/`**
-  Ensures consistency across all features using the same data definitions.
+* **Theme and Components centralization**
+  The `theme/` and `components/` folders ensure a consistent look and feel across the entire application.
