@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">OrderManagementCake</string>
+    <string name="name_profile">The Artisanal Bakery</string>
+    <string name="current_order">Order sira iha agora</string>
+    <string name="culinary_cration">Jestiona ita-nia kriasaun kulinária</string>
+    <string name="search_order">buka order...</string>
+    <string name="btn_all_order">Hotu</string>
+    <string name="btn_pending_order">Hein</string>
+    <string name="btn_inprogress_order">Prosesu</string>
+    <string name="btn_ready_order">Prontu</string>
+    <string name="btn_complete">Completu</string>
+
+    <string name="naran1_order">Eleanor Rigby</string>
+    <string name="cake1_type">Double Chocolate Fudge - 1 unit</string>
+    <string name="pickup1">Foti</string>
+    <string name="time_pickup1">Oct 24, 14:00</string>
+
+    <string name="naran2_order">Arthur Dent</string>
+    <string name="cake2_type">Wild Berry Medley - 2 unit</string>
+    <string name="pickup2">Foti</string>
+    <string name="time_pickup2">Oct 24, 16:30</string>
+
+    <string name="naran3_order">Sarah Zenkins</string>
+    <string name="cake3_type">Zesty Lemon Drezzy - 1 unit</string>
+    <string name="pickup3">Foti</string>
+    <string name="time_pickup3">Today, 10:00</string>
+
+    <string name="naran4_order">Michael Scott</string>
+    <string name="cake4_type">Custom Wedding Tier - 1 unit</string>
+    <string name="pickup4">Foti</string>
+    <string name="time_pickup4">Yesterday</string>
+
+</resources>
