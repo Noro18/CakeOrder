@@ -1,4 +1,4 @@
-package com.example.ordermanagementcake.ui.theme
+package com.example.ordermanagementcake.ui.clients
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,11 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddShoppingCart
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,9 +24,6 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -56,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ordermanagementcake.R
+import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -310,7 +304,7 @@ fun ClientsListScreen(){
 @Preview(showBackground = true)
 @Composable
 fun ClientsListScreenPreview(){
-    OrderManagementCakeTheme {
+    _root_ide_package_.com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme {
         ClientsListScreen()
     }
 }
