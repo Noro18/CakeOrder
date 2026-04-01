@@ -1,8 +1,10 @@
-<p align="center">
-  <img src="https://api.visitorbadge.io/api/visitors?path=Noro18%2FCakeOrder&labelColor=%2337d67a&countColor=%23697689" />
-</p>
-
 # OrderManagementCake
+
+<p align="center">
+  <a href="https://visitorbadge.io/status?path=Noro18%2FCakeOrder">
+    <img src="https://api.visitorbadge.io/api/combined?path=Noro18%2FCakeOrder&labelColor=%23697689&countColor=%23263759" />
+  </a>
+</p>
 
 *(Tetum iha kraik)*
 
@@ -28,6 +30,28 @@ OrderManagementCake is an Android application designed to help users (likely bak
 *   **Build System:** Gradle (Kotlin DSL)
 *   **Minimum SDK:** 24
 *   **Target SDK:** 36
+
+## Project Structure
+
+The project follows a feature-based structure where each feature is separated into its own folder named after its main functionality, and each contains its own ViewModel.
+
+```text
+app/src/main/java/com/example/ordermanagementcake/
+├── data/                   # Data layer
+│   ├── local/              # Local data source (Room)
+│   │   ├── dao/            # Data Access Objects (Queries)
+│   │   ├── entities/       # Database entities (tables)
+│   │   └── OrderDatabase.kt # Room database configuration
+│   └── repository/         # Data source implementations
+├── repository/             # Domain repositories (Business logic)
+├── ui/                     # UI Layer (Jetpack Compose)
+│   ├── clients/            # Client-related screens and ViewModel
+│   ├── components/         # Reusable UI components (buttons, cards, etc.)
+│   ├── navigation/         # App navigation logic and routes
+│   ├── orders/             # Order-related screens and ViewModel
+│   └── theme/              # App styling and theme (Colors, Type, etc.)
+└── MainActivity.kt         # Main entry point of the application
+```
 
 ## Architecture
 checkout [Archictecture and File structure](docs/ARCHITECTURE.md) for a more detailed explanation about the architecture 
@@ -84,6 +108,28 @@ OrderManagementCake mak aplicasaun Android ida ne'ebé dezenvolve atu ajuda uza-
 *   **Sistema Build:** Gradle (Kotlin DSL)
 *   **SDK Mínimu:** 24
 *   **SDK Alvu:** 36
+
+## Estrutura Projetu
+
+Projetu ne'e tuir estrutura bazeia ba funsaun (feature-based) ne'ebé kada funsaun haketak ba nia pasta rasik ne'ebé hanaran tuir nia funsaun prinsipál, no ida-idak iha nia ViewModel rasik.
+
+```text
+app/src/main/java/com/example/ordermanagementcake/
+├── data/                   # Kamada dadus
+│   ├── local/              # Fonte dadus lokál (Room)
+│   │   ├── dao/            # Data Access Objects (DAO: Query sira)
+│   │   ├── entities/       # Entidade baze dadus (tabela sira)
+│   │   └── OrderDatabase.kt # Konfigurasaun baze dadus Room
+│   └── repository/         # Implementasaun fonte dadus sira
+├── repository/             # Repozitóriu domíniu (Lójika negósiu)
+├── ui/                     # Kamada UI (Jetpack Compose)
+│   ├── clients/            # Tela sira ne'ebé relasiona ho kliente no ViewModel
+│   ├── components/         # Komponente UI ne'ebé uza fali (butaun, kardaun, nst)
+│   ├── navigation/         # Lójika navigasaun no rota sira
+│   ├── orders/             # Tela sira ne'ebé relasiona ho pedidu no ViewModel
+│   └── theme/              # Estilu no tema aplicasaun (Kór, Tipografia, nst)
+└── MainActivity.kt # Pontu entrada prinsipál ba aplicasaun
+```
 
 ## Arkitetura
 haree [Arkitetura no Estrutura File](docs/ARCHITECTURE.md) ba esplikasaun detalladu liu kona-ba arkitetura.
