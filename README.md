@@ -115,3 +115,8 @@ Ba guia kontribuisaun, haree [Guia Kontribuisaun](docs/CONTRIBUTION.md).
 ## Lisensa
 
 Projetu ne'e lisensiadu okos Lisensa MIT - haree file [LICENSE](LICENSE) ba detallu sira (se iha).
+
+## PR test
+
+Review code ida ne'e no approve ou karik hakarak muda baut ruma reqeust changes
+Depois de comment hotu resolve comment foin merge bele unblock 
