@@ -43,7 +43,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
-
+    implementation("androidx.navigation:navigation-compose:2.9.7")
     // Ensure you have the BOM (you already do, but keep it):
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
