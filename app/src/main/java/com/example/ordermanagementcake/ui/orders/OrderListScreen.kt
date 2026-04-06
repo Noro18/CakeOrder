@@ -24,18 +24,22 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
+import com.example.ordermanagementcake.ui.navigation.Routes
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderListScreen(){
+fun OrderListScreen(navController: NavHostController){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -83,10 +87,21 @@ fun OrderListScreen(){
 
         // ne'e mak bottom bar
         bottomBar = {
-            var selectedItem by remember { mutableStateOf(1) }
+            val navBackStackEntry by navController.currentBackStackEntryAsState() // holds info about my current screen
+            val currentRoute = navBackStackEntry?.destination?.route // extrack sai string hsui route nia naran
+            val selectedItem = when (currentRoute) { // uza naran extracted no troka sai index
+                "orders" -> 1
+                "clients" -> 2
+                else -> 1
+            }
             BottomNavigationBar(
                 selectedItem = selectedItem,
-                onItemSelected = { selectedItem = it }
+                onItemSelected = { index ->
+                    when(index) {
+                        1 -> navController.navigate(Routes.ORDERS)
+                        2 -> navController.navigate(Routes.CLIENTS)
+                    }
+                }
             )
         },
 
@@ -583,10 +598,11 @@ fun OrderListScreen(){
 
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun OrderListScreenPreview(){
     _root_ide_package_.com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme {
         OrderListScreen()
     }
-}
+}*/

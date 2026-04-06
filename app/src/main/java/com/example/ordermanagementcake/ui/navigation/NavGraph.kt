@@ -23,5 +23,4 @@ fun AppNavHost(navController: NavHostController) {
             ClientsListScreen(navController)
         }
     }
-    }
-}
+ }
