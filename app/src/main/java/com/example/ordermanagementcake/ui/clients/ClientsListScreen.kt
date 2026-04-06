@@ -48,13 +48,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.ordermanagementcake.R
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
+import com.example.ordermanagementcake.ui.navigation.Routes
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClientsListScreen(){
+fun ClientsListScreen(navController: NavHostController){
     Scaffold( // uza scafforl hodi fahe nia parte sira ex: topbar,containt, bottombar
         topBar = {
             TopAppBar(
@@ -106,10 +110,22 @@ fun ClientsListScreen(){
 
         // ne'e mak bottom bar
         bottomBar = {
-            var selectedItem by remember { mutableStateOf(2) }
+            val navBackStackEntry by navController.currentBackStackEntryAsState() // holds info about my current screen
+            val currentRoute = navBackStackEntry?.destination?.route // extrack sai string hsui route nia naran
+
+            val selectedItem = when (currentRoute) { // uza naran extracted no troka sai index
+                "orders" -> 1
+                "clients" -> 2
+                else -> 2
+            }
             BottomNavigationBar(
                 selectedItem = selectedItem,
-                onItemSelected = { selectedItem = it }
+                onItemSelected = { index ->
+                    when (index) {
+                        1 -> navController.navigate(Routes.ORDERS)
+                        2 -> navController.navigate(Routes.CLIENTS)
+                    }
+                }
             )
         },
 
@@ -306,6 +322,6 @@ fun ClientsListScreen(){
 @Composable
 fun ClientsListScreenPreview(){
     _root_ide_package_.com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme {
-        ClientsListScreen()
+        ClientsListScreen(navController = rememberNavController())
     }
 }
