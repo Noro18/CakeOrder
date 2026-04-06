@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_profile">Clients</string>
-    <string name="search_clients">buka client liu husi naran no nu_tele...</string>
+    <string name="search_clients">buka client liu husi </string>
     <string name="directory_clients">Lista</string>
     <string name="loyal_patrons">Kliente fiel sira</string>
     <string name="total_patrons">total 120</string>
