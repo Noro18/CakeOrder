@@ -39,94 +39,10 @@ import com.example.ordermanagementcake.ui.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderListScreen(navController: NavHostController){
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                windowInsets = TopAppBarDefaults.windowInsets,
-                modifier = Modifier.fillMaxWidth(),
-                title = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color(0xFFC23C12))
-                    ) {
-                        Icon( // icon menu
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            modifier = Modifier
-                                .size(30.dp),
-                            tint = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(15.dp))
-                        Text(
-                            text = stringResource(id = R.string.name_profile),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(70.dp))
-                        Image( // foto profile
-                            painter = painterResource(id = R.drawable.foto_profile),
-                            contentDescription = "Foto Profile",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape)
-
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFC23C12)
-                ),
-//                windowInsets = WindowInsets(left = 0.dp)
-            )
-        },
-
-        // ne'e mak bottom bar
-        bottomBar = {
-            val navBackStackEntry by navController.currentBackStackEntryAsState() // holds info about my current screen
-            val currentRoute = navBackStackEntry?.destination?.route // extrack sai string hsui route nia naran
-            val selectedItem = when (currentRoute) { // uza naran extracted no troka sai index
-                "orders" -> 1
-                "clients" -> 2
-                else -> 1
-            }
-            BottomNavigationBar(
-                selectedItem = selectedItem,
-                onItemSelected = { index ->
-                    when(index) {
-                        1 -> navController.navigate(Routes.ORDERS)
-                        2 -> navController.navigate(Routes.CLIENTS)
-                    }
-                }
-            )
-        },
-
-        // ida ne'e mak button add
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { },
-                containerColor = Color(0xFFC23C12)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "aumenta",
-                    tint = Color.White
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End
-
-
-    ) { paddingValues ->
-
+fun OrderListScreen(){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
@@ -596,7 +512,6 @@ fun OrderListScreen(navController: NavHostController){
 
     }
 
-}
 
 /*
 @Preview(showBackground = true)
