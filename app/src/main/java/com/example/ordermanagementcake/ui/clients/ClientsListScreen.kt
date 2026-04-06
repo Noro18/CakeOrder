@@ -112,6 +112,7 @@ fun ClientsListScreen(){
                 onItemSelected = { selectedItem = it }
             )
         },
+
         // ida ne'e mak button add
         floatingActionButton = {
             FloatingActionButton(
