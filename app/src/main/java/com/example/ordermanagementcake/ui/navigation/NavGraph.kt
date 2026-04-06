@@ -21,14 +21,14 @@ object Routes {
 }
 
 @Composable
-fun AppNavHost(navController: NavHostController) {
+fun AppNavHost(navController: NavHostController, startDestination: String = Routes.CLIENTS) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     val selectedItem = when (currentRoute) {
         Routes.ORDERS -> 1
         Routes.CLIENTS -> 2
-        else -> 2
+        else -> 1
     }
 
     Scaffold(
@@ -53,7 +53,7 @@ fun AppNavHost(navController: NavHostController) {
         // only this part changes when you navigate
         NavHost(
             navController = navController,
-            startDestination = Routes.CLIENTS,
+            startDestination = startDestination,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Routes.ORDERS) {

@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.ordermanagementcake.ui.clients.ClientsListScreen
 import com.example.ordermanagementcake.ui.navigation.AppNavHost
+import com.example.ordermanagementcake.ui.navigation.Routes
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,5 +29,17 @@ class MainActivity : ComponentActivity() {
 
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AppPreview() {
+    OrderManagementCakeTheme {
+        val navController = rememberNavController()
+        AppNavHost(
+            navController = navController,
+            startDestination = Routes.ORDERS  // 👈 just add this
+        )
     }
 }
