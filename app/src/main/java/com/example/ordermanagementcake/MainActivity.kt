@@ -12,7 +12,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.ordermanagementcake.ui.clients.ClientsListScreen
+import com.example.ordermanagementcake.ui.navigation.AppNavHost
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +23,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             OrderManagementCakeTheme {
-                ClientsListScreen()
+                val navControler = rememberNavController()
+                AppNavHost(navController = navControler)
+
             }
         }
     }
