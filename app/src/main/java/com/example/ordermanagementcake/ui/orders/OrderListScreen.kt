@@ -205,7 +205,7 @@ fun OrderListScreen(){
                         )
                     }
                     Column(
-                        horizontalAlignment = Alignment.End // allgiht data ba iah liman loos 
+                        horizontalAlignment = Alignment.End // allgiht data ba iah liman loos
                     ) {
                         Text(
                             text = stringResource(id = R.string.pickup1),
