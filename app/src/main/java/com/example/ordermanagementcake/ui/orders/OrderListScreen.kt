@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -168,7 +169,6 @@ fun OrderListScreen(){
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -183,341 +183,76 @@ fun OrderListScreen(){
                         modifier = Modifier
                             .size(70.dp)
                             .clip(CircleShape)
-
                     )
                     Column(
                         modifier = Modifier
                             .padding(start = 10.dp)
-                            .width(120.dp)
-
+                            .weight(1f) // ida ne'e atu nun'ee elementu sira pas pas
                     ) {
                         Text(
                             text = stringResource(id = R.string.naran1_order),
                             fontWeight = FontWeight.Bold,
                             fontSize = 17.sp,
                             color = Color.Black,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .width(80.dp),
-                            maxLines = 1
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                         Text(
                             text = stringResource(id = R.string.cake1_type),
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            fontSize = 10.sp
+                            fontSize = 10.sp,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
-                    Spacer(modifier = Modifier.width(90.dp))
                     Column(
-                        modifier = Modifier
-                            .weight(1f)
-
+                        horizontalAlignment = Alignment.End // allgiht data ba iah liman loos 
                     ) {
                         Text(
                             text = stringResource(id = R.string.pickup1),
                             fontSize = 10.sp,
                             color = Color.Black,
-                            modifier = Modifier
-                                .width(80.dp),
-                            maxLines = 1
                         )
                         Text(
                             text = stringResource(id = R.string.time_pickup1),
                             fontSize = 11.sp,
                             color = Color.Black,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .width(80.dp)
                         )
                     }
                 }
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .padding(start = 250.dp, end = 10.dp, bottom  = 10.dp)
-                        .height(35.dp)
-                        .width(200.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFEE8111),
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.btn_pending_order),
-                        fontSize = 10.sp
-                    )
-                }
-            }
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-
-            ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(end = 10.dp, bottom = 10.dp),
+                    horizontalArrangement = Arrangement.End
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.wild_berry_midley),
-                        contentDescription = "Foto Profile",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(70.dp)
-                            .clip(CircleShape)
-
-                    )
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 10.dp)
-                            .width(120.dp)
-
+                    Button(
+                        onClick = {},
+                        modifier = Modifier.height(35.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFEE8111),
+                            contentColor = Color.White
+                        )
                     ) {
                         Text(
-                            text = stringResource(id = R.string.naran2_order),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 17.sp,
-                            color = Color.Black,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .width(80.dp),
-                            maxLines = 1
-                        )
-                        Text(
-                            text = stringResource(id = R.string.cake2_type),
-                            modifier = Modifier
-                                .fillMaxWidth(),
+                            text = stringResource(id = R.string.btn_pending_order),
                             fontSize = 10.sp
                         )
                     }
-                    Spacer(modifier = Modifier.width(90.dp))
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.pickup2),
-                            fontSize = 10.sp,
-                            color = Color.Black,
-                            modifier = Modifier
-                                .width(80.dp),
-                            maxLines = 1
-                        )
-                        Text(
-                            text = stringResource(id = R.string.time_pickup2),
-                            fontSize = 11.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .width(80.dp)
-                        )
-                    }
-                }
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .padding(start = 250.dp, end = 10.dp, bottom  = 10.dp)
-                        .height(35.dp)
-                        .width(200.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF8DE7EF),
-                        contentColor = Color.Blue
-                    )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.btn_inprogress_order),
-                        fontSize = 10.sp
-                    )
                 }
             }
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
 
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.zesty_lemon_drezzy),
-                        contentDescription = "Foto Profile",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(70.dp)
-                            .clip(CircleShape)
-
-                    )
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 10.dp)
-                            .width(120.dp)
-
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.naran3_order),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 17.sp,
-                            color = Color.Black,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .width(80.dp),
-                            maxLines = 1
-                        )
-                        Text(
-                            text = stringResource(id = R.string.cake3_type),
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            fontSize = 10.sp
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(90.dp))
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.pickup3),
-                            fontSize = 10.sp,
-                            color = Color.Black,
-                            modifier = Modifier
-                                .width(80.dp),
-                            maxLines = 1
-                        )
-                        Text(
-                            text = stringResource(id = R.string.time_pickup3),
-                            fontSize = 11.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .width(80.dp)
-                        )
-                    }
-                }
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .padding(start = 250.dp, end = 10.dp, bottom  = 10.dp)
-                        .height(35.dp)
-                        .width(200.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF7BE068),
-                        contentColor = Color(0xFF29601E)
-                    )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.btn_ready_order),
-                        fontSize = 10.sp
-                    )
-                }
-            }
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.custom_wedding_tier),
-                        contentDescription = "Foto Profile",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(70.dp)
-                            .clip(CircleShape)
-
-                    )
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 10.dp)
-                            .width(120.dp)
-
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.naran4_order),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 17.sp,
-                            color = Color.Black,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .width(80.dp),
-                            maxLines = 1
-                        )
-                        Text(
-                            text = stringResource(id = R.string.cake4_type),
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            fontSize = 10.sp
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(90.dp))
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.pickup4),
-                            fontSize = 10.sp,
-                            color = Color.Black,
-                            modifier = Modifier
-                                .width(80.dp),
-                            maxLines = 1
-                        )
-                        Text(
-                            text = stringResource(id = R.string.time_pickup4),
-                            fontSize = 11.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .width(80.dp)
-                        )
-                    }
-                }
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .padding(start = 250.dp, end = 10.dp, bottom  = 10.dp)
-                        .height(35.dp)
-                        .width(200.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFBABDB9),
-                        contentColor = Color(0xFF424442)
-                    )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.btn_complete),
-                        fontSize = 10.sp
-                    )
-                }
-            }
 
         }
 
     }
 
 
-/*
 @Preview(showBackground = true)
 @Composable
 fun OrderListScreenPreview(){
     _root_ide_package_.com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme {
         OrderListScreen()
     }
-}*/
+}
