@@ -318,10 +318,11 @@ fun ClientsListScreen(navController: NavHostController){
 }
 
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun ClientsListScreenPreview(){
     _root_ide_package_.com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme {
         ClientsListScreen(navController = rememberNavController())
     }
-}
+}*/
