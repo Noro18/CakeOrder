@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="greeting">Good Morning</string>
+    <string name="datetime_dashboard">Saturday, April 04, 2026</string>
+
+
+<!--    card today's order-->
+    <string name="num_todays_order">12</string>
+    <string name="todays_order">orderan Loron ohin</string>
+
+<!--    card pending-->
+    <string name="num_pending">4</string>
+
+    <!--    card resdy-->
+    <string name="num_ready">8</string>
+    <string name="ready_for_pickup">Pronto hodi foti</string>
+
+    <!--    card resdy-->
+    <string name="num_total_clients">142</string>
+    <string name="total_client">Total Kliente</string>
+</resources>

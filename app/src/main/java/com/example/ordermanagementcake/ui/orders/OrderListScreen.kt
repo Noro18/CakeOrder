@@ -48,13 +48,17 @@ fun OrderListScreen(){
                             .fillMaxWidth()
                             .background(Color(0xFFC23C12))
                     ) {
-                        Icon( // icon menu
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            modifier = Modifier
-                                .size(30.dp),
-                            tint = Color.White
-                        )
+                        IconButton(
+                            onClick = { /* asaun icon bele klik */ }
+                        ) {
+                            Icon( // icon menu
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "Menu",
+                                modifier = Modifier
+                                    .size(30.dp),
+                                tint = Color.White
+                            )
+                        }
                         Spacer(modifier = Modifier.width(15.dp))
                         Text(
                             text = stringResource(id = R.string.name_profile),
