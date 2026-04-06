@@ -48,90 +48,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.ordermanagementcake.R
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
+import com.example.ordermanagementcake.ui.navigation.Routes
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClientsListScreen(){
-    Scaffold( // uza scafforl hodi fahe nia parte sira ex: topbar,containt, bottombar
-        topBar = {
-            TopAppBar(
-                windowInsets = windowInsets,
-                modifier = Modifier.fillMaxWidth(),
-                title = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color(0xFFC23C12))
-                    ) {
-                        IconButton(
-                            onClick = { /* asaun icon bele klik */ }
-                        ) {
-                            Icon( // icon menu
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu",
-                                modifier = Modifier
-                                    .size(30.dp),
-                                tint = Color.White
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(15.dp))
-                        Text(
-                            text = stringResource(id = R.string.title_profile),
-                            fontSize = 33.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                        Spacer(modifier = Modifier.width(150.dp))
-                        Image( // foto profile
-                            painter = painterResource(id = R.drawable.foto_profile),
-                            contentDescription = "Foto Profile",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape)
-
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFC23C12)
-                ),
-//                windowInsets = WindowInsets(left = 0.dp)
-            )
-        },
-
-        // ne'e mak bottom bar
-        bottomBar = {
-            var selectedItem by remember { mutableStateOf(2) }
-            BottomNavigationBar(
-                selectedItem = selectedItem,
-                onItemSelected = { selectedItem = it }
-            )
-        },
-        // ida ne'e mak button add
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { },
-                containerColor = Color(0xFFC23C12)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "aumenta",
-                    tint = Color.White
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End
-
-    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .padding(16.dp)
         ) {
            // search bar
@@ -298,13 +228,14 @@ fun ClientsListScreen(){
 
         }
     }
-}
 
+
+/*
 
 @Preview(showBackground = true)
 @Composable
 fun ClientsListScreenPreview(){
     _root_ide_package_.com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme {
-        ClientsListScreen()
+        ClientsListScreen(navController = rememberNavController())
     }
-}
+}*/
