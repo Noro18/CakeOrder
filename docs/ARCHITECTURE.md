@@ -62,3 +62,30 @@ OrderManagementCake/app/src/main/java/com/example/ordermanagementcake/
 
 * **Theme and Components centralization**
   The `theme/` and `components/` folders ensure a consistent look and feel across the entire application.
+
+--- 
+
+## Navigation
+
+Aplikasaiun agora uza ona Navigation Compose ba scren navigatyion nian
+
+`AppNavHost` iha `ui/navigation/NavGraph.kt` mak resonsoavble ba:
+
+- Scaffold ba **TopBar** no **BottomBar** haketak husi main content
+- DefineROute no mapeia ba iha screen
+
+```bash
+
+# visualmente nia hnsa ne
+┌─────────────────────┐
+│       TopBar        │  ← lives in the main Scaffold(AppNavHost), never changes
+├─────────────────────┤
+│                     │
+│   content changes   │  ← only this part swaps when you navigate
+│   here              │
+│                     │
+├─────────────────────┤
+│     BottomBar       │  ← lives in the main Scaffold(AppNavHost), never changes
+└─────────────────────┘
+```
+
