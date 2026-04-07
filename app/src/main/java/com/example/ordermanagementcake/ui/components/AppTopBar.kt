@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ordermanagementcake.R
@@ -32,31 +34,27 @@ import com.example.ordermanagementcake.R
 @Composable
 fun AppTopBar() {
     TopAppBar(
-        windowInsets = TopAppBarDefaults.windowInsets,
-        modifier = Modifier.fillMaxWidth(),
         title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color(0xFFC23C12))
-            ) {
-                IconButton(onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Menu",
-                        modifier = Modifier.size(30.dp),
-                        tint = Color.White
-                    )
-                }
-                Spacer(modifier = Modifier.width(15.dp))
-                Text(
-                    text = "The Artisanal Bakery",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
+            Text(
+                text = "The Artisanal Bakery",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        },
+
+        navigationIcon = {
+            IconButton(onClick = { }) {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = "Menu",
+                    tint = Color.White
                 )
-                Spacer(modifier = Modifier.width(70.dp))
+            }
+        },
+
+        actions = {
+            IconButton(onClick = { }) {
                 Image(
                     painter = painterResource(id = R.drawable.foto_profile),
                     contentDescription = "Foto Profile",
@@ -67,8 +65,15 @@ fun AppTopBar() {
                 )
             }
         },
+
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color(0xFFC23C12)
         )
     )
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun TopBarPreview() {
+    AppTopBar()
 }
