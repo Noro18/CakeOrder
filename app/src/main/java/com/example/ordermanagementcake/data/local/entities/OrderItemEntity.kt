@@ -9,7 +9,7 @@ data class OrderItemEntity(
     val orderId: Int,
     val title: String,
     val description: String,
-    val imageRef: String,
+    val imageRef: String, // String ou File? i don't know
     val quantity: Int,
     val notes: String
 )

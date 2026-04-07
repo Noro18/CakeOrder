@@ -10,5 +10,6 @@ data class OrderEntity (
     val orderDate: String,
     val pickupDate: String,
     val status: String,
-    val notes: String
+    val notes: String,
+    val createdAt: String
 )
