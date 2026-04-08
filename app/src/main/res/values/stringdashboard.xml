@@ -18,4 +18,7 @@
     <!--    card resdy-->
     <string name="num_total_clients">142</string>
     <string name="total_client">Total Kliente</string>
+    
+    <string name="upcoming_pickups">Rekolla tuir mai</string>
+    <string name="view_all">Haree hotu</string>
 </resources>
