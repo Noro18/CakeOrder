@@ -1,5 +1,6 @@
 package com.example.ordermanagementcake.ui.dashboard
 
+
 import android.icu.text.ListFormatter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -51,6 +52,8 @@ import androidx.compose.ui.unit.sp
 import com.example.ordermanagementcake.R
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 
+
+// ida ne'e mak file inti
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen() {
