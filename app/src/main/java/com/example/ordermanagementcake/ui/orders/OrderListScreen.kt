@@ -56,7 +56,6 @@ fun OrderListScreen(){
             )
             Text(
                 text = stringResource(id = R.string.culinary_cration),
-                color = Color.Gray,
                 modifier = Modifier
                     .padding(bottom = 7.dp, start = 15.dp)
             )
@@ -193,7 +192,6 @@ fun OrderListScreen(){
                             text = stringResource(id = R.string.naran1_order),
                             fontWeight = FontWeight.Bold,
                             fontSize = 17.sp,
-                            color = Color.Black,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -210,12 +208,10 @@ fun OrderListScreen(){
                         Text(
                             text = stringResource(id = R.string.pickup1),
                             fontSize = 15.sp,
-                            color = Color.Black,
                         )
                         Text(
                             text = stringResource(id = R.string.time_pickup1),
                             fontSize = 11.sp,
-                            color = Color.Black,
                             fontWeight = FontWeight.Bold,
                         )
                     }
