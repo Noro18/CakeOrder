@@ -1,6 +1,6 @@
 # OrderManagementCake
 <p align="center">
-  <img src="docs/images/Screenshot_2026-04-06-20-56-09-30_babce33eed3349751ba338e6d27eb4dd.jpg" width="300"/>
+  <img src="docs/images/screenshot_2026-04-07_13-22-30.png" width="300"/>
 </p>
 
 <p align="center">
