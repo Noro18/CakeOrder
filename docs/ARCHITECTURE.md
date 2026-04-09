@@ -19,32 +19,34 @@ The folder structure directly reflects this separation:
 OrderManagementCake/app/src/main/java/com/example/ordermanagementcake/
 ├── data/                              # Model layer (data + business logic)
 │   ├── local/
-│   │   ├── OrderDatabase.kt          # Central database instance (single source of truth)
-│   │   ├── dao/                      # Defines database operations
-│   │   └── entities/                 # Database entities (tables)
+│   │   ├── OrderDatabase.kt          # Room Database definition (Placeholder)
+│   │   ├── dao/                      # Database operations (Empty)
+│   │   └── entities/                 # Database entities/tables (Empty)
 │   │
-│   └── repository/                    # Handles data logic and abstracts data access
+│   └── repository/                    # Data logic and abstraction (Empty)
 │
-└── ui/                               # View layer (UI + ViewModels)
+├── repository/                        # Duplicate/Placeholder folder (Empty)
+│
+└── ui/                               # View layer (UI)
     ├── clients/
-    │   ├── ClientsListScreen.kt      # Displays list of clients
-    │   └── ClientsViewModel.kt       # Manages client-related UI state
+    │   └── ClientsListScreen.kt      # Displays list of clients
 │
     ├── orders/
-    │   ├── OrderListScreen.kt        # Displays list of orders (summary view)
-    │   └── OrderViewModel.kt         # Manages order UI state
+    │   └── OrderListScreen.kt        # Displays list of orders
 │
     ├── components/                    # Reusable UI components
-    │   └── Components.kt
+    │   ├── AppTopBar.kt              # Common TopAppBar for the app
+    │   └── Components.kt             # Shared UI elements like BottomNavigationBar
 │
-    ├── navigation/                   # App navigation logic and routes
+    ├── navigation/                   # App navigation logic (Navigation Compose)
+    │   └── NavGraph.kt               # Routes and NavHost configuration
 │
     ├── theme/                        # App styling and theme
     │   ├── Color.kt
     │   ├── Theme.kt
     │   └── Type.kt
 │
-└── MainActivity.kt                    # Main entry point of the application
+└── MainActivity.kt                    # Entry point, hosts the AppNavHost
 ```
 
 ---
@@ -62,3 +64,30 @@ OrderManagementCake/app/src/main/java/com/example/ordermanagementcake/
 
 * **Theme and Components centralization**
   The `theme/` and `components/` folders ensure a consistent look and feel across the entire application.
+
+--- 
+
+## Navigation
+
+Aplikasaiun agora uza ona Navigation Compose ba scren navigatyion nian
+
+`AppNavHost` iha `ui/navigation/NavGraph.kt` mak resonsoavble ba:
+
+- Scaffold ba **TopBar** no **BottomBar** haketak husi main content
+- DefineROute no mapeia ba iha screen
+
+```bash
+
+# visualmente nia hnsa ne
+┌─────────────────────┐
+│       TopBar        │  ← lives in the main Scaffold(AppNavHost), never changes
+├─────────────────────┤
+│                     │
+│   content changes   │  ← only this part swaps when you navigate
+│   here              │
+│                     │
+├─────────────────────┤
+│     BottomBar       │  ← lives in the main Scaffold(AppNavHost), never changes
+└─────────────────────┘
+```
+
