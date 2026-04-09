@@ -25,6 +25,30 @@ OrderManagementCake is an Android application designed to help users (likely bak
 *   **Status Management:** Track the progress of orders (e.g., Pending, Baking, Ready for Delivery, Delivered).
 *   **Delivery Schedule:** View upcoming deliveries in a clear list or calendar view.
 
+## Project Status & Implementation
+
+Currently, the application has the following implemented:
+
+*   **Navigation:** Uses **Jetpack Navigation Compose**. The `AppNavHost` (in `NavGraph.kt`) manages the app's navigation and structure.
+*   **Unified UI Structure:** A single `Scaffold` in `AppNavHost` contains a common `AppTopBar` and `BottomNavigationBar`. Only the main content area swaps when navigating between screens, making the app feel smoother.
+*   **Screens:**
+    *   **Order List Screen:** Displays a summary of current orders. Includes a search bar and filter chips (All, Pending, In Progress, etc.) to quickly find specific orders.
+    *   **Client List Screen:** Displays a directory of "Loyal Patrons". Includes a search bar and shows client contact details.
+*   **MVVM Structure:** The project folder structure is organized according to MVVM, although Data layers (Room, Repositories) and ViewModels are currently in the placeholder stage.
+
+---
+
+## Status Projetu & Implementasaun
+
+Atualmente, aplikasaun ne'e implementa ona buat hirak tuir mai ne'e:
+
+*   **Navigasaun:** Uza **Jetpack Navigation Compose**. `AppNavHost` (iha `NavGraph.kt`) mak jere navigasaun no estrutura aplikasaun nian.
+*   **Estrutura UI Unifikadu:** `Scaffold` ida deit iha `AppNavHost` ne'ebé kontein `AppTopBar` no `BottomNavigationBar` ne'ebé hanesan ba screen hotu. Só área konteúdu mak troka wainhira halo navigasaun, halo aplikasaun ne'e sente moos liu (smooth).
+*   **Screen sira:**
+    *   **Order List Screen:** Hatudu sumáriu pedidu sira nian. Inclui search bar no filter chips (All, Pending, In Progress, nst) atu buka pedidu sira ho lalais.
+    *   **Client List Screen:** Hatudu direktóriu "Loyal Patrons". Inclui search bar no hatudu detallu kontaktu kliente sira nian.
+*   **Estrutura MVVM:** Estrutura folder projetu nian organiza tuir MVVM, maske layer Data (Room, Repositories) no ViewModels sei iha hela deit faze placeholder nian.
+
 ## Tech Stack
 
 *   **Language:** [Kotlin](https://kotlinlang.org/)

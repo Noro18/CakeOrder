@@ -1,0 +1,93 @@
+Index: app/src/main/java/com/example/ordermanagementcake/ClientsListScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/ordermanagementcake/ClientsListScreen.kt b/app/src/main/java/com/example/ordermanagementcake/ui/theme/ClientsListScreen.kt
+rename from app/src/main/java/com/example/ordermanagementcake/ClientsListScreen.kt
+rename to app/src/main/java/com/example/ordermanagementcake/ui/theme/ClientsListScreen.kt
+--- a/app/src/main/java/com/example/ordermanagementcake/ClientsListScreen.kt	(revision d3f18cbf5dd19b44117e47474fdec30f0780f1c1)
++++ b/app/src/main/java/com/example/ordermanagementcake/ui/theme/ClientsListScreen.kt	(date 1775050627471)
+@@ -1,17 +1,10 @@
+-package com.example.ordermanagementcake
++package com.example.ordermanagementcake.ui.theme
+ 
+-import android.os.Bundle
+-import androidx.activity.ComponentActivity
+-import androidx.activity.compose.setContent
+-import androidx.activity.enableEdgeToEdge
+ import androidx.compose.foundation.Image
+ import androidx.compose.foundation.background
+-import androidx.compose.foundation.border
+ import androidx.compose.foundation.layout.Column
+ import androidx.compose.foundation.layout.Row
+ import androidx.compose.foundation.layout.Spacer
+-import androidx.compose.foundation.layout.WindowInsets
+-import androidx.compose.foundation.layout.fillMaxHeight
+ import androidx.compose.foundation.layout.fillMaxSize
+ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.height
+@@ -19,36 +12,26 @@
+ import androidx.compose.foundation.layout.size
+ import androidx.compose.foundation.layout.width
+ import androidx.compose.foundation.lazy.LazyColumn
+-import androidx.compose.foundation.rememberScrollState
+ import androidx.compose.foundation.shape.CircleShape
+-import androidx.compose.foundation.verticalScroll
+ import androidx.compose.material.icons.Icons
+-import androidx.compose.material.icons.automirrored.filled.ArrowForward
+ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+ import androidx.compose.material.icons.filled.Add
+ import androidx.compose.material.icons.filled.AddShoppingCart
+-import androidx.compose.material.icons.filled.ArrowForward
+ import androidx.compose.material.icons.filled.CalendarMonth
+ import androidx.compose.material.icons.filled.Dashboard
+-import androidx.compose.material.icons.filled.GridView
+-import androidx.compose.material.icons.filled.KeyboardArrowRight
+ import androidx.compose.material.icons.filled.Menu
+ import androidx.compose.material.icons.filled.People
+ import androidx.compose.material.icons.filled.Search
+-import androidx.compose.material3.BottomAppBar
+-import androidx.compose.material3.Button
+ import androidx.compose.material3.Card
+ import androidx.compose.material3.ExperimentalMaterial3Api
+ import androidx.compose.material3.FabPosition
+ import androidx.compose.material3.FloatingActionButton
+ import androidx.compose.material3.Icon
+ import androidx.compose.material3.IconButton
+-import androidx.compose.material3.Label
+ import androidx.compose.material3.NavigationBar
+ import androidx.compose.material3.NavigationBarItem
+ import androidx.compose.material3.NavigationBarItemDefaults
+ import androidx.compose.material3.OutlinedTextField
+-import androidx.compose.material3.OutlinedTextFieldDefaults
+ import androidx.compose.material3.Scaffold
+ import androidx.compose.material3.Text
+ import androidx.compose.material3.TextFieldDefaults
+@@ -63,7 +46,6 @@
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
+-import androidx.compose.ui.focus.focusModifier
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.layout.ContentScale
+ import androidx.compose.ui.res.painterResource
+@@ -73,8 +55,7 @@
+ import androidx.compose.ui.tooling.preview.Preview
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+-import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
+-import com.google.android.engage.shopping.datamodel.ShoppingCart
++import com.example.ordermanagementcake.R
+ 
+ 
+ @OptIn(ExperimentalMaterial3Api::class)
+@@ -83,7 +64,7 @@
+     Scaffold( // uza scafforl hodi fahe nia parte sira ex: topbar,containt, bottombar
+         topBar = {
+             TopAppBar(
+-                windowInsets = TopAppBarDefaults.windowInsets,
++                windowInsets = windowInsets,
+                 modifier = Modifier.fillMaxWidth(),
+                 title = {
+                     Row(

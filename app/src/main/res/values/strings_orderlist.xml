@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name_order_management_cake">OrderManagementCake</string>
+    <string name="app_name">OrderManagementCake</string>
     <string name="name_profile">The Artisanal Bakery</string>
     <string name="current_order">Order sira iha agora</string>
     <string name="culinary_cration">Jestiona ita-nia kriasaun kulinária</string>

@@ -19,32 +19,34 @@ The folder structure directly reflects this separation:
 OrderManagementCake/app/src/main/java/com/example/ordermanagementcake/
 ├── data/                              # Model layer (data + business logic)
 │   ├── local/
-│   │   ├── OrderDatabase.kt          # Central database instance (single source of truth)
-│   │   ├── dao/                      # Defines database operations
-│   │   └── entities/                 # Database entities (tables)
+│   │   ├── OrderDatabase.kt          # Room Database definition (Placeholder)
+│   │   ├── dao/                      # Database operations (Empty)
+│   │   └── entities/                 # Database entities/tables (Empty)
 │   │
-│   └── repository/                    # Handles data logic and abstracts data access
+│   └── repository/                    # Data logic and abstraction (Empty)
 │
-├── ui/                               # View layer (UI + ViewModels)
-│   ├── clients/
-│   │   ├── ClientsListScreen.kt      # Displays list of clients
-│   │   └── ClientsViewModel.kt       # Manages client-related UI state
-│   │
-│   ├── orders/
-│   │   ├── OrderListScreen.kt        # Displays list of orders (summary view)
-│   │   └── OrderViewModel.kt         # Manages order UI state
-│   │
-│   ├── components/                    # Reusable UI components
-│   │   └── Components.kt
-│   │
-│   ├── navigation/                   # App navigation logic and routes
-│   │
-│   ├── theme/                        # App styling and theme
-│       ├── Color.kt
-│       ├── Theme.kt
-│       └── Type.kt
+├── repository/                        # Duplicate/Placeholder folder (Empty)
 │
-└── MainActivity.kt                    # Main entry point of the application
+└── ui/                               # View layer (UI)
+    ├── clients/
+    │   └── ClientsListScreen.kt      # Displays list of clients
+│
+    ├── orders/
+    │   └── OrderListScreen.kt        # Displays list of orders
+│
+    ├── components/                    # Reusable UI components
+    │   ├── AppTopBar.kt              # Common TopAppBar for the app
+    │   └── Components.kt             # Shared UI elements like BottomNavigationBar
+│
+    ├── navigation/                   # App navigation logic (Navigation Compose)
+    │   └── NavGraph.kt               # Routes and NavHost configuration
+│
+    ├── theme/                        # App styling and theme
+    │   ├── Color.kt
+    │   ├── Theme.kt
+    │   └── Type.kt
+│
+└── MainActivity.kt                    # Entry point, hosts the AppNavHost
 ```
 
 ---
