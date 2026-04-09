@@ -13,19 +13,23 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.ordermanagementcake.ui.clients.ClientsListScreen
 import com.example.ordermanagementcake.ui.components.AppTopBar
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
+import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
 import com.example.ordermanagementcake.ui.orders.OrderListScreen
 
 object Routes {
+    const val DASHBOARD = "dashboard"
     const val ORDERS = "orders"
     const val CLIENTS = "clients"
+
 }
 
 @Composable
-fun AppNavHost(navController: NavHostController, startDestination: String = Routes.CLIENTS) {
+fun AppNavHost(navController: NavHostController, startDestination: String = Routes.DASHBOARD) { // screen primeiro ne'eb sei loke
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     val selectedItem = when (currentRoute) {
+        Routes.DASHBOARD -> 0
         Routes.ORDERS -> 1
         Routes.CLIENTS -> 2
         else -> 1
@@ -43,8 +47,10 @@ fun AppNavHost(navController: NavHostController, startDestination: String = Rout
                 selectedItem = selectedItem,
                 onItemSelected = { index ->
                     when (index) {
+                        0 -> navController.navigate(Routes.DASHBOARD)
                         1 -> navController.navigate(Routes.ORDERS)
                         2 -> navController.navigate(Routes.CLIENTS)
+
                     }
                 }
             )
@@ -61,6 +67,9 @@ fun AppNavHost(navController: NavHostController, startDestination: String = Rout
             }
             composable(Routes.CLIENTS) {
                 ClientsListScreen()  // no navController needed anymore
+            }
+            composable(Routes.DASHBOARD) {
+                DashboardScreen()
             }
         }
     }
