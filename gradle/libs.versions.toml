@@ -11,6 +11,7 @@ composeBom = "2024.09.00"
 engageCore = "1.5.11"
 material3 = "1.4.0"
 ui = "1.10.6"
+navigation = "2.7.7"
 
 [libraries]
 androidx-compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
@@ -32,6 +33,8 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 engage-core = { group = "com.google.android.engage", name = "engage-core", version.ref = "engageCore" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
