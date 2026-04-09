@@ -12,7 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.ordermanagementcake.ui.clients.ClientsListScreen
+import com.example.ordermanagementcake.ui.navigation.AppNavHost
+import com.example.ordermanagementcake.ui.navigation.Routes
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,30 +24,22 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             OrderManagementCakeTheme {
-                ClientsListScreen()
+                val navControler = rememberNavController()
+                AppNavHost(navController = navControler)
+
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-
-    Button(
-        onClick ={}
-    ) {
-        Text(text = "Click Me")
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun AppPreview() {
     OrderManagementCakeTheme {
-        Greeting("Ediko")
+        val navController = rememberNavController()
+        AppNavHost(
+            navController = navController,
+            startDestination = Routes.ORDERS  // 👈 just add this
+        )
     }
 }
