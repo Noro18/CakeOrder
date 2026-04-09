@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun BottomNavigationBar(
@@ -17,7 +18,12 @@ fun BottomNavigationBar(
             selected = selectedItem == 0,
             onClick = { onItemSelected(0) },
             icon = { Icon(Icons.Default.Dashboard, contentDescription = "Dashboard") },
-            label = { Text("DASHBOARD") },
+            label = {
+                Text(
+                    text = "DASHBOARD",
+                    fontSize = 10.sp
+                )
+                    },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Color(0xFFC23C12),
                 selectedTextColor = Color(0xFFC23C12),
@@ -30,7 +36,12 @@ fun BottomNavigationBar(
             selected = selectedItem == 1,
             onClick = { onItemSelected(1) },
             icon = { Icon(Icons.Default.AddShoppingCart, contentDescription = "Orders") },
-            label = { Text("ORDERS") },
+            label = {
+                Text(
+                    text = "ORDERS",
+                    fontSize = 10.sp
+                )
+                    },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Color(0xFFC23C12),
                 selectedTextColor = Color(0xFFC23C12),
@@ -43,7 +54,12 @@ fun BottomNavigationBar(
             selected = selectedItem == 2,
             onClick = { onItemSelected(2) },
             icon = { Icon(Icons.Default.People, contentDescription = "Clients") },
-            label = { Text("CLIENTS") },
+            label = {
+                Text(
+                    text = "CLIENTS",
+                    fontSize = 10.sp
+                )
+                    },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Color(0xFFC23C12),
                 selectedTextColor = Color(0xFFC23C12),
@@ -56,7 +72,12 @@ fun BottomNavigationBar(
             selected = selectedItem == 3,
             onClick = { onItemSelected(3) },
             icon = { Icon(Icons.Default.CalendarMonth, contentDescription = "Schedule") },
-            label = { Text("SCHEDULES") },
+            label = {
+                Text(
+                    text = "SCHEDULES",
+                    fontSize = 10.sp
+                )
+                    },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Color(0xFFC23C12),
                 selectedTextColor = Color(0xFFC23C12),
