@@ -1,4 +1,5 @@
 # OrderManagementCake
+
 ![Top Language](https://img.shields.io/github/languages/top/Noro18/CakeOrder)
 ![Language Count](https://img.shields.io/github/languages/count/Noro18/CakeOrder)
 ![Stars](https://img.shields.io/github/stars/Noro18/CakeOrder?style=social)
@@ -7,6 +8,7 @@
 ![Last Commit](https://img.shields.io/github/last-commit/Noro18/CakeOrder)
 ![Repo Size](https://img.shields.io/github/repo-size/Noro18/CakeOrder)
 ![License](https://img.shields.io/github/license/Noro18/CakeOrder)
+
 <p align="center">
   <img src="docs/images/screenshot_2026-04-07_13-22-30.png" width="300"/>
 </p>
