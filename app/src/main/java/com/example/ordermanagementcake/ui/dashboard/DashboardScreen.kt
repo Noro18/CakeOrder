@@ -53,7 +53,7 @@ import com.example.ordermanagementcake.R
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 
 
-// ida ne'e mak file intisss
+// ida ne'e mak file intissssss
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen() {
