@@ -20,4 +20,8 @@
 > - Kria `NavGraph.kt` iah `ui/navigation/` no aumenta ROute no AppNavHost sai sentr 
 > - haketak TopAppBar no mos Bottombar iha iha `AppNavHost`
 > - Agora So content mak muda se wainhria user teekan bottom navigation ida
-> - **Before**: Screen tomak recomposes wainhria use halo navigasaun 
+> - **Before**: Screen tomak recomposes wainhria use halo navigasaun
+
+
+## fix/17-font-color-dark-mode
+> - hapus tiha kor black sira ne'ebe iha teks atu nune'e bele ajusta ho white no dark mode.
