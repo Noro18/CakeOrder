@@ -1,7 +1,7 @@
 
 <div align="center">
 
-#  󰣇 Order Mmanagement 󰣇
+#   🧁🎂Order Management🎂🧁 
 
 *Order Management Android app made with kotlin*
 
