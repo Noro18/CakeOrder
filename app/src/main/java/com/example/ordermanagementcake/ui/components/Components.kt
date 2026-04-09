@@ -27,8 +27,8 @@ fun BottomNavigationBar(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Color(0xFFC23C12),
                 selectedTextColor = Color(0xFFC23C12),
-                unselectedIconColor = Color.Gray,
-                unselectedTextColor = Color.Gray,
+                unselectedIconColor = Color(0xFFAAAAAA),
+                unselectedTextColor = Color(0xFFAAAAAA),
                 indicatorColor = Color(0xFFF39D82)
             )
         )
@@ -45,8 +45,8 @@ fun BottomNavigationBar(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Color(0xFFC23C12),
                 selectedTextColor = Color(0xFFC23C12),
-                unselectedIconColor = Color.Gray,
-                unselectedTextColor = Color.Gray,
+                unselectedIconColor = Color(0xFFAAAAAA),
+                unselectedTextColor = Color(0xFFAAAAAA),
                 indicatorColor = Color(0xFFF39D82)
             )
         )
@@ -63,8 +63,8 @@ fun BottomNavigationBar(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Color(0xFFC23C12),
                 selectedTextColor = Color(0xFFC23C12),
-                unselectedIconColor = Color.Gray,
-                unselectedTextColor = Color.Gray,
+                unselectedIconColor = Color(0xFFAAAAAA),
+                unselectedTextColor = Color(0xFFAAAAAA),
                 indicatorColor = Color(0xFFF39D82)
             )
         )
@@ -81,8 +81,8 @@ fun BottomNavigationBar(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = Color(0xFFC23C12),
                 selectedTextColor = Color(0xFFC23C12),
-                unselectedIconColor = Color.Gray,
-                unselectedTextColor = Color.Gray,
+                unselectedIconColor = Color(0xFFAAAAAA),
+                unselectedTextColor = Color(0xFFAAAAAA),
                 indicatorColor = Color(0xFFF39D82)
             )
         )

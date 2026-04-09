@@ -94,7 +94,6 @@ fun ClientsListScreen(){
 
             Text(
                 text = stringResource(id = R.string.directory_clients),
-                color = Color(0xFFB2A9A7),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -149,14 +148,12 @@ fun ClientsListScreen(){
                                     text = stringResource(id = R.string.client1_name),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.Black,
                                     modifier = Modifier
                                         .padding(bottom = 0.dp)
                                 )
                                 Text(
                                     text = stringResource(id = R.string.nu_telefone1),
-                                    fontSize = 16.sp,
-                                    color = Color.Gray,
+                                    fontSize = 16.sp
                                 )
                             }
                             IconButton(
@@ -202,14 +199,12 @@ fun ClientsListScreen(){
                                     text = stringResource(id = R.string.client2_name),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.Black,
                                     modifier = Modifier
                                         .padding(bottom = 0.dp)
                                 )
                                 Text(
                                     text = stringResource(id = R.string.nu_telefone2),
-                                    fontSize = 16.sp,
-                                    color = Color.Gray,
+                                    fontSize = 16.sp
                                 )
                             }
                             IconButton(
