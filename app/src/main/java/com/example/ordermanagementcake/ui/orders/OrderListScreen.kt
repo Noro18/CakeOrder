@@ -199,7 +199,7 @@ fun OrderListScreen(){
                         )
                         Text(
                             text = stringResource(id = R.string.cake1_type),
-                            fontSize = 10.sp,
+                            fontSize = 15.sp,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -209,7 +209,7 @@ fun OrderListScreen(){
                     ) {
                         Text(
                             text = stringResource(id = R.string.pickup1),
-                            fontSize = 10.sp,
+                            fontSize = 15.sp,
                             color = Color.Black,
                         )
                         Text(
