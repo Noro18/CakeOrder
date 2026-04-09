@@ -1,4 +1,11 @@
-# OrderManagementCake
+
+<div align="center">
+
+#  󰣇 Order Mmanagement 󰣇
+
+*Order Management Android app made with kotlin*
+
+</div>
 
 ![Top Language](https://img.shields.io/github/languages/top/Noro18/CakeOrder)
 ![Language Count](https://img.shields.io/github/languages/count/Noro18/CakeOrder)
