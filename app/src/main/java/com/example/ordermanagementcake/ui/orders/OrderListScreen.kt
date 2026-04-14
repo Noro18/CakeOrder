@@ -1,254 +1,191 @@
 package com.example.ordermanagementcake.ui.orders
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.ordermanagementcake.R
-import androidx.compose.runtime.*
-import androidx.compose.material3.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.ui.graphics.Color
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Button
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.ordermanagementcake.ui.components.BottomNavigationBar
-import com.example.ordermanagementcake.ui.navigation.Routes
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.ordermanagementcake.R
+import com.example.ordermanagementcake.data.local.OrderDatabase
+import com.example.ordermanagementcake.data.repository.OrderRepository
+import androidx.compose.foundation.Image
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderListScreen(){
-        Column(
+fun OrderListScreen(
+    viewModel: OrderViewModel = viewModel(
+        factory = OrderViewModelFactory(
+            OrderRepository(
+                OrderDatabase.getInstance(LocalContext.current).orderDao()
+            )
+        )
+    )
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val statusFilters = listOf("PENDING", "IN_PROGRESS", "READY", "COMPLETED")
+    val statusLabels  = listOf("Hotu", "Hein", "Prosesu", "Prontu")
+
+    var searchText by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Text(
+            text = "Order sira iha agora",
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 25.sp,
+            modifier = Modifier.padding(top = 16.dp, start = 15.dp)
+        )
+        Text(
+            text = "Jestiona ita-nia kriasaun kulinária",
+            modifier = Modifier.padding(bottom = 7.dp, start = 15.dp)
+        )
+
+        OutlinedTextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            label = { Text("buka order...") },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+        )
+
+        // Filter buttons
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp, start = 15.dp)
+                .horizontalScroll(rememberScrollState())
         ) {
-            Text(
-                text = stringResource(id = R.string.current_order),
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 25.sp,
-                modifier = Modifier
-                    .padding(top = 16.dp, start = 15.dp)
-
-            )
-            Text(
-                text = stringResource(id = R.string.culinary_cration),
-                modifier = Modifier
-                    .padding(bottom = 7.dp, start = 15.dp)
-            )
-
-            // search bar
-            var searchText by remember { mutableStateOf("") }
-
-            OutlinedTextField(
-                value = searchText,
-                onValueChange = {searchText = it},
-                label = {Text(
-                    text =  stringResource(id = R.string.search_order),
-                    modifier = Modifier.padding(all = 0.dp)
-                )},
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search"
-                    )
-                },
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 10.dp, start = 10.dp)
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, start = 15.dp)
-                    .horizontalScroll(rememberScrollState())
-            ) {
+            statusFilters.forEachIndexed { index, status ->
+                val isSelected = uiState.selectedStatus == status
                 Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .padding(12.dp),
+                    onClick = { viewModel.loadOrders(status) },
+                    modifier = Modifier.padding(horizontal = 6.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFF87146),
+                        containerColor = if (isSelected) Color(0xFFF87146) else Color.Gray,
                         contentColor = Color.White
                     )
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.btn_all_order)
-                    )
-                }
-
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .padding(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Gray,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.btn_pending_order)
-                    )
-
-                }
-
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .padding(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Gray,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.btn_inprogress_order)
-                    )
-
-                }
-
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .padding(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Gray,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.btn_ready_order)
-                    )
-
-                }
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .padding(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Gray,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.btn_complete)
-                    )
-
+                    Text(statusLabels[index])
                 }
             }
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.double_chodolate_fudge),
-                        contentDescription = "Foto Profile",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(70.dp)
-                            .clip(CircleShape)
-                    )
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 10.dp)
-                            .weight(1f) // ida ne'e atu nun'ee elementu sira pas pas
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.naran1_order),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 17.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Text(
-                            text = stringResource(id = R.string.cake1_type),
-                            fontSize = 15.sp,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                    Column(
-                        horizontalAlignment = Alignment.End // allgiht data ba iah liman loos
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.pickup1),
-                            fontSize = 15.sp,
-                        )
-                        Text(
-                            text = stringResource(id = R.string.time_pickup1),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 10.dp, bottom = 10.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Button(
-                        onClick = {},
-                        modifier = Modifier.height(35.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFEE8111),
-                            contentColor = Color.White
-                        )
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.btn_pending_order),
-                            fontSize = 10.sp
-                        )
-                    }
-                }
-            }
-
-
-
         }
 
-    }
-
-
-@Preview(showBackground = true)
-@Composable
-fun OrderListScreenPreview(){
-    _root_ide_package_.com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme {
-        OrderListScreen()
+        // Loading / error / list
+        when {
+            uiState.isLoading -> {
+                Box(modifier = Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+            uiState.errorMessage != null -> {
+                Text(
+                    text = "Error: ${uiState.errorMessage}",
+                    color = Color.Red,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+            uiState.orders.isEmpty() -> {
+                Text(
+                    text = "La iha order ba status ne'e.",
+                    modifier = Modifier.padding(16.dp),
+                    color = Color.Gray
+                )
+            }
+            else -> {
+                uiState.orders.forEach { order ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.double_chodolate_fudge),
+                                contentDescription = "Order image",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(70.dp)
+                                    .clip(CircleShape)
+                            )
+                            Column(
+                                modifier = Modifier
+                                    .padding(start = 10.dp)
+                                    .weight(1f)
+                            ) {
+                                Text(
+                                    text = "Order #${order.id}",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 17.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Text(
+                                    text = order.notes.ifBlank { "La iha nota" },
+                                    fontSize = 15.sp,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                            Column(horizontalAlignment = Alignment.End) {
+                                Text(text = "Foti", fontSize = 15.sp)
+                                Text(
+                                    text = order.pickupDate,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 10.dp, bottom = 10.dp),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            Button(
+                                onClick = { viewModel.updateStatus(order.id, "IN_PROGRESS") },
+                                modifier = Modifier.height(35.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFEE8111),
+                                    contentColor = Color.White
+                                )
+                            ) {
+                                Text(text = order.status, fontSize = 10.sp)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

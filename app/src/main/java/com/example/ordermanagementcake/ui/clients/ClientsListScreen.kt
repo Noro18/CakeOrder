@@ -1,236 +1,163 @@
 package com.example.ordermanagementcake.ui.clients
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarDefaults.windowInsets
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ordermanagementcake.R
-import com.example.ordermanagementcake.ui.components.BottomNavigationBar
-import com.example.ordermanagementcake.ui.navigation.Routes
+import com.example.ordermanagementcake.data.local.OrderDatabase
+import com.example.ordermanagementcake.data.repository.ClientRepository
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClientsListScreen(){
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-           // search bar
-            var searchText by remember { mutableStateOf("") }
-
-            OutlinedTextField(
-                value = searchText,
-                onValueChange = {searchText = it},
-                placeholder = {Text(
-                    text =  stringResource(id = R.string.search_clients),
-                    modifier = Modifier
-                        .padding(0.dp),
-                    textAlign = TextAlign.Center
-                )},
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search"
-                    )
-                },
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                modifier = Modifier
-                    .width(400.dp)
+fun ClientsListScreen(
+    viewModel: ClientViewModel = viewModel(
+        factory = ClientViewModelFactory(
+            ClientRepository(
+                OrderDatabase.getInstance(LocalContext.current).clientDao()
             )
+        )
+    )
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-            Spacer(modifier = Modifier.height(30.dp))
-
-            Text(
-                text = stringResource(id = R.string.directory_clients),
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = stringResource(id = R.string.loyal_patrons),
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-
-                Spacer(modifier = Modifier.width(70.dp))
-
-                Text(
-                    text = stringResource(id = R.string.total_patrons),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 7.dp)
-                )
-            }
-
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                item {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(12.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.foto_profile),
-                                contentDescription = "Foto Profile",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .size(60.dp)
-                                    .clip(CircleShape)
-
-                            )
-
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Column(
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.client1_name),
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier
-                                        .padding(bottom = 0.dp)
-                                )
-                                Text(
-                                    text = stringResource(id = R.string.nu_telefone1),
-                                    fontSize = 16.sp
-                                )
-                            }
-                            IconButton(
-                                onClick = { /* asaun icon bele klik */ }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                    contentDescription = "hmmm",
-                                    tint = Color.Gray
-                                )
-                            }
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-                }
-
-                item {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(12.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.foto_profile),
-                                contentDescription = "Foto Profile",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .size(60.dp)
-                                    .clip(CircleShape)
-
-                            )
-
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Column(
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.client2_name),
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier
-                                        .padding(bottom = 0.dp)
-                                )
-                                Text(
-                                    text = stringResource(id = R.string.nu_telefone2),
-                                    fontSize = 16.sp
-                                )
-                            }
-                            IconButton(
-                                onClick = { /* asaun icon bele klik */ }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                    contentDescription = "hmmm",
-                                    tint = Color.Gray
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
+    // Filter clients locally using the search query
+    val filteredClients = remember(uiState.clients, uiState.searchQuery) {
+        if (uiState.searchQuery.isBlank()) uiState.clients
+        else uiState.clients.filter {
+            it.name.contains(uiState.searchQuery, ignoreCase = true) ||
+                    it.phoneNumber.contains(uiState.searchQuery, ignoreCase = true)
         }
     }
 
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        OutlinedTextField(
+            value = uiState.searchQuery,
+            onValueChange = { viewModel.onSearchQueryChange(it) },
+            placeholder = {
+                Text(
+                    text = "buka client liu husi naran ka telefone...",
+                    textAlign = TextAlign.Start
+                )
+            },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
 
-/*
+        Spacer(modifier = Modifier.height(24.dp))
 
-@Preview(showBackground = true)
-@Composable
-fun ClientsListScreenPreview(){
-    _root_ide_package_.com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme {
-        ClientsListScreen(navController = rememberNavController())
+        Text(
+            text = "Lista",
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = "Kliente fiel sira",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+            Text(
+                text = "total ${filteredClients.size}",
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 7.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        when {
+            uiState.isLoading -> {
+                Box(modifier = Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+            uiState.errorMessage != null -> {
+                Text(
+                    text = "Error: ${uiState.errorMessage}",
+                    color = Color.Red,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+            filteredClients.isEmpty() -> {
+                Text(
+                    text = "La iha kliente ne'ebé hetan.",
+                    modifier = Modifier.padding(16.dp),
+                    color = Color.Gray
+                )
+            }
+            else -> {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(filteredClients, key = { it.id }) { client ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 6.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(12.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.foto_profile),
+                                    contentDescription = "Foto Profile",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .size(60.dp)
+                                        .clip(CircleShape)
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = client.name,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = client.phoneNumber,
+                                        fontSize = 16.sp
+                                    )
+                                }
+                                IconButton(onClick = { /* navigate to client detail */ }) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                        contentDescription = "View client",
+                                        tint = Color.Gray
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-}*/
+}

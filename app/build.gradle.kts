@@ -43,6 +43,9 @@ android {
 }
 
 dependencies {
+    // ViewModel Dependency
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
+
     // Room Database
     val room_version = "2.7.1"
     implementation("androidx.room:room-runtime:$room_version")
