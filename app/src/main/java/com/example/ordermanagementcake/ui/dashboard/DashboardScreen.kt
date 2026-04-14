@@ -242,7 +242,6 @@ fun DashboardScreen() {
                 ) {
                     Text(
                         text = "Eleanor Shellstrop",
-                        color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
@@ -259,7 +258,6 @@ fun DashboardScreen() {
                     Text(
                         text = "Today",
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF9A2A07)
                     )
                     Text(
                         text = "09:00 AM"
@@ -267,7 +265,7 @@ fun DashboardScreen() {
                 }
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(27.dp))
         Text(
             text = "Orderan agora dau-daun",
             fontSize = 20.sp,
@@ -275,7 +273,6 @@ fun DashboardScreen() {
             modifier = Modifier
                 .padding(start = 10.dp)
         )
-        Spacer(modifier = Modifier.height(16.dp))
         Card(
             modifier = Modifier
                 .width(380.dp)
@@ -292,7 +289,6 @@ fun DashboardScreen() {
                 ) {
                     Text(
                         text = "Jason Mendoza",
-                        color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
@@ -334,7 +330,6 @@ fun DashboardScreen() {
                     Text(
                         text = "$48.00",
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black,
                         modifier = Modifier
                             .padding(start = 30.dp)
                     )
