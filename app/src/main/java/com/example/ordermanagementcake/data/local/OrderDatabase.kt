@@ -4,12 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.ordermanagementcake.data.local.dao.ClientDao
 import com.example.ordermanagementcake.data.local.dao.OrderDao
 import com.example.ordermanagementcake.data.local.dao.OrderItemDao
 import com.example.ordermanagementcake.data.local.entities.ClientEntity
 import com.example.ordermanagementcake.data.local.entities.OrderEntity
 import com.example.ordermanagementcake.data.local.entities.OrderItemEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // degfine nia database Room iah ne'e
 @Database (
@@ -36,8 +40,23 @@ abstract class OrderDatabase: RoomDatabase() {
                     context.applicationContext,
                     OrderDatabase::class.java,
                     "order_management_db"
-                ).build().also { INSTANCE = it }
+                )
+                    .addCallback(PrepopulateCallback())
+                    .build()
+                    .also { INSTANCE = it }
+            }
+        }
+    }
+    private class PrepopulateCallback : Callback() {
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+            INSTANCE?.let { database ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    seedDatabase(database)  // ← calls your seed function
+                }
             }
         }
     }
 }
+
+
