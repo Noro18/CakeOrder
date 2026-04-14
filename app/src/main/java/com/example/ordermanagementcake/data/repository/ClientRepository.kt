@@ -1,7 +1,8 @@
-package com.example.ordermanagementcake.data.local.relations
+package com.example.ordermanagementcake.data.repository
 
 import com.example.ordermanagementcake.data.local.dao.ClientDao
 import com.example.ordermanagementcake.data.local.entities.ClientEntity
+import com.example.ordermanagementcake.data.local.relations.ClientWithOrder
 import kotlinx.coroutines.flow.Flow
 
 class ClientRepository(private val clientDao: ClientDao) {
