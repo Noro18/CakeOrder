@@ -107,12 +107,12 @@ Room DB  →  DAO  →  Repository  →  ViewModel  →  UiState  →  Screen (C
 The Orders screen follows the same pattern, with the added behaviour of filtering by status: `OrderViewModel.loadOrders(status)` fetches only orders matching the given `status` string (e.g. `"PENDING"`, `"READY"`).
 
 ---
-
 ### UiState Classes
 
 Each feature has a dedicated `UiState` data class that represents everything the screen needs to render itself:
 
-**`ClientUiState`**
+#### `ClientUiState`
+
 | Field | Type | Purpose |
 | :--- | :--- | :--- |
 | `clients` | `List<ClientEntity>` | All clients loaded from DB |
@@ -120,15 +120,14 @@ Each feature has a dedicated `UiState` data class that represents everything the
 | `errorMessage` | `String?` | Non-null if the DB flow threw an exception |
 | `searchQuery` | `String` | Current value of the search bar; filtering happens in the screen |
 
-**`OrderUiState`**
+#### `OrderUiState`
+
 | Field | Type | Purpose |
 | :--- | :--- | :--- |
 | `orders` | `List<OrderEntity>` | Orders for the currently selected status |
 | `isLoading` | `Boolean` | Show loading spinner while fetching |
 | `errorMessage` | `String?` | Non-null if the DB flow threw an exception |
 | `selectedStatus` | `String` | Active filter button (defaults to `"PENDING"`) |
-
----
 
 ### ViewModelFactory Pattern
 
