@@ -252,6 +252,7 @@ fun ScheduleViewScreen(
                     }
                     Column(
                         modifier = Modifier
+                            .padding(bottom = 12.dp)
                     ) {
                         Button(
                             onClick = {},
