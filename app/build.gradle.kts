@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.ordermanagementcake"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -45,6 +45,9 @@ android {
 dependencies {
     // ViewModel Dependency
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.ui.text)
 
     // Room Database
     val room_version = "2.7.1"
@@ -63,6 +66,8 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.ui)
+
+    coreLibraryDesugaring("com.android.tools.build:desugaring-rules:2.1.4")
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.8.3")
