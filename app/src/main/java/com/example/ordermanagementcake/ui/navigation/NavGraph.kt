@@ -15,11 +15,14 @@ import com.example.ordermanagementcake.ui.components.AppTopBar
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
 import com.example.ordermanagementcake.ui.orders.OrderListScreen
+import com.example.ordermanagementcake.ui.schedule.ScheduleViewScreen
 
 object Routes {
     const val DASHBOARD = "dashboard"
     const val ORDERS = "orders"
     const val CLIENTS = "clients"
+
+    const val SCHEDULES = "schedules"
 
 }
 
@@ -32,6 +35,7 @@ fun AppNavHost(navController: NavHostController, startDestination: String = Rout
         Routes.DASHBOARD -> 0
         Routes.ORDERS -> 1
         Routes.CLIENTS -> 2
+        Routes.SCHEDULES -> 3
         else -> 1
     }
 
@@ -50,6 +54,7 @@ fun AppNavHost(navController: NavHostController, startDestination: String = Rout
                         0 -> navController.navigate(Routes.DASHBOARD)
                         1 -> navController.navigate(Routes.ORDERS)
                         2 -> navController.navigate(Routes.CLIENTS)
+                        3 -> navController.navigate(Routes.SCHEDULES)
 
                     }
                 }
@@ -70,6 +75,9 @@ fun AppNavHost(navController: NavHostController, startDestination: String = Rout
             }
             composable(Routes.DASHBOARD) {
                 DashboardScreen()
+            }
+            composable(Routes.SCHEDULES) {
+                ScheduleViewScreen()
             }
         }
     }
