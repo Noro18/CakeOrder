@@ -40,6 +40,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -84,9 +85,10 @@ fun ScheduleViewScreen(
     ) {
         Card(
             modifier = Modifier
-                .width(370.dp)
+                .fillMaxWidth()
                 .height(350.dp)
-                .padding(top = 15.dp, start = 20.dp)
+                .padding(top = 15.dp)
+                .padding(horizontal = 20.dp)
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
 
@@ -108,7 +110,7 @@ fun ScheduleViewScreen(
                         Text(
                             text = "$deliveryCount Deliveries scheduled this month",
                             fontSize = 12.sp,
-                            color = Color.Gray
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                         )
                     }
 
@@ -146,7 +148,7 @@ fun ScheduleViewScreen(
                             modifier = Modifier.weight(1f),
                             textAlign = TextAlign.Center,
                             fontSize = 11.sp,
-                            color = Color.LightGray,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
                             fontWeight = FontWeight.Medium
                         )
                     }
@@ -223,8 +225,8 @@ fun ScheduleViewScreen(
         ) {
             Card(
                 modifier = Modifier
-                    .width(370.dp)
-                    .padding(start = 20.dp, top = 20.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 20.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -306,7 +308,7 @@ fun DayCell(day: Int, isSelected: Boolean, hasDot: Boolean, onClick: () -> Unit)
                 text = "$day",
                 fontSize = 13.sp,
                 fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
-                color = if (isSelected) Color.White else Color.DarkGray
+                color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurface // <-- ganti ini
             )
         }
 
@@ -337,10 +339,10 @@ fun NavButton(label: String, onClick: () -> Unit) {
         modifier = Modifier
             .size(30.dp)
             .clip(CircleShape)
-            .border(1.dp, Color.LightGray, CircleShape)
+            .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
             .clickable { onClick() }
     ) {
-        Text(label, fontSize = 16.sp, color = Color.DarkGray)
+        Text(label, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
     }
 }
 
