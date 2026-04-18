@@ -1,10 +1,15 @@
 package com.example.ordermanagementcake.ui.navigation
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -15,14 +20,16 @@ import com.example.ordermanagementcake.ui.components.AppTopBar
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
 import com.example.ordermanagementcake.ui.orders.OrderListScreen
+import com.example.ordermanagementcake.ui.orderviewscren.NewOrderScreen
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewScreen
 
 object Routes {
     const val DASHBOARD = "dashboard"
     const val ORDERS = "orders"
     const val CLIENTS = "clients"
-
     const val SCHEDULES = "schedules"
+
+    const val NEW_ORDER = "new_order"
 
 }
 
@@ -59,6 +66,22 @@ fun AppNavHost(navController: NavHostController, startDestination: String = Rout
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            // Only show FAB on pages you want
+            val showFab = currentRoute in listOf(Routes.ORDERS, Routes.CLIENTS)
+            if (showFab) {
+                FloatingActionButton(
+                    onClick = { navController.navigate(Routes.NEW_ORDER) },
+                    containerColor = Color(0xFFC23C12)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add",
+                        tint = Color.White
+                    )
+                }
+            }
         }
     ) { paddingValues ->
         // only this part changes when you navigate
@@ -78,6 +101,9 @@ fun AppNavHost(navController: NavHostController, startDestination: String = Rout
             }
             composable(Routes.SCHEDULES) {
                 ScheduleViewScreen()
+            }
+            composable(Routes.NEW_ORDER) {
+                NewOrderScreen()
             }
         }
     }
