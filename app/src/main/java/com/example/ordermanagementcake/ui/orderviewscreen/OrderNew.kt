@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,11 +33,25 @@ import com.example.ordermanagementcake.R
 @Composable
 fun NewOrderScreen() {
 
-    var client by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false) }
+    // ── State variables ──────────────────────────────────────────────────────
+    var client    by remember { mutableStateOf("") }
+    var expanded  by remember { mutableStateOf(false) }
+    var cakeName  by remember { mutableStateOf("") }
+    var quantity  by remember { mutableStateOf("1") }
+    var orderDate by remember { mutableStateOf("") }
+    var notes     by remember { mutableStateOf("") }
+
+    // Shared OutlinedTextField colors (orange accent)
+    val textFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor   = Color(0xFFE8640C),
+        unfocusedBorderColor = Color(0xFFE0E0E0),
+        cursorColor          = Color(0xFFE8640C)
+    )
 
     Scaffold(
         topBar = {
+
+
             TopAppBar(
                 title = {
                     Text("New Order", color = Color.White, fontWeight = FontWeight.Bold)
@@ -46,10 +61,11 @@ fun NewOrderScreen() {
                         Icon(Icons.Default.ArrowBack, null, tint = Color.White)
                     }
                 },
+
+
                 actions = {
                     Image(
-                        painter = painterResource(id = R.drawable
-                            .sell),
+                        painter = painterResource(id = R.drawable.sell),
                         contentDescription = null,
                         modifier = Modifier
                             .padding(end = 12.dp)
@@ -75,13 +91,14 @@ fun NewOrderScreen() {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            // Card ORDER ENTRY
+            // ── Card ORDER ENTRY ─────────────────────────────────────────────
             Card(
-                shape = RoundedCornerShape(12.dp),
+                shape  = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(Color.White)
             ) {
                 Column(Modifier.padding(16.dp)) {
 
+                    // Badge
                     Box(
                         Modifier
                             .clip(RoundedCornerShape(4.dp))
@@ -90,38 +107,34 @@ fun NewOrderScreen() {
                     ) {
                         Text(
                             "ORDER ENTRY",
-                            color = Color(0xFFE8640C),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
+                            color        = Color(0xFFE8640C),
+                            fontSize     = 11.sp,
+                            fontWeight   = FontWeight.Bold,
                             letterSpacing = 1.sp
                         )
                     }
 
                     Spacer(Modifier.height(8.dp))
-                    Text(
-                        "Craft a new creation",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
+                    Text("Craft a new creation", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
                     Spacer(Modifier.height(4.dp))
                     Text(
                         "Capture the details for your client's next celebration. Every field helps ensure a perfect bake.",
                         fontSize = 13.sp,
-                        color = Color.Gray
+                        color    = Color.Gray
                     )
                     Spacer(Modifier.height(16.dp))
 
-                    // CLIENT
+                    // ── CLIENT dropdown ──────────────────────────────────────
                     Text(
                         "CLIENT",
-                        fontSize = 11.sp,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold,
+                        fontSize      = 11.sp,
+                        color         = Color.Gray,
+                        fontWeight    = FontWeight.Bold,
                         letterSpacing = 1.sp
                     )
                     Spacer(Modifier.height(4.dp))
                     ExposedDropdownMenuBox(
-                        expanded = expanded,
+                        expanded        = expanded,
                         onExpandedChange = { expanded = !expanded }
                     ) {
                         Row(
@@ -131,7 +144,7 @@ fun NewOrderScreen() {
                                 .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(8.dp))
                                 .padding(horizontal = 12.dp, vertical = 14.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment     = Alignment.CenterVertically
                         ) {
                             Text(
                                 client.ifEmpty { "Select a Client" },
@@ -140,12 +153,12 @@ fun NewOrderScreen() {
                             Icon(Icons.Default.ArrowDropDown, null, tint = Color.Gray)
                         }
                         ExposedDropdownMenu(
-                            expanded = expanded,
+                            expanded        = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
                             listOf("Client A", "Client B", "Client C").forEach {
                                 DropdownMenuItem(
-                                    text = { Text(it) },
+                                    text    = { Text(it) },
                                     onClick = { client = it; expanded = false }
                                 )
                             }
@@ -154,52 +167,54 @@ fun NewOrderScreen() {
 
                     Spacer(Modifier.height(12.dp))
 
-                    // CAKE NAME
+                    // ── CAKE NAME ────────────────────────────────────────────
                     Text(
                         "CAKE NAME",
-                        fontSize = 11.sp,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold,
+                        fontSize      = 11.sp,
+                        color         = Color.Gray,
+                        fontWeight    = FontWeight.Bold,
                         letterSpacing = 1.sp
                     )
                     Spacer(Modifier.height(4.dp))
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(8.dp))
-                            .padding(horizontal = 12.dp, vertical = 14.dp)
-                    ) {
-                        Text("e.g. Victorian Sponge", color = Color.LightGray)
-                    }
+                    OutlinedTextField(
+                        value         = cakeName,
+                        onValueChange = { cakeName = it },
+                        placeholder   = { Text("e.g. Victorian Sponge", color = Color.LightGray) },
+                        modifier      = Modifier.fillMaxWidth(),
+                        shape         = RoundedCornerShape(8.dp),
+                        singleLine    = true,
+                        colors        = textFieldColors
+                    )
 
                     Spacer(Modifier.height(12.dp))
 
-                    // QUANTITY
+                    // ── QUANTITY ─────────────────────────────────────────────
                     Text(
                         "QUANTITY",
-                        fontSize = 11.sp,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold,
+                        fontSize      = 11.sp,
+                        color         = Color.Gray,
+                        fontWeight    = FontWeight.Bold,
                         letterSpacing = 1.sp
                     )
                     Spacer(Modifier.height(4.dp))
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(8.dp))
-                            .padding(horizontal = 12.dp, vertical = 14.dp)
-                    ) {
-                        Text("1", color = Color.Black)
-                    }
+                    OutlinedTextField(
+                        value          = quantity,
+                        onValueChange  = { quantity = it },
+                        modifier       = Modifier.fillMaxWidth(),
+                        shape          = RoundedCornerShape(8.dp),
+                        singleLine     = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        colors         = textFieldColors
+                    )
 
                     Spacer(Modifier.height(12.dp))
 
-                    // INITIAL STATUS
+                    // ── INITIAL STATUS (read-only display) ───────────────────
                     Text(
                         "INITIAL STATUS",
-                        fontSize = 11.sp,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold,
+                        fontSize      = 11.sp,
+                        color         = Color.Gray,
+                        fontWeight    = FontWeight.Bold,
                         letterSpacing = 1.sp
                     )
                     Spacer(Modifier.height(4.dp))
@@ -209,22 +224,22 @@ fun NewOrderScreen() {
                             .background(Color(0xFFFFF8F0), RoundedCornerShape(8.dp))
                             .padding(horizontal = 12.dp, vertical = 14.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment     = Alignment.CenterVertically
                     ) {
                         Text("Pending", color = Color.Black)
                         Icon(
                             Icons.Default.DateRange,
                             null,
-                            tint = Color(0xFFE8640C),
+                            tint     = Color(0xFFE8640C),
                             modifier = Modifier.size(20.dp)
                         )
                     }
                 }
             }
 
-            // Card TIMELINE
+            // ── Card TIMELINE ────────────────────────────────────────────────
             Card(
-                shape = RoundedCornerShape(12.dp),
+                shape  = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(Color.White)
             ) {
                 Column(Modifier.padding(16.dp)) {
@@ -232,55 +247,70 @@ fun NewOrderScreen() {
                         Icon(
                             Icons.Default.DateRange,
                             null,
-                            tint = Color(0xFFE8640C),
+                            tint     = Color(0xFFE8640C),
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(Modifier.width(6.dp))
                         Text("Timeline", fontWeight = FontWeight.Bold)
                     }
                     Spacer(Modifier.height(8.dp))
+
+                    // ── ORDER DATE ───────────────────────────────────────────
                     Text(
                         "ORDER DATE",
-                        fontSize = 11.sp,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold,
+                        fontSize      = 11.sp,
+                        color         = Color.Gray,
+                        fontWeight    = FontWeight.Bold,
                         letterSpacing = 1.sp
                     )
                     Spacer(Modifier.height(4.dp))
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(8.dp))
-                            .padding(horizontal = 12.dp, vertical = 14.dp)
-                    ) {
-                        Text("mm/dd/yyyy", color = Color.LightGray)
-                    }
+                    OutlinedTextField(
+                        value         = orderDate,
+                        onValueChange = { orderDate = it },
+                        placeholder   = { Text("mm/dd/yyyy", color = Color.LightGray) },
+                        modifier      = Modifier.fillMaxWidth(),
+                        shape         = RoundedCornerShape(8.dp),
+                        singleLine    = true,
+                        colors        = textFieldColors
+                    )
                 }
             }
 
-            // Card NOTES
+            // ── Card NOTES ───────────────────────────────────────────────────
             Card(
-                shape = RoundedCornerShape(12.dp),
+                shape  = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(Color.White)
             ) {
                 Column(Modifier.padding(16.dp)) {
                     Text(
                         "NOTES / CAKE INSCRIPTION",
-                        fontSize = 11.sp,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold,
+                        fontSize      = 11.sp,
+                        color         = Color.Gray,
+                        fontWeight    = FontWeight.Bold,
                         letterSpacing = 1.sp
                     )
                     Spacer(Modifier.height(4.dp))
-                    Text(
-                        "Write the personalized message or special dietary requirements here...",
-                        color = Color.LightGray,
-                        fontSize = 13.sp
+                    OutlinedTextField(
+                        value         = notes,
+                        onValueChange = { notes = it },
+                        placeholder   = {
+                            Text(
+                                "Write the personalized message or special dietary requirements here...",
+                                color    = Color.LightGray,
+                                fontSize = 13.sp
+                            )
+                        },
+                        modifier  = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 100.dp),
+                        shape     = RoundedCornerShape(8.dp),
+                        minLines  = 3,
+                        colors    = textFieldColors
                     )
                 }
             }
 
-            // Reference Photo
+            // ── Reference Photo placeholder ──────────────────────────────────
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -293,7 +323,7 @@ fun NewOrderScreen() {
                     Icon(
                         Icons.Default.DateRange,
                         null,
-                        tint = Color.White,
+                        tint     = Color.White,
                         modifier = Modifier.size(32.dp)
                     )
                     Spacer(Modifier.height(6.dp))
@@ -301,13 +331,13 @@ fun NewOrderScreen() {
                 }
             }
 
-            // Tombol Save
+            // ── Save Button ──────────────────────────────────────────────────
             Button(
-                onClick = {},
+                onClick  = {},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                shape = RoundedCornerShape(10.dp),
+                shape  = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE8640C))
             ) {
                 Icon(Icons.Default.CheckCircle, null, tint = Color.White, modifier = Modifier.size(18.dp))
