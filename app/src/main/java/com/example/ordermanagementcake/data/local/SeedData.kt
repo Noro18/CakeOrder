@@ -15,7 +15,8 @@ suspend fun seedDatabase(database: OrderDatabase) {
         ClientEntity(name = "Sarah Jenkins",    phoneNumber = "+670 77100003", address = "Dili, Timor-Leste",  createdAt = "2026-02-01"),
         ClientEntity(name = "Michael Scott",    phoneNumber = "+670 77100004", address = "Dili, Timor-Leste",  createdAt = "2026-02-14"),
         ClientEntity(name = "Abinda Carmo",     phoneNumber = "+670 76534263", address = "Dili, Timor-Leste",  createdAt = "2026-03-01"),
-        ClientEntity(name = "Chrismerry Carmo", phoneNumber = "+670 76588263", address = "Dili, Timor-Leste",  createdAt = "2026-03-05")
+        ClientEntity(name = "Chrismerry Carmo", phoneNumber = "+670 76588263", address = "Dili, Timor-Leste",  createdAt = "2026-03-05"),
+        ClientEntity(name = "Estefania de Jesus Silva", phoneNumber = "+ 670 7555588", address = "Dili, Timor-Leste", createdAt = "2023-03-05")
     ).map { clientDao.insertClient(it) }
 
     val orderIds = listOf(
