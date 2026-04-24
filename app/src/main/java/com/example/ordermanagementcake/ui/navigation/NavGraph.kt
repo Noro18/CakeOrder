@@ -20,7 +20,7 @@ import com.example.ordermanagementcake.ui.components.AppTopBar
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
 import com.example.ordermanagementcake.ui.orders.OrderListScreen
-import com.example.ordermanagementcake.ui.orderviewscren.NewOrderScreen
+import com.example.ordermanagementcake.ui.forms.orders.NewOrderScreen
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewScreen
 
 object Routes {
