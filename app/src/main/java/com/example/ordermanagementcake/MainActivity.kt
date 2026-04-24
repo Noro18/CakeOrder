@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
             OrderManagementCakeTheme {
                 val navControler = rememberNavController()
                 AppNavHost(navController = navControler)
-
             }
         }
     }
