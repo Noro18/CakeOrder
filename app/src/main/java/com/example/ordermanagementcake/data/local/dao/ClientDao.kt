@@ -15,18 +15,18 @@ interface ClientDao {
 
     // Select all clients
     @Query("SELECT * FROM clients")
-    fun getAllCLients(): Flow<List<ClientEntity>>
+    fun getAllCLients(): Flow<List<ClientEntity>> // Flow ne'e return stemas of data non stop
 
      @Query("SELECT * FROM clients WHERE phoneNumber = :phoneNumber")
      suspend fun findByWhatsapp(phoneNumber: String): ClientEntity?
 
 
      // Sei confusaun ???
-     @Transaction
+     @Transaction // make usre to use "atomicity"
      @Query("SELECT * FROM clients WHERE id = :id")
      fun getClientWithOrder(id: Int): Flow<ClientWithOrder> // Return type laos ClientEntity maiube ClientWithOrders
 
-    @Insert
+    @Insert // no need for Query, Room knows how to generate hte INSERT to
     suspend fun insertClient(client: ClientEntity): Long
 
     @Update

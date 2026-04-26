@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 // degfine nia database Room iah ne'e
 @Database (
     entities = [ClientEntity::class, OrderEntity::class, OrderItemEntity::class], // register tabelar sira iha ne'e
-    version = 1 // versuan actuall husi database, se kark ita muda schema database mak
+    version = 1 // versuan actuall husi database, se kark ita muda schema database mak ita update +1
 )
 
 abstract class OrderDatabase: RoomDatabase() {
