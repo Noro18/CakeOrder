@@ -47,6 +47,8 @@ abstract class OrderDatabase: RoomDatabase() {
             }
         }
     }
+
+    // iha kraik ne'e atu pre propulate ka aumenta dados manual uluk lai
     private class PrepopulateCallback : Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
