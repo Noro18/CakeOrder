@@ -27,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.ordermanagementcake.ui.clients.ClientsListScreen
+import com.example.ordermanagementcake.ui.components.AppDrawer
 import com.example.ordermanagementcake.ui.components.AppTopBar
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
@@ -65,32 +66,11 @@ fun AppNavHost(navController: NavHostController, startDestination: String = Rout
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet() {
-
-                Text("Menu")
-                HorizontalDivider()
-
-                // 2. your menu items
-                NavigationDrawerItem(
-                    label = { Text("Settings") },
-                    icon = { Icon(Icons.Default.Settings, null) },
-                    selected = false,
-                    onClick = { /* go to settings */ }
-                )
-                NavigationDrawerItem(
-                    label = { Text("About") },
-                    icon = { Icon(Icons.Default.Info, null) },
-                    selected = false,
-                    onClick = { /* go to about */ }
-                )
-                NavigationDrawerItem(
-                    label = { Text("Contact") },
-                    icon = { Icon(Icons.Default.Phone, null) },
-                    selected = false,
-                    onClick = { /* go to contact */ }
-                )
-
-            }
+            AppDrawer (
+                onClose = {
+                    scope.launch { drawerState.close() }
+                }
+            )
         }
     ) {
         Scaffold(
