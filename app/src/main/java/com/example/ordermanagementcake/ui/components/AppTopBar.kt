@@ -32,7 +32,7 @@ import com.example.ordermanagementcake.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBar() {
+fun AppTopBar(onMenuClick: () -> Unit = {}) {
     TopAppBar(
         title = {
             Text(
@@ -44,7 +44,7 @@ fun AppTopBar() {
         },
 
         navigationIcon = {
-            IconButton(onClick = { }) {
+            IconButton(onClick = { onMenuClick() }) {
                 Icon(
                     imageVector = Icons.Default.Menu,
                     contentDescription = "Menu",
