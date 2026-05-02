@@ -30,13 +30,7 @@ import com.example.ordermanagementcake.data.repository.OrderRepository
 
 @Composable
 fun OrderListScreen(
-    viewModel: OrderViewModel = viewModel(
-        factory = OrderViewModelFactory(
-            OrderRepository(
-                OrderDatabase.getInstance(LocalContext.current).orderDao()
-            )
-        )
-    )
+    viewModel: OrderViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
