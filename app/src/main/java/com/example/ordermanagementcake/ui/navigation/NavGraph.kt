@@ -1,5 +1,11 @@
 package com.example.ordermanagementcake.ui.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -26,6 +32,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.ordermanagementcake.ui.clients.ClientViewModel
 import com.example.ordermanagementcake.ui.clients.ClientsListScreen
 import com.example.ordermanagementcake.ui.components.AppDrawer
 import com.example.ordermanagementcake.ui.components.AppTopBar
@@ -33,6 +40,7 @@ import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
 import com.example.ordermanagementcake.ui.orders.OrderListScreen
 import com.example.ordermanagementcake.ui.forms.orders.NewOrderScreen
+import com.example.ordermanagementcake.ui.orders.OrderViewModel
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewScreen
 import kotlinx.coroutines.launch
 
@@ -47,7 +55,12 @@ object Routes {
 }
 
 @Composable
-fun AppNavHost(navController: NavHostController, startDestination: String = Routes.DASHBOARD) { // screen primeiro ne'eb sei loke
+fun AppNavHost(
+    navController: NavHostController,
+    startDestination: String = Routes.DASHBOARD,
+    orderViewModel: OrderViewModel,
+    clientViewModel: ClientViewModel
+) { // screen primeiro ne'eb sei loke
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -119,13 +132,17 @@ fun AppNavHost(navController: NavHostController, startDestination: String = Rout
             NavHost(
                 navController = navController,
                 startDestination = startDestination,
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(paddingValues),
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None },
+                popEnterTransition = { EnterTransition.None },
+                popExitTransition = { ExitTransition.None }
             ) {
                 composable(Routes.ORDERS) {
-                    OrderListScreen()  // no navController needed anymore
+                    OrderListScreen(orderViewModel)  // no navController needed anymore
                 }
                 composable(Routes.CLIENTS) {
-                    ClientsListScreen()  // no navController needed anymore
+                    ClientsListScreen(clientViewModel)  // no navController needed anymore
                 }
                 composable(Routes.DASHBOARD) {
                     DashboardScreen()
@@ -133,7 +150,13 @@ fun AppNavHost(navController: NavHostController, startDestination: String = Rout
                 composable(Routes.SCHEDULES) {
                     ScheduleViewScreen()
                 }
-                composable(Routes.NEW_ORDER) {
+                composable(
+                    route = Routes.NEW_ORDER,
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up, tween(300)) + fadeIn(tween(300)) },
+                    exitTransition = { fadeOut(tween(200)) },
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down, tween(300)) + fadeOut(tween(300)) }
+                ) {
                     NewOrderScreen()
                 }
             }
