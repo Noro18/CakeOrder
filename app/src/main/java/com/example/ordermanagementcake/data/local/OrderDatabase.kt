@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 abstract class OrderDatabase: RoomDatabase() {
 
     // Implementa DAO sira atu Repository no ViewModle bele accesss DAO
-    abstract fun clientDao(): ClientDao
+        abstract fun clientDao(): ClientDao
     abstract fun orderDao(): OrderDao
     abstract fun orderItemDao(): OrderItemDao
 

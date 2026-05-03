@@ -29,13 +29,7 @@ import com.example.ordermanagementcake.data.repository.ClientRepository
 
 @Composable
 fun ClientsListScreen(
-    viewModel: ClientViewModel = viewModel(
-        factory = ClientViewModelFactory(
-            ClientRepository(
-                OrderDatabase.getInstance(LocalContext.current).clientDao()
-            )
-        )
-    )
+    viewModel: ClientViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
