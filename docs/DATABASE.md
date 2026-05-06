@@ -1,5 +1,10 @@
 # Cake Order Management App — Database Schema
 
+
+<p align="center">
+  <img src="images/Cake-Order-DB-schema.png"/>
+</p>
+
 ## Overview
 
 This is a mobile app for managing cake orders. A customer places an order, each order can contain multiple cakes, each cake has multiple tiers stacked bottom to top, and each tier has its own shape, size, color, and price.
