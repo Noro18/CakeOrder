@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.ordermanagementcake.data.local.dao.ClientDao
 import com.example.ordermanagementcake.data.local.dao.OrderDao
@@ -16,9 +17,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 // degfine nia database Room iah ne'e
+@TypeConverters(Converter::class)
 @Database (
     entities = [ClientEntity::class, OrderEntity::class, OrderItemEntity::class], // register tabelar sira iha ne'e
-    version = 1 // versuan actuall husi database, se kark ita muda schema database mak ita update +1
+    version = 2 // versuan actuall husi database, se kark ita muda schema database mak ita update +1
 )
 
 abstract class OrderDatabase: RoomDatabase() {
