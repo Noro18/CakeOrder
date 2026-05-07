@@ -8,8 +8,8 @@ import com.example.ordermanagementcake.data.local.entities.OrderEntity
 data class ClientWithOrder(
     @Embedded val client: ClientEntity,
     @Relation (
-        parentColumn = "id",
-        entityColumn = "clientId"
+        parentColumn = "client_id",
+        entityColumn = "client_id"
     )
     val orders: List<OrderEntity>
 )
