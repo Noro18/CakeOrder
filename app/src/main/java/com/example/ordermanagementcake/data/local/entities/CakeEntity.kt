@@ -3,6 +3,7 @@ package com.example.ordermanagementcake.data.local.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -13,6 +14,7 @@ import androidx.room.PrimaryKey
         childColumns = ["order_id"],
         onDelete = ForeignKey.CASCADE
     )],
+    indices = [Index(value = ["order_id"])]
 
 )
 data class CakeEntity(
