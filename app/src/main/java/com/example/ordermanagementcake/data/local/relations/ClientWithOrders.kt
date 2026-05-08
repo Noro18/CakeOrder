@@ -5,7 +5,7 @@ import androidx.room.Relation
 import com.example.ordermanagementcake.data.local.entities.ClientEntity
 import com.example.ordermanagementcake.data.local.entities.OrderEntity
 
-data class ClientWithOrder(
+data class ClientWithOrders(
     @Embedded val client: ClientEntity,
     @Relation (
         parentColumn = "client_id",
