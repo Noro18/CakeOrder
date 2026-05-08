@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.ui.text)
     implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.adapters)
 
     // Room Database
     val room_version = "2.7.1"
