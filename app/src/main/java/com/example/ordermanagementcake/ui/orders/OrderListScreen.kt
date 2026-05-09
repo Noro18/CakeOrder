@@ -16,17 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ordermanagementcake.R
-import com.example.ordermanagementcake.data.local.OrderDatabase
-import com.example.ordermanagementcake.data.repository.OrderRepository
+import com.example.ordermanagementcake.data.local.entities.OrderStatus
+import com.example.ordermanagementcake.data.local.relations.OrderWithCakes
 
 @Composable
 fun OrderListScreen(
@@ -34,8 +32,13 @@ fun OrderListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val statusFilters = listOf("PENDING", "IN_PROGRESS", "READY", "COMPLETED")
-    val statusLabels = listOf("Hotu", "Hein", "Prosesu", "Prontu")
+    val statusFilters = listOf(
+        OrderStatus.PENDING,
+        OrderStatus.IN_PROGRESS,
+        OrderStatus.READY,
+        OrderStatus.COMPLETED
+    )
+    val statusLabels = listOf("Pendente", "Hein", "Prosesu", "Prontu")
 
     var searchText by remember { mutableStateOf("") }
 
@@ -144,8 +147,13 @@ fun OrderListScreen(
                 }
                 else -> {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        uiState.orders.forEach { order ->
-                            OrderCard(order = order, onUpdateStatus = { viewModel.updateStatus(order.id, "IN_PROGRESS") })
+                        uiState.orders.forEach { orderWithCakes ->
+                            OrderCard(
+                                orderWithCakes = orderWithCakes,
+                                onUpdateStatus = { 
+                                    viewModel.updateStatus(orderWithCakes.orders.id, OrderStatus.IN_PROGRESS) 
+                                }
+                            )
                         }
                     }
                 }
@@ -155,7 +163,10 @@ fun OrderListScreen(
 }
 
 @Composable
-fun OrderCard(order: com.example.ordermanagementcake.data.local.entities.OrderEntity, onUpdateStatus: () -> Unit) {
+fun OrderCard(orderWithCakes: OrderWithCakes, onUpdateStatus: () -> Unit) {
+    val order = orderWithCakes.orders
+    val mainCake = orderWithCakes.cakes.firstOrNull()
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -182,12 +193,14 @@ fun OrderCard(order: com.example.ordermanagementcake.data.local.entities.OrderEn
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Order #${order.id}",
+                        text = mainCake?.cakeTitle ?: "Keku Deskonhesidu",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = order.notes.ifBlank { "La iha nota" },
+                        text = "Order #${order.id} • ${order.orderNotes.ifBlank { "La iha nota" }}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
@@ -197,12 +210,12 @@ fun OrderCard(order: com.example.ordermanagementcake.data.local.entities.OrderEn
 
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "Foti",
+                        text = "Entrega",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.secondary
                     )
                     Text(
-                        text = order.pickupDate,
+                        text = order.deliveryDate,
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -216,15 +229,16 @@ fun OrderCard(order: com.example.ordermanagementcake.data.local.entities.OrderEn
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Status indicator/button
                 Button(
                     onClick = onUpdateStatus,
                     modifier = Modifier.height(32.dp),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = when(order.status) {
-                            "PENDING" -> Color(0xFFEE8111)
-                            "READY" -> Color(0xFF31912E)
+                            OrderStatus.PENDING -> Color(0xFFEE8111)
+                            OrderStatus.READY -> Color(0xFF31912E)
+                            OrderStatus.IN_PROGRESS -> Color(0xFFF87146)
+                            OrderStatus.COMPLETED -> Color(0xFF3B82F6)
                             else -> Color(0xFFF87146)
                         },
                         contentColor = Color.White
@@ -232,7 +246,7 @@ fun OrderCard(order: com.example.ordermanagementcake.data.local.entities.OrderEn
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = order.status,
+                        text = order.status.name,
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold
                     )
