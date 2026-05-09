@@ -41,7 +41,7 @@ Represents one customer agreement — one pickup/delivery event.
 | delivery_date | date    |               |
 | total_price   | decimal |               |
 | order_notes   | string  |               |
-
+| status | enum | pending, in_progress, ready, completed, cancelled |
 
 ---
 
