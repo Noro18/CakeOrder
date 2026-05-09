@@ -37,7 +37,7 @@ fun ClientsListScreen(
         if (uiState.searchQuery.isBlank()) uiState.clients
         else uiState.clients.filter {
             it.name.contains(uiState.searchQuery, ignoreCase = true) ||
-                    it.phoneNumber.contains(uiState.searchQuery, ignoreCase = true)
+                    it.phone.contains(uiState.searchQuery, ignoreCase = true)
         }
     }
 
@@ -179,7 +179,7 @@ fun ClientCard(client: com.example.ordermanagementcake.data.local.entities.Clien
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = client.phoneNumber,
+                    text = client.phone,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
