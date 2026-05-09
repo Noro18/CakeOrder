@@ -9,26 +9,18 @@ import kotlinx.coroutines.flow.Flow
 
 class OrderRepository(private val orderDao: OrderDao) {
 
+    // Updated to return the relationship so we can see the Cake titles
+    fun getOrdersWithCakesByStatus(status: OrderStatus): Flow<List<OrderWithCakes>> =
+        orderDao.getOrdersWithCakesByStatus(status)
+
     fun getAllOrders(): Flow<List<OrderEntity>> =
         orderDao.getAllOrders()
-
-    fun getOrdersByClient(clientId: Int): Flow<List<OrderEntity>> =
-        orderDao.getOrdersByClient(clientId)
-
-    fun getOrdersByStatus(status: OrderStatus): Flow<List<OrderEntity>> =
-        orderDao.getOrdersByStatus(status)
-
-    fun getOrderWithCakes(id: Int): Flow<OrderWithCakes?> =
-        orderDao.getOrderWithCakes(id)
 
     fun getOrderWithCakesAndTiers(id: Int): Flow<OrderWithCakeAndTiers?> =
         orderDao.getOrderWithCakesAndTiers(id)
 
     suspend fun insertOrder(order: OrderEntity): Long =
         orderDao.insertOrder(order)
-
-    suspend fun updateOrder(order: OrderEntity) =
-        orderDao.updateOrder(order)
 
     suspend fun updateStatus(orderId: Int, status: OrderStatus) =
         orderDao.updateStatus(orderId, status)
