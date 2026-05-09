@@ -20,6 +20,10 @@ interface OrderDao {
     fun getOrdersByStatus(status: OrderStatus): Flow<List<OrderEntity>>
 
     @Transaction
+    @Query("SELECT * FROM orders WHERE status = :status")
+    fun getOrdersWithCakesByStatus(status: OrderStatus): Flow<List<OrderWithCakes>>
+
+    @Transaction
     @Query("SELECT * FROM orders WHERE order_id = :id")
     fun getOrderWithCakes(id: Int): Flow<OrderWithCakes?>
 
