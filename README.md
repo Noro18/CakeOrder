@@ -17,7 +17,9 @@
 ![License](https://img.shields.io/github/license/Noro18/CakeOrder)
 
 <p align="center">
-  <img src="docs/images/screenshot_2026-04-07_13-22-30.png" width="300"/>
+  <img src="docs/images/client.jpg" width="30%"/>
+  <img src="docs/images/schedule.jpg" width="30%"/>
+  <img src="docs/images/orders.jpg" width="30%"/>
 </p>
 
 <p align="center">
