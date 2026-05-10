@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
-    private val _uiState = MutableStateFlow(OrderUiState())
-    val uiState: StateFlow<OrderUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(OrderUiState()) // private mutable State
+    val uiState: StateFlow<OrderUiState> = _uiState.asStateFlow() // StateFlow, Immutable expose ba iha View
 
     init {
         loadOrders(OrderStatus.PENDING)
@@ -24,7 +24,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
         _uiState.update { it.copy(isLoading = true, selectedStatus = status, errorMessage = null) }
         viewModelScope.launch {
             repository.getOrdersWithCakesByStatus(status)
-                .catch { e ->
+                .catch { e -> // Erro message
                     _uiState.update { it.copy(isLoading = false, errorMessage = e.message) }
                 }
                 .collect { ordersWithCakes ->
