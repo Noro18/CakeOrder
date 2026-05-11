@@ -16,26 +16,65 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ordermanagementcake.R
-import com.example.ordermanagementcake.data.local.OrderDatabase
-import com.example.ordermanagementcake.data.repository.OrderRepository
+import com.example.ordermanagementcake.data.local.entities.OrderStatus
+import com.example.ordermanagementcake.data.local.relations.OrderWithCakes
+
+// ── helpers ──────────────────────────────────────────────────────────────────
+
+/** Returns the next logical status, or null if the order is already terminal. */
+fun nextStatus(current: OrderStatus): OrderStatus? = when (current) {
+    OrderStatus.PENDING     -> OrderStatus.IN_PROGRESS
+    OrderStatus.IN_PROGRESS -> OrderStatus.READY
+    OrderStatus.READY       -> OrderStatus.COMPLETED
+    else                    -> null   // COMPLETED / CANCELLED — nothing to do
+}
+
+/** Human-readable action label for the button, e.g. "Start Baking" */
+fun actionLabel(current: OrderStatus): String = when (current) {
+    OrderStatus.PENDING     -> "Komesa Baking"
+    OrderStatus.IN_PROGRESS -> "Marka Prontu"
+    OrderStatus.READY       -> "Marka Kompletu"
+    OrderStatus.COMPLETED   -> "Completu ✓"
+    OrderStatus.CANCELLED   -> "Kansela"
+}
+
+/** Confirmation dialog message */
+fun confirmMessage(current: OrderStatus, cakeTitle: String): String = when (current) {
+    OrderStatus.PENDING     -> "Komesa Bake \"$cakeTitle\"? Ida ne'e sei muda statu kek ba iha Prosesa."
+    OrderStatus.IN_PROGRESS -> "Marka \"$cakeTitle\" Prontu atu foti?"
+    OrderStatus.READY       -> "Marka \"$cakeTitle\" Kompleta? This cannot be undone."
+    else                    -> ""
+}
+
+/** Button / badge colour per status */
+fun statusColor(status: OrderStatus): Color = when (status) {
+    OrderStatus.PENDING     -> Color(0xFFEE8111)
+    OrderStatus.IN_PROGRESS -> Color(0xFFF87146)
+    OrderStatus.READY       -> Color(0xFF31912E)
+    OrderStatus.COMPLETED   -> Color(0xFF3B82F6)
+    OrderStatus.CANCELLED   -> Color(0xFF9E9E9E)
+}
+
+// ── screen ───────────────────────────────────────────────────────────────────
 
 @Composable
-fun OrderListScreen(
-    viewModel: OrderViewModel
-) {
+fun OrderListScreen(viewModel: OrderViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val statusFilters = listOf("PENDING", "IN_PROGRESS", "READY", "COMPLETED")
-    val statusLabels = listOf("Hotu", "Hein", "Prosesu", "Prontu")
+    val statusFilters = listOf(
+        OrderStatus.PENDING,
+        OrderStatus.IN_PROGRESS,
+        OrderStatus.READY,
+        OrderStatus.COMPLETED
+    )
+    val statusLabels = listOf("Pendente", "Prosesu", "Prontu", "Kompleta")
 
     var searchText by remember { mutableStateOf("") }
 
@@ -45,7 +84,7 @@ fun OrderListScreen(
             .verticalScroll(rememberScrollState())
             .padding(bottom = 16.dp)
     ) {
-        // Header Section
+        // Header
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -110,7 +149,7 @@ fun OrderListScreen(
             }
         }
 
-        // Content Area
+        // Content
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -119,7 +158,9 @@ fun OrderListScreen(
             when {
                 uiState.isLoading -> {
                     CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center).padding(32.dp),
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .padding(32.dp),
                         color = Color(0xFFF87146)
                     )
                 }
@@ -132,7 +173,9 @@ fun OrderListScreen(
                 }
                 uiState.orders.isEmpty() -> {
                     Column(
-                        modifier = Modifier.fillMaxWidth().padding(48.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(48.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
@@ -144,8 +187,13 @@ fun OrderListScreen(
                 }
                 else -> {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        uiState.orders.forEach { order ->
-                            OrderCard(order = order, onUpdateStatus = { viewModel.updateStatus(order.id, "IN_PROGRESS") })
+                        uiState.orders.forEach { orderWithCakes ->
+                            OrderCard(
+                                orderWithCakes = orderWithCakes,
+                                onConfirmStatusUpdate = { newStatus ->
+                                    viewModel.updateStatus(orderWithCakes.orders.id, newStatus)
+                                }
+                            )
                         }
                     }
                 }
@@ -154,8 +202,62 @@ fun OrderListScreen(
     }
 }
 
+// ── card ─────────────────────────────────────────────────────────────────────
+
 @Composable
-fun OrderCard(order: com.example.ordermanagementcake.data.local.entities.OrderEntity, onUpdateStatus: () -> Unit) {
+fun OrderCard(
+    orderWithCakes: OrderWithCakes,
+    onConfirmStatusUpdate: (OrderStatus) -> Unit
+) {
+    val order     = orderWithCakes.orders
+    val mainCake  = orderWithCakes.cakes.firstOrNull()
+    val next      = nextStatus(order.status) // foti status tuir mai
+
+    // Controls whether the confirmation dialog is visible
+    var showDialog by remember { mutableStateOf(false) }
+
+    // Confirmation dialog
+    if (showDialog && next != null) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = {
+                Text(
+                    text = "Confirm Status Update",
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = confirmMessage(order.status, mainCake?.cakeTitle ?: "this order")
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onConfirmStatusUpdate(next)
+                        showDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = statusColor(next)
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("Yes, confirm", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                OutlinedButton(
+                    onClick = { showDialog = false },
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("Cancel")
+                }
+            },
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
+
+    // Card UI
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -165,6 +267,8 @@ fun OrderCard(order: com.example.ordermanagementcake.data.local.entities.OrderEn
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+
+            // Top row — cake image + info + delivery date
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -182,12 +286,14 @@ fun OrderCard(order: com.example.ordermanagementcake.data.local.entities.OrderEn
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Order #${order.id}",
+                        text = mainCake?.cakeTitle ?: "Keku Deskonhesidu",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = order.notes.ifBlank { "La iha nota" },
+                        text = "Order #${order.id} • ${order.orderNotes.ifBlank { "La iha nota" }}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
@@ -197,12 +303,12 @@ fun OrderCard(order: com.example.ordermanagementcake.data.local.entities.OrderEn
 
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "Foti",
+                        text = "Entrega",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.secondary
                     )
                     Text(
-                        text = order.pickupDate,
+                        text = order.deliveryDate,
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -210,30 +316,53 @@ fun OrderCard(order: com.example.ordermanagementcake.data.local.entities.OrderEn
             }
 
             Spacer(modifier = Modifier.height(12.dp))
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+            Spacer(modifier = Modifier.height(12.dp))
 
+            // Bottom row — current status badge + action button
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Status indicator/button
-                Button(
-                    onClick = onUpdateStatus,
-                    modifier = Modifier.height(32.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = when(order.status) {
-                            "PENDING" -> Color(0xFFEE8111)
-                            "READY" -> Color(0xFF31912E)
-                            else -> Color(0xFFF87146)
-                        },
-                        contentColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(8.dp)
+                // Current status badge (read-only, just shows where it is now)
+                Surface(
+                    color = statusColor(order.status).copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(6.dp)
                 ) {
                     Text(
-                        text = order.status,
+                        text = order.status.name.replace("_", " "),
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        color = statusColor(order.status),
                         style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                // Action button — only shown if there is a next status to move to
+                if (next != null) {
+                    Button(
+                        onClick = { showDialog = true },
+                        modifier = Modifier.height(34.dp),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 0.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = statusColor(next)
+                        ),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(
+                            text = actionLabel(order.status),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                } else {
+                    // Terminal state — no button, just a subtle label
+                    Text(
+                        text = if (order.status == OrderStatus.COMPLETED) "Done ✓" else "Cancelled",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = statusColor(order.status),
                         fontWeight = FontWeight.Bold
                     )
                 }

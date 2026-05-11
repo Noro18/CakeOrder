@@ -1,5 +1,6 @@
 package com.example.ordermanagementcake.ui.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.*
@@ -75,6 +76,9 @@ fun AppNavHost(
     // drawer States
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed) // ne object ida ne'ebe remember drawer agora loke ga closed hela
     val scope = rememberCoroutineScope() // not clear but ne atu run opeing animation iha background
+    BackHandler(enabled = drawerState.isOpen) { // Register Drawer iha backstack
+        scope.launch { drawerState.close() }
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,

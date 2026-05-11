@@ -2,19 +2,22 @@ package com.example.ordermanagementcake.data.repository
 
 import com.example.ordermanagementcake.data.local.dao.ClientDao
 import com.example.ordermanagementcake.data.local.entities.ClientEntity
-import com.example.ordermanagementcake.data.local.relations.ClientWithOrder
+import com.example.ordermanagementcake.data.local.relations.ClientWithOrders
 import kotlinx.coroutines.flow.Flow
 
 class ClientRepository(private val clientDao: ClientDao) {
 
     fun getAllClients(): Flow<List<ClientEntity>> =
-        clientDao.getAllCLients()
+        clientDao.getAllClients()
 
-    fun getClientWithOrders(id: Int): Flow<ClientWithOrder> =
-        clientDao.getClientWithOrder(id)
+    fun getClientById(id: Int) =
+        clientDao.getClientById(id)
 
-    suspend fun findByWhatsapp(phoneNumber: String): ClientEntity? =
-        clientDao.findByWhatsapp(phoneNumber)
+    fun getClientWithOrders(id: Int): Flow<ClientWithOrders?> =
+        clientDao.getClientWithOrders(id)
+
+    suspend fun findByPhone(phone: String): ClientEntity? =
+        clientDao.findByPhone(phone)
 
     suspend fun insertClient(client: ClientEntity): Long =
         clientDao.insertClient(client)

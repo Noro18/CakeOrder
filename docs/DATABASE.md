@@ -24,6 +24,7 @@ Stores the people who place orders.
 | name    | string |     |
 | phone   | string |     |
 | address | string |     |
+| created_at | string | |
 
 
 ---
@@ -35,13 +36,13 @@ Represents one customer agreement — one pickup/delivery event.
 
 | Column        | Type    | Key           |
 | ------------- | ------- | ------------- |
-| id            | uuid    | PK            |
+| order_id      | uuid    | PK            |
 | customer_id   | uuid    | FK → CUSTOMER |
 | order_date    | date    |               |
 | delivery_date | date    |               |
 | total_price   | decimal |               |
 | order_notes   | string  |               |
-
+| status | enum | pending, in_progress, ready, completed, cancelled |
 
 ---
 
