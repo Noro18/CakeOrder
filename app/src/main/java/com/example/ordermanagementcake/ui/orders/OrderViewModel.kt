@@ -21,7 +21,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
     }
 
     fun loadOrders(status: OrderStatus) {
-        _uiState.update { it.copy(isLoading = true, selectedStatus = status, errorMessage = null) }
+        _uiState.update { it.copy(isLoading = it.orders.isEmpty(), selectedStatus = status, errorMessage = null) }
         viewModelScope.launch {
             repository.getOrdersWithCakesByStatus(status)
                 .catch { e -> // Erro message
