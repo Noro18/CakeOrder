@@ -3,10 +3,11 @@ package com.example.ordermanagementcake.ui.orders
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -78,100 +79,117 @@ fun OrderListScreen(viewModel: OrderViewModel) {
 
     var searchText by remember { mutableStateOf("") }
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .padding(bottom = 16.dp)
     ) {
         // Header
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 24.dp)
-        ) {
-            Text(
-                text = "Order sira iha agora",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.ExtraBold
-            )
-            Text(
-                text = "Jestiona ita-nia kriasaun kulinária",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary
-            )
-        }
-
-        // Search Bar
-        OutlinedTextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            placeholder = { Text("Buka order...") },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            shape = RoundedCornerShape(28.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent
-            ),
-            singleLine = true
-        )
-
-        // Filter Chips
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-                .horizontalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            statusFilters.forEachIndexed { index, status ->
-                val isSelected = uiState.selectedStatus == status
-                FilterChip(
-                    selected = isSelected,
-                    onClick = { viewModel.loadOrders(status) },
-                    label = { Text(statusLabels[index]) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = Color(0xFFF87146),
-                        selectedLabelColor = Color.White
-                    ),
-                    border = if (!isSelected) FilterChipDefaults.filterChipBorder(
-                        borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-                        enabled = true,
-                        selected = false
-                    ) else null
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 24.dp)
+            ) {
+                Text(
+                    text = "Order sira iha agora",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.ExtraBold
+                )
+                Text(
+                    text = "Jestiona ita-nia kriasaun kulinária",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
         }
 
+        // Search Bar
+        item {
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { searchText = it },
+                placeholder = { Text("Buka order...") },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                shape = RoundedCornerShape(28.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent
+                ),
+                singleLine = true
+            )
+        }
+
+        // Filter Chips
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                statusFilters.forEachIndexed { index, status ->
+                    val isSelected = uiState.selectedStatus == status
+                    FilterChip(
+                        selected = isSelected,
+                        onClick = { viewModel.loadOrders(status) },
+                        label = { Text(statusLabels[index]) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = Color(0xFFF87146),
+                            selectedLabelColor = Color.White
+                        ),
+                        border = if (!isSelected) FilterChipDefaults.filterChipBorder(
+                            borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+                            enabled = true,
+                            selected = false
+                        ) else null
+                    )
+                }
+            }
+        }
+
         // Content
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            when {
-                uiState.isLoading -> {
-                    CircularProgressIndicator(
+        when {
+            uiState.isLoading -> {
+                item {
+                    Box(
                         modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(32.dp),
-                        color = Color(0xFFF87146)
-                    )
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(32.dp),
+                            color = Color(0xFFF87146)
+                        )
+                    }
                 }
-                uiState.errorMessage != null -> {
-                    Text(
-                        text = "Error: ${uiState.errorMessage}",
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(16.dp)
-                    )
+            }
+            uiState.errorMessage != null -> {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        Text(
+                            text = "Error: ${uiState.errorMessage}",
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
                 }
-                uiState.orders.isEmpty() -> {
+            }
+            uiState.orders.isEmpty() -> {
+                item {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -185,16 +203,16 @@ fun OrderListScreen(viewModel: OrderViewModel) {
                         )
                     }
                 }
-                else -> {
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        uiState.orders.forEach { orderWithCakes ->
-                            OrderCard(
-                                orderWithCakes = orderWithCakes,
-                                onConfirmStatusUpdate = { newStatus ->
-                                    viewModel.updateStatus(orderWithCakes.orders.id, newStatus)
-                                }
-                            )
-                        }
+            }
+            else -> {
+                items(uiState.orders, key = { it.orders.id }) { orderWithCakes ->
+                    Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)) {
+                        OrderCard(
+                            orderWithCakes = orderWithCakes,
+                            onConfirmStatusUpdate = { newStatus ->
+                                viewModel.updateStatus(orderWithCakes.orders.id, newStatus)
+                            }
+                        )
                     }
                 }
             }

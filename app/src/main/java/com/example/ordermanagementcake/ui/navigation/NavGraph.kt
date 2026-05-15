@@ -133,14 +133,15 @@ fun AppNavHost(
             }
         ) { paddingValues ->
             // only this part changes when you navigate
+            // AFTER — quick 150ms fade
             NavHost(
                 navController = navController,
                 startDestination = startDestination,
                 modifier = Modifier.padding(paddingValues),
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None },
-                popEnterTransition = { EnterTransition.None },
-                popExitTransition = { ExitTransition.None }
+                enterTransition = { fadeIn(animationSpec = tween(150)) },
+                exitTransition = { fadeOut(animationSpec = tween(150)) },
+                popEnterTransition = { fadeIn(animationSpec = tween(150)) },
+                popExitTransition = { fadeOut(animationSpec = tween(150)) }
             ) {
                 composable(Routes.ORDERS) {
                     OrderListScreen(orderViewModel)  // no navController needed anymore
