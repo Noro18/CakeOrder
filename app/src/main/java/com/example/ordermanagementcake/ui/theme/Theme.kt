@@ -41,7 +41,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun OrderManagementCakeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,   // ← ubah jadi false!
+    dynamicColor: Boolean = false,   // ← ubah jadi false!
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
