@@ -25,9 +25,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             OrderManagementCakeTheme {
-//                val navControler = rememberNavController()
-//                AppNavHost(navController = navControler)
-                ScheduleViewScreen()
+                val navController = rememberNavController()
+                AppNavHost(
+                    navController = navController,
+                    orderViewModel = orderViewModel,
+                    clientViewModel = clientViewModel
+
+                )
+
 
             }
         }
@@ -37,13 +42,11 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun AppPreview() {
-
-    ScheduleViewScreen()
-//    OrderManagementCakeTheme {
-//        val navController = rememberNavController()
-//        AppNavHost(
-//            navController = navController,
-//            startDestination = Routes.ORDERS  // 👈 just add this
-//        )
-//    }
-}
+    OrderManagementCakeTheme {
+        val navController = rememberNavController()
+        AppNavHost(
+            navController = navController,
+            startDestination = Routes.ORDERS  // 👈 just add this
+        )
+    }
+}*/
