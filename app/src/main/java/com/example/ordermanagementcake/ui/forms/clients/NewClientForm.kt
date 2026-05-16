@@ -100,7 +100,7 @@ fun NewClientForm(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = "Adisiona ho lalais dadus foun.",
+                                text = "Adisiona ho lais dadus foun.",
                                 fontSize = 12.sp,
                                 color = Color.Gray
                             )
@@ -146,11 +146,11 @@ fun NewClientForm(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    InputFieldLabel(text = "DIRESAUN ENTREGA")
+                    InputFieldLabel(text = "HElA FATIN")
                     CustomFormTextField(
                         value = deliveryAddress,
                         onValueChange = { deliveryAddress = it },
-                        placeholder = "Rua, Sidade, Distritu"
+                        placeholder = "Rua, Aldeia, Suku"
                     )
 
                     Spacer(modifier = Modifier.height(28.dp))
