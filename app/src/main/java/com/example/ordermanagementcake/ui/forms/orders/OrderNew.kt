@@ -1,268 +1,355 @@
 package com.example.ordermanagementcake.ui.forms.orders
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Notes
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PersonAdd
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.text.SimpleDateFormat
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewOrderScreen() {
-    // Form States
-    var client by remember { mutableStateOf("") }
-    var cakeName by remember { mutableStateOf("") }
-    var quantity by remember { mutableStateOf("1") }
-    var orderDate by remember { mutableStateOf("") }
-    var notes by remember { mutableStateOf("") }
+fun NewOrderForm() {
+    var searchText by remember { mutableStateOf("") }
 
-    // UI States
-    var clientExpanded by remember { mutableStateOf(false) }
-    var quantityExpanded by remember { mutableStateOf(false) }
-    var showDatePicker by remember { mutableStateOf(false) }
-
-    val datePickerState = rememberDatePickerState()
-    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-
-    if (showDatePicker) {
-        DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
-            confirmButton = {
-                TextButton(onClick = {
-                    datePickerState.selectedDateMillis?.let {
-                        orderDate = formatter.format(Date(it))
-                    }
-                    showDatePicker = false
-                }) { Text("OK", color = Color(0xFFE8640C)) }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) { Text("Cancel") }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF0EDE8))
-            .verticalScroll(rememberScrollState())
-            .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        // Card ORDER ENTRY
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(Color.White)
-        ) {
-            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                // Header
-                Column {
-                    Surface(
-                        color = Color(0xFFFFF3E0),
-                        shape = RoundedCornerShape(4.dp)
-                    ) {
-                        Text(
-                            "ORDER ENTRY",
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
-                            color = Color(0xFFE8640C),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text  = "Order Form",
+                        fontWeight = FontWeight.Bold
+                ) },
+                navigationIcon = {
+                    IconButton(onClick = { }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Kembali"
                         )
                     }
-                    Spacer(Modifier.height(8.dp))
-                    Text("Craft a new creation", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+                },
+                actions = {
+                    IconButton(onClick = { }) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "Menu"
+                        )
+                    }
+                }
+            )
+        }
+
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Main Card: Search and Selected Client
+            Card(
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .width(360.dp)
+                    .height(230.dp),
+                shape = RoundedCornerShape(16.dp)
+            ){
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Box(
+                            modifier = Modifier
+                                .padding(top = 16.dp, start = 16.dp)
+                                .size(50.dp)
+                                .clip(CircleShape)
+                                .background(Color.LightGray),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            IconButton(onClick = {}) {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Profile",
+                                    modifier = Modifier.size(24.dp),
+                                    tint = Color.White
+                                )
+                            }
+                        }
+                        Text(
+                            text = "La iha Cliente Selecionado",
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top = 16.dp, start = 12.dp),
+                            lineHeight = 28.sp
+                        )
+                    }
+
+                    OutlinedTextField(
+                        value = searchText,
+                        onValueChange = { searchText = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                        placeholder = {
+                            Text(
+                                text = "buka clinet ne'ebe eziste...",
+                                color = Color(0xFF8C280E)
+                            ) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "Search",
+                                tint = Color(0xFF8C280E)
+                            )
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true
+                    )
+
+                    // Add New Client Card inside the main card
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFF96340F)
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { /* Handle add new client */ }
+                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PersonAdd,
+                                contentDescription = "Add",
+                                tint = Color(0xFFFCF9F8)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Adisiona Kliente Foun",
+                                color = Color(0xFFF6F0EF),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
+                        }
+                    }
+                }
+            }
+
+
+            Spacer(modifier = Modifier.height(25.dp))
+            // cake items row
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
                     Text(
-                        "Capture the details for your client's next celebration.",
+                        text = "contem order sira",
+                        color = Color(0xFF8C280E)
+                    )
+
+                    Text(
+                        text = "Elemento Cake",
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(top = 2.dp),
+                        fontSize = 25.sp,
+                        color = Color(0xFF8C280E)
+                    )
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Text(
+                        text = "draft order",
+                        color = Color.Gray,
+                        modifier = Modifier
+                            .clickable { /* Handle change */ }
+                    )
+
+                    Text(
+                        text = "$0.00",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 25.sp,
+                        color = Color(0xFF8C280E),
+                        modifier = Modifier
+                            .clickable { /* Handle change */ }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Dashed Border "Add First Cake" Section
+            val stroke = Stroke(
+                width = 2f,
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+            )
+
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+                    .height(140.dp)
+                    .drawBehind {
+                        drawRoundRect(
+                            color = Color.LightGray,
+                            style = stroke,
+                            cornerRadius = CornerRadius(12.dp.toPx())
+                        )
+                    }
+                    .clickable { /* Handle add first cake */ },
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(45.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFF3F3F3)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add",
+                            tint = Color(0xFF8C280E),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "Aumenta Cake Primeiro",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        color = Color.Black
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Select from your menu or create custom",
                         fontSize = 13.sp,
                         color = Color.Gray
                     )
                 }
+            }
 
-                // CLIENT DROPDOWN
-                Column {
-                    LabelText("CLIENT")
-                    ExposedDropdownMenuBox(
-                        expanded = clientExpanded,
-                        onExpandedChange = { clientExpanded = !clientExpanded }
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Delivery Details Section
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = "DELIVERY DETAILS",
+                    color = Color(0xFF8C280E),
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 12.sp,
+                    letterSpacing = 1.sp
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .clickable { /* Handle selection */ },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        OutlinedTextField(
-                            value = client,
-                            onValueChange = {},
-                            readOnly = true,
-                            placeholder = { Text("Select a Client") },
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = clientExpanded) },
-                            modifier = Modifier.fillMaxWidth().menuAnchor(),
-                            shape = RoundedCornerShape(8.dp),
-                            colors = textFieldColors()
+                        Text(
+                            text = "Select pickup or delivery date",
+                            color = Color.Gray,
+                            fontSize = 14.sp
                         )
-                        ExposedDropdownMenu(
-                            expanded = clientExpanded,
-                            onDismissRequest = { clientExpanded = false }
-                        ) {
-                            listOf("Client A", "Client B", "Client C").forEach {
-                                DropdownMenuItem(
-                                    text = { Text(it) },
-                                    onClick = { client = it; clientExpanded = false }
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // CAKE NAME FIELD
-                Column {
-                    LabelText("CAKE NAME")
-                    OutlinedTextField(
-                        value = cakeName,
-                        onValueChange = { cakeName = it },
-                        placeholder = { Text("e.g. Victorian Sponge") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = textFieldColors()
-                    )
-                }
-
-                // QUANTITY DROPDOWN
-                Column {
-                    LabelText("QUANTITY")
-                    ExposedDropdownMenuBox(
-                        expanded = quantityExpanded,
-                        onExpandedChange = { quantityExpanded = !quantityExpanded }
-                    ) {
-                        OutlinedTextField(
-                            value = quantity,
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = quantityExpanded) },
-                            modifier = Modifier.fillMaxWidth().menuAnchor(),
-                            shape = RoundedCornerShape(8.dp),
-                            colors = textFieldColors()
+                        Icon(
+                            imageVector = Icons.Default.CalendarToday,
+                            contentDescription = "Calendar",
+                            tint = Color.Gray,
+                            modifier = Modifier.size(20.dp)
                         )
-                        ExposedDropdownMenu(
-                            expanded = quantityExpanded,
-                            onDismissRequest = { quantityExpanded = false }
-                        ) {
-                            (1..5).forEach { num ->
-                                DropdownMenuItem(
-                                    text = { Text(num.toString()) },
-                                    onClick = { quantity = num.toString(); quantityExpanded = false }
-                                )
-                            }
-                        }
                     }
                 }
             }
-        }
-
-        // Card TIMELINE
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(Color.White)
-        ) {
-            Column(Modifier.padding(16.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.DateRange, null, tint = Color(0xFFE8640C), modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(6.dp))
-                    Text("Timeline", fontWeight = FontWeight.Bold)
-                }
-                Spacer(Modifier.height(12.dp))
-                LabelText("ORDER DATE")
-                OutlinedTextField(
-                    value = orderDate,
-                    onValueChange = {},
-                    readOnly = true,
-                    placeholder = { Text("Select Date") },
-                    trailingIcon = {
-                        IconButton(onClick = { showDatePicker = true }) {
-                            Icon(Icons.Default.DateRange, null, tint = Color(0xFFE8640C))
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = textFieldColors()
-                )
-            }
-        }
-
-        // Card NOTES
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(Color.White)
-        ) {
-            Column(Modifier.padding(16.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Notes, null, tint = Color(0xFFE8640C), modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(6.dp))
-                    Text("Notes", fontWeight = FontWeight.Bold)
-                }
-                Spacer(Modifier.height(12.dp))
-                OutlinedTextField(
-                    value = notes,
-                    onValueChange = { notes = it },
-                    placeholder = { Text("Write personalized message or special requirements...") },
-                    modifier = Modifier.fillMaxWidth().height(100.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = textFieldColors()
-                )
-            }
-        }
-
-        // Save Button
-        Button(
-            onClick = { /* Save Logic */ },
-            modifier = Modifier.fillMaxWidth().height(50.dp),
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE8640C))
-        ) {
-            Icon(Icons.Default.CheckCircle, null, tint = Color.White, modifier = Modifier.size(18.dp))
-            Spacer(Modifier.width(8.dp))
-            Text("Save Order", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
 
 @Composable
-fun LabelText(text: String) {
-    Text(
-        text = text,
-        fontSize = 11.sp,
-        color = Color.Gray,
-        fontWeight = FontWeight.Bold,
-        letterSpacing = 1.sp,
-        modifier = Modifier.padding(bottom = 4.dp)
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun textFieldColors() = OutlinedTextFieldDefaults.colors(
-    focusedBorderColor = Color(0xFFE8640C),
-    unfocusedBorderColor = Color(0xFFE0E0E0),
-    focusedLabelColor = Color(0xFFE8640C),
-    cursorColor = Color(0xFFE8640C)
-)
-
 @Preview(showBackground = true)
-@Composable
-fun NewOrderScreenPreview() {
-    NewOrderScreen()
+fun OrderFormPreview (){
+    NewOrderForm()
 }

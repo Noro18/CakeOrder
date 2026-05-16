@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -40,7 +41,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.R
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -350,19 +350,15 @@ fun OrderDetailScreen() {
                 description = "7\" Signature Collection",
                 details = "3 Layers, 2 Tiers",
                 price = "$85.00",
-                imageRes = R.drawable.raspberrylayercake,
-                onEditClick = { /* Edita item */ }
+                onEditClick = { }
             )
-
-            Spacer(modifier = Modifier.height(12.dp))
 
             CakeOrderItem(
                 name = "Vanilla Ruffle",
                 description = "9\" Special Occasion",
                 details = "2 Layers, 1 Tier",
                 price = "$110.00",
-                imageRes = R.drawable.raspberrylayercake,
-                onEditClick = { /* Edita item */ }
+                onEditClick = { }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -446,7 +442,6 @@ fun CakeOrderItem(
     description: String,
     details: String,
     price: String,
-    imageRes: Int,
     onEditClick: () -> Unit
 ) {
     Card(
@@ -461,14 +456,20 @@ fun CakeOrderItem(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = imageRes),
-                contentDescription = null,
+            Box(
                 modifier = Modifier
                     .size(80.dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                contentScale = ContentScale.Crop
-            )
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color(0xFFFFEDE6)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Cake,
+                    contentDescription = null,
+                    tint = Color(0xFF8C280E),
+                    modifier = Modifier.size(36.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
