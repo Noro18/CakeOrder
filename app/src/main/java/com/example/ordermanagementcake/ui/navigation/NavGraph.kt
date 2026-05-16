@@ -61,113 +61,103 @@ fun AppNavHost(
     startDestination: String = Routes.DASHBOARD,
     orderViewModel: OrderViewModel,
     clientViewModel: ClientViewModel
-) { // screen primeiro ne'eb sei loke
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     val selectedItem = when (currentRoute) {
         Routes.DASHBOARD -> 0
-        Routes.ORDERS -> 1
-        Routes.CLIENTS -> 2
+        Routes.ORDERS    -> 1
+        Routes.CLIENTS   -> 2
         Routes.SCHEDULES -> 3
-        else -> 1
+        else             -> 1
     }
 
-    // drawer States
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed) // ne object ida ne'ebe remember drawer agora loke ga closed hela
-    val scope = rememberCoroutineScope() // not clear but ne atu run opeing animation iha background
-    BackHandler(enabled = drawerState.isOpen) { // Register Drawer iha backstack
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    // ✅ Use currentValue, not isOpen — avoids the animation race condition
+    val isDrawerOpen = drawerState.currentValue == DrawerValue.Open
+    BackHandler(enabled = isDrawerOpen) {
         scope.launch { drawerState.close() }
     }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            AppDrawer (
-                onClose = {
-                    scope.launch { drawerState.close() }
-                }
-            )
+            AppDrawer(onClose = { scope.launch { drawerState.close() } })
         }
     ) {
         Scaffold(
             topBar = {
-                // Top bar agora iah ne'e deit atu dune'e kada pagina nia top bar hanesan hotu
-                AppTopBar(
-                    onMenuClick = {
-                        scope.launch { drawerState.open() }
-                    }
-                )
+                AppTopBar(onMenuClick = { scope.launch { drawerState.open() } })
             },
-            // no ba bottom bar nian mos halo componenet ketak ida deit iha ne
             bottomBar = {
-                // one single bottom bar for the whole app
                 BottomNavigationBar(
                     selectedItem = selectedItem,
                     onItemSelected = { index ->
-                        when (index) {
-                            0 -> navController.navigate(Routes.DASHBOARD)
-                            1 -> navController.navigate(Routes.ORDERS)
-                            2 -> navController.navigate(Routes.CLIENTS)
-                            3 -> navController.navigate(Routes.SCHEDULES)
-
+                        val route = when (index) {
+                            0 -> Routes.DASHBOARD
+                            1 -> Routes.ORDERS
+                            2 -> Routes.CLIENTS
+                            3 -> Routes.SCHEDULES
+                            else -> Routes.DASHBOARD
+                        }
+                        navController.navigate(route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 )
             },
             floatingActionButton = {
-                // Only show FAB on pages you want
                 val showFab = currentRoute in listOf(Routes.ORDERS, Routes.CLIENTS)
                 if (showFab) {
                     FloatingActionButton(
                         onClick = { navController.navigate(Routes.NEW_ORDER) },
                         containerColor = Color(0xFFC23C12)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add",
-                            tint = Color.White
-                        )
+                        Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
                     }
                 }
             }
         ) { paddingValues ->
             // only this part changes when you navigate
+            // AFTER — quick 150ms fade
             NavHost(
                 navController = navController,
                 startDestination = startDestination,
                 modifier = Modifier.padding(paddingValues),
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None },
-                popEnterTransition = { EnterTransition.None },
-                popExitTransition = { ExitTransition.None }
+                enterTransition = { fadeIn(animationSpec = tween(150)) },
+                exitTransition = { fadeOut(animationSpec = tween(150)) },
+                popEnterTransition = { fadeIn(animationSpec = tween(150)) },
+                popExitTransition = { fadeOut(animationSpec = tween(150)) }
             ) {
-                composable(Routes.ORDERS) {
-                    OrderListScreen(orderViewModel)  // no navController needed anymore
-                }
-                composable(Routes.CLIENTS) {
-                    ClientsListScreen(clientViewModel)  // no navController needed anymore
-                }
-                composable(Routes.DASHBOARD) {
-                    DashboardScreen()
-                }
-                composable(Routes.SCHEDULES) {
-                    ScheduleViewScreen()
-                }
+                composable(Routes.ORDERS)    { OrderListScreen(orderViewModel) }
+                composable(Routes.CLIENTS)   { ClientsListScreen(clientViewModel) }
+                composable(Routes.DASHBOARD) { DashboardScreen() }
+                composable(Routes.SCHEDULES) { ScheduleViewScreen() }
                 composable(
                     route = Routes.NEW_ORDER,
-                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up, tween(300)) + fadeIn(tween(300)) },
+                    enterTransition = {
+                        slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up, tween(300)) +
+                                fadeIn(tween(300))
+                    },
                     exitTransition = { fadeOut(tween(200)) },
                     popEnterTransition = { EnterTransition.None },
-                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down, tween(300)) + fadeOut(tween(300)) }
+                    popExitTransition = {
+                        slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down, tween(300)) +
+                                fadeOut(tween(300))
+                    }
                 ) {
                     NewOrderScreen()
                 }
             }
         }
     }
-
-
 }
 
 @Composable
