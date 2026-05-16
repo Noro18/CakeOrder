@@ -54,7 +54,9 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewOrderForm() {
+fun NewOrderForm(
+    onAddNewClient: () -> Unit = {}
+) {
     var searchText by remember { mutableStateOf("") }
 
     Scaffold(
@@ -170,7 +172,7 @@ fun NewOrderForm() {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { /* Handle add new client */ }
+                                .clickable { onAddNewClient() }
                                 .padding(horizontal = 16.dp, vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
