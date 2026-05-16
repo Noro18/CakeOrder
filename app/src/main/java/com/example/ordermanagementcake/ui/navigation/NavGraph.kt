@@ -39,6 +39,7 @@ import com.example.ordermanagementcake.ui.components.AppDrawer
 import com.example.ordermanagementcake.ui.components.AppTopBar
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
+import com.example.ordermanagementcake.ui.forms.clients.NewClientForm
 import com.example.ordermanagementcake.ui.forms.orders.NewOrderForm
 import com.example.ordermanagementcake.ui.orders.OrderListScreen
 import com.example.ordermanagementcake.ui.forms.orders.NewOrderScreen
@@ -53,6 +54,7 @@ object Routes {
     const val SCHEDULES = "schedules"
 
     const val NEW_ORDER = "new_order"
+    const val NEW_CLIENT = "new_client"
 
 }
 
@@ -154,7 +156,12 @@ fun AppNavHost(
                                 fadeOut(tween(300))
                     }
                 ) {
-                    NewOrderForm()
+                    NewOrderForm(onAddNewClient = { navController.navigate(Routes.NEW_CLIENT) })
+                }
+                composable(route = Routes.NEW_CLIENT) {
+                    NewClientForm(
+                        onBack = { navController.popBackStack()}
+                    )
                 }
             }
         }
