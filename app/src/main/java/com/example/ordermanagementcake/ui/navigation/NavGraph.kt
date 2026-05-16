@@ -39,6 +39,7 @@ import com.example.ordermanagementcake.ui.components.AppDrawer
 import com.example.ordermanagementcake.ui.components.AppTopBar
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
+import com.example.ordermanagementcake.ui.forms.orders.NewOrderForm
 import com.example.ordermanagementcake.ui.orders.OrderListScreen
 import com.example.ordermanagementcake.ui.forms.orders.NewOrderScreen
 import com.example.ordermanagementcake.ui.orders.OrderViewModel
@@ -153,7 +154,7 @@ fun AppNavHost(
                                 fadeOut(tween(300))
                     }
                 ) {
-                    NewOrderScreen()
+                    NewOrderForm()
                 }
             }
         }
