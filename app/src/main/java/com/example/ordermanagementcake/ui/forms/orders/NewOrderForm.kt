@@ -25,15 +25,22 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,13 +58,49 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewOrderForm(
-    onAddNewClient: () -> Unit = {}
+    onAddNewClient: () -> Unit = {},
+    onSaveOrder: () -> Unit = {}
 ) {
     var searchText by remember { mutableStateOf("") }
+    
+    // State to control DatePicker visibility
+    var showDatePicker by remember { mutableStateOf(false) }
+    // State to store the selected date text
+    var selectedDateText by remember { mutableStateOf("Select pickup or delivery date") }
+    
+    val datePickerState = rememberDatePickerState()
+
+    // DatePicker Dialog logic
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let {
+                        val sdf = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+                        selectedDateText = sdf.format(Date(it))
+                    }
+                    showDatePicker = false
+                }) {
+                    Text("OK", color = Color(0xFF8C280E))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("CANCEL", color = Color.Gray)
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -71,7 +114,7 @@ fun NewOrderForm(
                     IconButton(onClick = { }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Kembali"
+                            contentDescription = "back"
                         )
                     }
                 },
@@ -84,6 +127,36 @@ fun NewOrderForm(
                     }
                 }
             )
+        },
+        bottomBar = {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shadowElevation = 16.dp,
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                color = Color.White
+            ) {
+                Box(
+                    modifier = Modifier
+                        .padding(24.dp)
+                        .fillMaxWidth()
+                ) {
+                    Button(
+                        onClick = onSaveOrder,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFA6510F))
+                    ) {
+                        Text(
+                            text = "Rai Pedidu",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = Color.White
+                        )
+                    }
+                }
+            }
         }
 
     ) { innerPadding ->
@@ -319,7 +392,7 @@ fun NewOrderForm(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp)
-                        .clickable { /* Handle selection */ },
+                        .clickable { showDatePicker = true }, // Click to show calendar
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -332,8 +405,8 @@ fun NewOrderForm(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Select pickup or delivery date",
-                            color = Color.Gray,
+                            text = selectedDateText,
+                            color = if (selectedDateText == "hili data entrega") Color.Gray else Color.Black,
                             fontSize = 14.sp
                         )
                         Icon(
