@@ -31,7 +31,8 @@ import com.example.ordermanagementcake.R
 @Composable
 fun NewClientForm(
     onDismiss: () -> Unit = {},
-    onSave: (String, String, String) -> Unit = { _, _, _ -> }
+    onSave: (String, String, String) -> Unit = { _, _, _ -> },
+
 ) {
     var fullName by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
