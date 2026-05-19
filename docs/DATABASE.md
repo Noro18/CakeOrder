@@ -1,9 +1,6 @@
 # Cake Order Management App — Database Schema
 
 
-<p align="center">
-  <img src="images/Cake-Order-DB-schema.png"/>
-</p>
 
 ## Overview
 
@@ -18,13 +15,13 @@ This is a mobile app for managing cake orders. A customer places an order, each 
 Stores the people who place orders.
 
 
-| Column  | Type   | Key |
-| ------- | ------ | --- |
-| id      | uuid   | PK  |
-| name    | string |     |
-| phone   | string |     |
-| address | string |     |
-| created_at | string | |
+| Column     | Type   | Key |
+| ---------- | ------ | --- |
+| id         | uuid   | PK  |
+| name       | string |     |
+| phone      | string |     |
+| address    | string |     |
+| created_at | string |     |
 
 
 ---
@@ -34,15 +31,16 @@ Stores the people who place orders.
 Represents one customer agreement — one pickup/delivery event.
 
 
-| Column        | Type    | Key           |
-| ------------- | ------- | ------------- |
-| order_id      | uuid    | PK            |
-| customer_id   | uuid    | FK → CUSTOMER |
-| order_date    | date    |               |
-| delivery_date | date    |               |
-| total_price   | decimal |               |
-| order_notes   | string  |               |
-| status | enum | pending, in_progress, ready, completed, cancelled |
+| Column        | Type    | Key                                               |
+| ------------- | ------- | ------------------------------------------------- |
+| order_id      | uuid    | PK                                                |
+| customer_id   | uuid    | FK → CUSTOMER                                     |
+| order_date    | date    |                                                   |
+| delivery_date | date    |                                                   |
+| total_price   | decimal |                                                   |
+| order_notes   | string  |                                                   |
+| status        | enum    | pending, in_progress, ready, completed, cancelled |
+
 
 ---
 

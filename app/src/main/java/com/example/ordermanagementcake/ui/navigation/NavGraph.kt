@@ -160,7 +160,11 @@ fun AppNavHost(
                 }
                 composable(route = Routes.NEW_CLIENT) {
                     NewClientForm(
-                        onBack = { navController.popBackStack()}
+                        onDismiss = { navController.popBackStack() },  // ← was onBack
+                        onSave = { name, phone, address ->
+                            // TODO: save logic
+                            navController.popBackStack()
+                        }
                     )
                 }
             }
