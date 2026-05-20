@@ -208,7 +208,7 @@ fun ClientDetail(
                     date = "OUT 14",
                     time = "Foti iha tuku 11:30 AM",
                     price = "$85.00",
-                    status = "KONKLUIDU",
+                    status = "Kompletu",
                     statusColor = Color(0xFF4CAF50)
                 )
                 OrderItem(
@@ -224,7 +224,7 @@ fun ClientDetail(
                     date = "AGO 20",
                     time = "Entrega ona ba Fatin",
                     price = "$210.00",
-                    status = "KONKLUIDU",
+                    status = "kompletu",
                     statusColor = Color(0xFF9E9E9E)
                 )
 
