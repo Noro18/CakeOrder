@@ -35,7 +35,7 @@ fun ClientDetail(
     var name by remember { mutableStateOf("Eleanor Fitzgerald") }
     var phone by remember { mutableStateOf("+1 (555) 234-8890") }
     var address by remember { mutableStateOf("72 Oakwood Crescent, Maplewood Heights, NY 10012") }
-    var notes by remember { mutableStateOf("Gosta menus frosting iha cupcake. Gosta baunilha husi Madagaskar. Uma laiha ai-fuan katar ba bei-oan sira.") }
+    var notes by remember { mutableStateOf("note iha ne") }
 
     Scaffold(
         topBar = {
