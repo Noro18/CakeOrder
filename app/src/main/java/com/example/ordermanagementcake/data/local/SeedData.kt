@@ -66,12 +66,14 @@ suspend fun seedDatabase(database: OrderDatabase) {
     ).map { orderDao.insertOrder(it) }
 
     // 5. Seed Cakes and Tiers
+
     // Order 0: Double Chocolate Fudge (1 tier)
     val cake1Id = cakeDao.insertCake(
         CakeEntity(
             orderId = orderIds[0].toInt(),
             cakeTitle = "Double Chocolate Fudge",
-            cakeNotes = "8 inch, dark chocolate ganache"
+            cakeNotes = "8 inch, dark chocolate ganache",
+            imageUri = "double_chodolate_fudge"
         )
     )
     tierDao.insertTier(
@@ -80,7 +82,7 @@ suspend fun seedDatabase(database: OrderDatabase) {
             level = 1,
             shapeId = shapeCircle.toInt(),
             sizeId = size8.toInt(),
-            colorHex = "#3E2723", // Dark Brown
+            colorHex = "#3E2723",
             price = 45.0
         )
     )
@@ -90,7 +92,8 @@ suspend fun seedDatabase(database: OrderDatabase) {
         CakeEntity(
             orderId = orderIds[1].toInt(),
             cakeTitle = "Wild Berry Medley",
-            cakeNotes = "6 inch, mixed berry compote"
+            cakeNotes = "6 inch, mixed berry compote",
+            imageUri = null
         )
     )
     tierDao.insertTier(
@@ -99,70 +102,76 @@ suspend fun seedDatabase(database: OrderDatabase) {
             level = 1,
             shapeId = shapeCircle.toInt(),
             sizeId = size6.toInt(),
-            colorHex = "#AD1457", // Berry Red
+            colorHex = "#AD1457",
             price = 35.0
         )
     )
 
-    // Order 2: Birthday Celebration (2 tiers)
+    // Order 2: Zesty Lemon Celebration (2 tiers)
     val cake3Id = cakeDao.insertCake(
         CakeEntity(
             orderId = orderIds[2].toInt(),
             cakeTitle = "Zesty Lemon Celebration",
-            cakeNotes = "Two tier lemon cake"
+            cakeNotes = "Two tier lemon cake",
+            imageUri = null
         )
     )
-    tierDao.insertTiers(listOf(
-        TierEntity(
-            cakeId = cake3Id.toInt(),
-            level = 1,
-            shapeId = shapeCircle.toInt(),
-            sizeId = size10.toInt(),
-            colorHex = "#FFF176", // Yellow
-            price = 70.0
-        ),
-        TierEntity(
-            cakeId = cake3Id.toInt(),
-            level = 2,
-            shapeId = shapeCircle.toInt(),
-            sizeId = size6.toInt(),
-            colorHex = "#FFF9C4", // Light Yellow
-            price = 50.0
+    tierDao.insertTiers(
+        listOf(
+            TierEntity(
+                cakeId = cake3Id.toInt(),
+                level = 1,
+                shapeId = shapeCircle.toInt(),
+                sizeId = size10.toInt(),
+                colorHex = "#FFF176",
+                price = 70.0
+            ),
+            TierEntity(
+                cakeId = cake3Id.toInt(),
+                level = 2,
+                shapeId = shapeCircle.toInt(),
+                sizeId = size6.toInt(),
+                colorHex = "#FFF9C4",
+                price = 50.0
+            )
         )
-    ))
+    )
 
-    // Order 3: Massive Wedding Cake (3 tiers)
+    // Order 3: Grand Wedding Tiered Cake (3 tiers)
     val cake4Id = cakeDao.insertCake(
         CakeEntity(
             orderId = orderIds[3].toInt(),
             cakeTitle = "Grand Wedding Tiered Cake",
-            cakeNotes = "White fondant with lace details"
+            cakeNotes = "White fondant with lace details",
+            imageUri = null
         )
     )
-    tierDao.insertTiers(listOf(
-        TierEntity(
-            cakeId = cake4Id.toInt(),
-            level = 1,
-            shapeId = shapeSquare.toInt(),
-            sizeId = size12.toInt(),
-            colorHex = "#FFFFFF",
-            price = 200.0
-        ),
-        TierEntity(
-            cakeId = cake4Id.toInt(),
-            level = 2,
-            shapeId = shapeCircle.toInt(),
-            sizeId = size10.toInt(),
-            colorHex = "#FFFFFF",
-            price = 180.0
-        ),
-        TierEntity(
-            cakeId = cake4Id.toInt(),
-            level = 3,
-            shapeId = shapeCircle.toInt(),
-            sizeId = size8.toInt(),
-            colorHex = "#FFFFFF",
-            price = 120.0
+    tierDao.insertTiers(
+        listOf(
+            TierEntity(
+                cakeId = cake4Id.toInt(),
+                level = 1,
+                shapeId = shapeSquare.toInt(),
+                sizeId = size12.toInt(),
+                colorHex = "#FFFFFF",
+                price = 200.0
+            ),
+            TierEntity(
+                cakeId = cake4Id.toInt(),
+                level = 2,
+                shapeId = shapeCircle.toInt(),
+                sizeId = size10.toInt(),
+                colorHex = "#FFFFFF",
+                price = 180.0
+            ),
+            TierEntity(
+                cakeId = cake4Id.toInt(),
+                level = 3,
+                shapeId = shapeCircle.toInt(),
+                sizeId = size8.toInt(),
+                colorHex = "#FFFFFF",
+                price = 120.0
+            )
         )
-    ))
+    )
 }

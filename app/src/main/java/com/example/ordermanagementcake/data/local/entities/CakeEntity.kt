@@ -22,5 +22,6 @@ data class CakeEntity(
     @ColumnInfo(name = "cake_id") val id: Int = 0,
     @ColumnInfo(name = "order_id") val orderId: Int,
     @ColumnInfo(name = "cake_title") val cakeTitle: String,
-    @ColumnInfo(name = "cake_notes") val cakeNotes: String
+    @ColumnInfo(name = "cake_notes") val cakeNotes: String,
+    @ColumnInfo(name="image_uri") val imageUri: String? = null
 )
