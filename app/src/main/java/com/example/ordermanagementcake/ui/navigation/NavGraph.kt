@@ -10,7 +10,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddShoppingCart
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DrawerValue
@@ -28,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -117,13 +120,24 @@ fun AppNavHost(
                 )
             },
             floatingActionButton = {
-                val showFab = currentRoute in listOf(Routes.ORDERS, Routes.CLIENTS)
-                if (showFab) {
+                data class FabConfig(
+                    val icon: ImageVector,
+                    val description: String,
+                    val route: String
+                )
+
+                val fabConfig = when (currentRoute) {
+                    Routes.ORDERS  -> FabConfig(Icons.Default.AddShoppingCart, "New Order",  Routes.NEW_ORDER)
+                    Routes.CLIENTS -> FabConfig(Icons.Default.PersonAdd,       "New Client", Routes.NEW_CLIENT)
+                    else           -> null
+                }
+
+                fabConfig?.let { config ->
                     FloatingActionButton(
-                        onClick = { navController.navigate(Routes.NEW_ORDER) },
+                        onClick = { navController.navigate(config.route) },
                         containerColor = Color(0xFFC23C12)
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
+                        Icon(config.icon, contentDescription = config.description, tint = Color.White)
                     }
                 }
             }
