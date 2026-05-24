@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -31,12 +32,17 @@ import com.example.ordermanagementcake.R
 @Composable
 fun NewClientForm(
     onDismiss: () -> Unit = {},
-    onSave: (String, String, String) -> Unit = { _, _, _ -> },
-
+    onSave: (String, String, String, String) -> Unit = { _, _, _, _ -> },
+    title: String = "Kliente Foun",
+    initialName: String = "",
+    initialPhone: String = "",
+    initialAddress: String = "",
+    initialNotes: String = ""
 ) {
-    var fullName by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
-    var deliveryAddress by remember { mutableStateOf("") }
+    var fullName by remember { mutableStateOf(initialName) }
+    var phoneNumber by remember { mutableStateOf(initialPhone) }
+    var deliveryAddress by remember { mutableStateOf(initialAddress) }
+    var notes by remember { mutableStateOf(initialNotes) }
 
     // Use Dialog for proper popup behavior
     Dialog(
@@ -104,13 +110,13 @@ fun NewClientForm(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "Kliente Foun",
+                                    text = title,
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.ExtraBold,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = "Adisiona ho lais dadus foun.",
+                                    text = if (initialName.isEmpty()) "Adisiona ho lais dadus foun." else "Atualiza dadus kliente nian.",
                                     fontSize = 12.sp,
                                     color = Color.Gray
                                 )
@@ -123,7 +129,7 @@ fun NewClientForm(
                                 color = Color(0xFFFFEDE6)
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.PersonAdd,
+                                    imageVector = if (initialName.isEmpty()) Icons.Default.PersonAdd else Icons.Default.Edit,
                                     contentDescription = null,
                                     tint = Color(0xFFF37B21),
                                     modifier = Modifier.padding(10.dp)
@@ -163,11 +169,20 @@ fun NewClientForm(
                             placeholder = "Rua, Aldeia, Suku"
                         )
 
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        InputFieldLabel(text = "NOTA & PREFERÉNSIA")
+                        CustomFormTextField(
+                            value = notes,
+                            onValueChange = { notes = it },
+                            placeholder = "ez. Gosta dekorasaun minimalista"
+                        )
+
                         Spacer(modifier = Modifier.height(28.dp))
 
                         // Action Button
                         Button(
-                            onClick = { onSave(fullName, phoneNumber, deliveryAddress) },
+                            onClick = { onSave(fullName, phoneNumber, deliveryAddress, notes) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(56.dp),
@@ -175,7 +190,7 @@ fun NewClientForm(
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE36D25))
                         ) {
                             Text(
-                                text = "Rai & Kontinua",
+                                text = if (initialName.isEmpty()) "Rai & Kontinua" else "Rai Mudansa",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold
                             )

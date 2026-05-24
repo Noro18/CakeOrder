@@ -29,7 +29,8 @@ import com.example.ordermanagementcake.data.repository.ClientRepository
 
 @Composable
 fun ClientsListScreen(
-    viewModel: ClientViewModel
+    viewModel: ClientViewModel,
+    onClientClick: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -138,7 +139,10 @@ fun ClientsListScreen(
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         items(filteredClients, key = { it.id }) { client ->
-                            ClientCard(client = client)
+                            ClientCard(
+                                client = client,
+                                onClick = {onClientClick(client.id)}
+                            )
                         }
                     }
                 }
@@ -148,7 +152,7 @@ fun ClientsListScreen(
 }
 
 @Composable
-fun ClientCard(client: com.example.ordermanagementcake.data.local.entities.ClientEntity) {
+fun ClientCard(client: com.example.ordermanagementcake.data.local.entities.ClientEntity, onClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -186,7 +190,7 @@ fun ClientCard(client: com.example.ordermanagementcake.data.local.entities.Clien
             }
             
             IconButton(
-                onClick = { /* TODO: navigate to detail */ },
+                onClick = onClick,
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
                 ),
