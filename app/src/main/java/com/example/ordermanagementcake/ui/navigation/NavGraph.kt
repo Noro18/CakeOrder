@@ -185,12 +185,13 @@ fun AppNavHost(
                 composable(route = Routes.NEW_CLIENT) {
                     NewClientForm(
                         onDismiss = { navController.popBackStack() },  // ← was onBack
-                        onSave = { name, phone, address ->
+                        onSave = { name, phone, address, notes ->
                             clientViewModel.insertClient(
                                 ClientEntity(
                                     name = name.trim(),
                                     phone = phone.trim(),
-                                    address = phone.trim()
+                                    address = address.trim(),
+                                    notes = notes.trim()
                                 )
                             )
                             navController.popBackStack()

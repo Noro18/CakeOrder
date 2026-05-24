@@ -10,5 +10,6 @@ data class ClientEntity(
     @ColumnInfo(name="client_id") val id: Int = 0,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "phone") val phone: String,
-    @ColumnInfo(name = "address") val address: String
+    @ColumnInfo(name = "address") val address: String,
+    @ColumnInfo(name = "notes") val notes: String = ""
 )
