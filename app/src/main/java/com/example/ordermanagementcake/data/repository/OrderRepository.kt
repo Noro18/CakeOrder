@@ -27,4 +27,10 @@ class OrderRepository(private val orderDao: OrderDao) {
 
     suspend fun deleteOrder(order: OrderEntity) =
         orderDao.deleteOrder(order)
+
+    fun getOrdersByMonth(monthPrefix: String): Flow<List<OrderEntity>> =
+        orderDao.getOrdersByMonth(monthPrefix)
+
+    fun getOrdersByDate(datePrefix: String): Flow<List<OrderEntity>> =
+        orderDao.getOrdersByDate(datePrefix)
 }

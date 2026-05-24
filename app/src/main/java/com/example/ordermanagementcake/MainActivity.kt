@@ -24,6 +24,8 @@ import com.example.ordermanagementcake.ui.navigation.AppNavHost
 import com.example.ordermanagementcake.ui.navigation.Routes
 import com.example.ordermanagementcake.ui.orders.OrderViewModel
 import com.example.ordermanagementcake.ui.orders.OrderViewModelFactory
+import com.example.ordermanagementcake.ui.schedule.ScheduleViewModel
+import com.example.ordermanagementcake.ui.schedule.ScheduleViewModelFactory
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewScreen
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 import kotlin.getValue
@@ -41,13 +43,18 @@ class MainActivity : ComponentActivity() {
         val clientViewModel: ClientViewModel by viewModels {
             ClientViewModelFactory(ClientRepository(db.clientDao()))
         }
+
+        val scheduleViewModel: ScheduleViewModel by viewModels {
+            ScheduleViewModelFactory(OrderRepository(db.orderDao()))
+        }
         setContent {
             OrderManagementCakeTheme {
                 val navController = rememberNavController()
                 AppNavHost(
                     navController = navController,
                     orderViewModel = orderViewModel,
-                    clientViewModel = clientViewModel
+                    clientViewModel = clientViewModel,
+                    scheduleViewModel = scheduleViewModel
 
                 )
 

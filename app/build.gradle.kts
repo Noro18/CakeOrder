@@ -57,6 +57,10 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
 
+    // Calender Dependencies
+    implementation("io.github.boguszpawlowski.composecalendar:composecalendar:1.3.0")
+    implementation("io.github.boguszpawlowski.composecalendar:kotlinx-datetime:1.3.0")
+
     // AndroidX & Compose (from Version Catalog)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)

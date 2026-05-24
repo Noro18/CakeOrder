@@ -42,4 +42,12 @@ interface OrderDao {
 
     @Delete
     suspend fun deleteOrder(order: OrderEntity)
+
+    // 1. For the calendar dots — fetches all orders in a month e.g. "2026-05"
+    @Query("SELECT * FROM orders WHERE delivery_date LIKE :monthPrefix || '%'")
+    fun getOrdersByMonth(monthPrefix: String): Flow<List<OrderEntity>>
+
+    // 2. For the list below — fetches orders for a specific tapped day e.g. "2026-05-24"
+    @Query("SELECT * FROM orders WHERE delivery_date LIKE :datePrefix || '%'")
+    fun getOrdersByDate(datePrefix: String): Flow<List<OrderEntity>>
 }

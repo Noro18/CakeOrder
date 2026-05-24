@@ -1,220 +1,260 @@
 package com.example.ordermanagementcake.ui.schedule
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.ordermanagementcake.R
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.boguszpawlowski.composecalendar.SelectableCalendar
+import io.github.boguszpawlowski.composecalendar.day.DayState
+import io.github.boguszpawlowski.composecalendar.header.MonthState
+import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
+import io.github.boguszpawlowski.composecalendar.selection.DynamicSelectionState
+import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
+import com.example.ordermanagementcake.data.local.entities.OrderEntity
+import com.example.ordermanagementcake.data.local.entities.OrderStatus
 
 @Composable
-fun ScheduleViewScreen(
-    year: Int = LocalDate.now().year,
-    month: Int = LocalDate.now().monthValue,
-    deliveryCount: Int = 48,
-    dotDays: Set<Int> = setOf(3, 5, 11, 14),
-    onDayClick: (Int) -> Unit = {}
-) {
-    var selectedDay by remember { mutableStateOf(LocalDate.now().dayOfMonth) }
-    var currentMonth by remember { mutableStateOf(month) }
-    var currentYear by remember { mutableStateOf(year) }
+fun ScheduleViewScreen(viewModel: ScheduleViewModel) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val brandOrange = Color(0xFFE8640C)
 
-    val yearMonth = YearMonth.of(currentYear, currentMonth)
-    val firstDayOfWeek = yearMonth.atDay(1).dayOfWeek
-    val offset = (firstDayOfWeek.value - 1) % 7
-    val totalDays = yearMonth.lengthOfMonth()
+    val calendarState = rememberSelectableCalendarState(
+        initialSelectionMode = SelectionMode.Single
+    )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = 24.dp)
+    // When the library's month changes, tell the ViewModel to load that month's orders
+    LaunchedEffect(calendarState.monthState.currentMonth) {
+        viewModel.onMonthChanged(calendarState.monthState.currentMonth)
+    }
+
+    // When the library's selection changes, tell the ViewModel to load that day's orders
+    LaunchedEffect(calendarState.selectionState.selection) {
+        calendarState.selectionState.selection.firstOrNull()?.let { date ->
+            viewModel.onDaySelected(date)
+        }
+    }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 24.dp)
     ) {
-        // --- Header Section ---
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 24.dp)
-        ) {
-            Text(
-                text = "Kalenáriu Entrega",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.ExtraBold
-            )
-            Text(
-                text = "Monitoriza ita-nia oráriu entrega hotu",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary
-            )
-        }
 
-        // --- Calendar Card ---
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                // Month & Nav
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = "${yearMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} $currentYear",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFFE8640C)
-                        )
-                        Text(
-                            text = "$deliveryCount Deliveries this month",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    }
-
-                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        IconButton(onClick = {
-                            if (currentMonth == 1) { currentMonth = 12; currentYear-- } else currentMonth--
-                        }) {
-                            Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = null)
-                        }
-                        IconButton(onClick = {
-                            if (currentMonth == 12) { currentMonth = 1; currentYear++ } else currentMonth++
-                        }) {
-                            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                // Day Labels
-                val dayLabels = listOf("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN")
-                Row(Modifier.fillMaxWidth()) {
-                    dayLabels.forEach { label ->
-                        Text(
-                            text = label,
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
-                        )
-                    }
-                }
-
-                Spacer(Modifier.height(8.dp))
-
-                // Calendar Grid
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(7),
-                    modifier = Modifier.heightIn(max = 280.dp),
-                    userScrollEnabled = false
-                ) {
-                    items(offset) { Spacer(Modifier.aspectRatio(1f)) }
-                    items(totalDays) { index ->
-                        val day = index + 1
-                        DayCell(
-                            day = day,
-                            isSelected = day == selectedDay,
-                            hasDot = day in dotDays,
-                            onClick = {
-                                selectedDay = day
-                                onDayClick(day)
-                            }
-                        )
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // --- Deliveries for Selected Day Section ---
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
+        // ── Header ────────────────────────────────────────────
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 24.dp)
+            ) {
                 Text(
-                    text = "Entrega ba ${yearMonth.month.getDisplayName(TextStyle.SHORT, Locale.getDefault())} $selectedDay",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    text = "Kalenáriu Entrega",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.ExtraBold
                 )
                 Text(
-                    text = "Sabadu . 3 orders total",
-                    style = MaterialTheme.typography.bodySmall,
+                    text = "Monitoriza ita-nia oráriu entrega hotu",
+                    style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
-            TextButton(onClick = { /* TODO */ }) {
-                Text(text = "View All", color = Color(0xFFE8640C))
+        }
+
+        // ── Calendar Card ─────────────────────────────────────
+        item {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+
+                    // Month count summary
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "${uiState.ordersForMonth.size} Deliveries this month",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                        Icon(
+                            imageVector = Icons.Default.CalendarMonth,
+                            contentDescription = null,
+                            tint = brandOrange,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+
+                    SelectableCalendar(
+                        calendarState = calendarState,
+                        dayContent = { dayState ->
+                            DayCell(
+                                state = dayState,
+                                hasOrder = dayState.date in uiState.orderDays,
+                                brandOrange = brandOrange
+                            )
+                        },
+                        monthHeader = { monthState ->
+                            MonthHeader(
+                                monthState = monthState,
+                                brandOrange = brandOrange
+                            )
+                        }
+                    )
+                }
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        item { Spacer(modifier = Modifier.height(32.dp)) }
 
-        // --- Delivery Items List ---
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            DeliveryItemCard(
-                name = "Eleanor Vance",
-                orderDesc = "Triple berry chantilly . 2 qty",
-                time = "10:30 PM",
-                status = "Ready"
-            )
-            DeliveryItemCard(
-                name = "Jason Mendoza",
-                orderDesc = "Chocolate Fudge Cake . 1 qty",
-                time = "02:00 PM",
-                status = "Pending"
+        // ── Selected Day Header ───────────────────────────────
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "Entrega ba ${uiState.selectedDate.dayOfWeek.getDisplayName(
+                            TextStyle.FULL, Locale.getDefault()
+                        )}",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "${uiState.selectedDate.month.getDisplayName(
+                            TextStyle.SHORT, Locale.getDefault()
+                        )} ${uiState.selectedDate.dayOfMonth} · " +
+                                "${uiState.ordersForSelectedDay.size} orders total",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
+            }
+        }
+
+        item { Spacer(modifier = Modifier.height(12.dp)) }
+
+        // ── Orders List for Selected Day ──────────────────────
+        when {
+            uiState.ordersForSelectedDay.isEmpty() -> {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(48.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "La iha entrega ba loron ne'e.",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.Gray
+                        )
+                    }
+                }
+            }
+            else -> {
+                items(uiState.ordersForSelectedDay) { order ->
+                    DeliveryOrderCard(
+                        order = order,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+// ── Month Header ──────────────────────────────────────────────────────────────
+
+@Composable
+fun MonthHeader(monthState: MonthState, brandOrange: Color) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "${monthState.currentMonth.month.getDisplayName(
+                TextStyle.FULL, Locale.getDefault()
+            )} ${monthState.currentMonth.year}",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = brandOrange
+        )
+        Row {
+            TextButton(onClick = { monthState.currentMonth = monthState.currentMonth.minusMonths(1) }) {
+                Text("‹", style = MaterialTheme.typography.titleLarge, color = brandOrange)
+            }
+            TextButton(onClick = { monthState.currentMonth = monthState.currentMonth.plusMonths(1) }) {
+                Text("›", style = MaterialTheme.typography.titleLarge, color = brandOrange)
+            }
+        }
+    }
+}
+
+// ── Week Header ───────────────────────────────────────────────────────────────
+
+@Composable
+fun WeekHeader(daysOfWeek: List<DayOfWeek>) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        daysOfWeek.forEach { dayOfWeek ->
+            Text(
+                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
         }
     }
 }
 
+// ── Day Cell ──────────────────────────────────────────────────────────────────
+
 @Composable
-fun DayCell(day: Int, isSelected: Boolean, hasDot: Boolean, onClick: () -> Unit) {
-    val brandOrange = Color(0xFFE8640C)
+fun DayCell(
+    state: DayState<DynamicSelectionState>,
+    hasOrder: Boolean,
+    brandOrange: Color
+) {
+    val date = state.date
+    val isSelected = state.selectionState.isDateSelected(date)
+    val isCurrentMonth = !state.isFromCurrentMonth.not()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -229,15 +269,20 @@ fun DayCell(day: Int, isSelected: Boolean, hasDot: Boolean, onClick: () -> Unit)
                 .size(32.dp)
                 .clip(CircleShape)
                 .background(if (isSelected) brandOrange else Color.Transparent)
-                .clickable { onClick() }
+                .clickable { state.selectionState.onDateSelected(date) }
         ) {
             Text(
-                text = "$day",
+                text = date.dayOfMonth.toString(),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurface
+                color = when {
+                    isSelected -> Color.White
+                    !isCurrentMonth -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                    else -> MaterialTheme.colorScheme.onSurface
+                }
             )
         }
+        // Order dot
         Box(
             modifier = Modifier
                 .padding(top = 2.dp)
@@ -245,7 +290,7 @@ fun DayCell(day: Int, isSelected: Boolean, hasDot: Boolean, onClick: () -> Unit)
                 .clip(CircleShape)
                 .background(
                     when {
-                        !hasDot -> Color.Transparent
+                        !hasOrder -> Color.Transparent
                         isSelected -> Color.White
                         else -> brandOrange
                     }
@@ -254,67 +299,77 @@ fun DayCell(day: Int, isSelected: Boolean, hasDot: Boolean, onClick: () -> Unit)
     }
 }
 
+// ── Delivery Order Card ───────────────────────────────────────────────────────
+
 @Composable
-fun DeliveryItemCard(name: String, orderDesc: String, time: String, status: String) {
+fun DeliveryOrderCard(order: OrderEntity, modifier: Modifier = Modifier) {
+    val statusColor = when (order.status) {
+        OrderStatus.PENDING     -> Color(0xFFEE8111)
+        OrderStatus.IN_PROGRESS -> Color(0xFFF87146)
+        OrderStatus.READY       -> Color(0xFF31912E)
+        OrderStatus.COMPLETED   -> Color(0xFF3B82F6)
+        OrderStatus.CANCELLED   -> Color(0xFF9E9E9E)
+    }
+
+    // Extract time from "2026-05-24 14:00" → "14:00"
+    val deliveryTime = order.deliveryDate.substringAfter(" ", "")
+
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(16.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.foto_profile),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+            // Status color strip
+            Box(
                 modifier = Modifier
-                    .size(56.dp)
-                    .clip(CircleShape)
+                    .width(4.dp)
+                    .height(48.dp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(statusColor)
             )
-            Spacer(modifier = Modifier.width(16.dp))
+
+            Spacer(modifier = Modifier.width(12.dp))
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = name,
+                    text = "Order #${order.id}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Text(
+                    text = order.orderNotes.ifBlank { "La iha nota" },
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                Text(
-                    text = orderDesc,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
             }
+
             Column(horizontalAlignment = Alignment.End) {
                 Surface(
-                    color = if (status == "Ready") Color(0xFFA9EF95) else Color(0xFFFFF3E0),
-                    shape = RoundedCornerShape(8.dp)
+                    color = statusColor.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(6.dp)
                 ) {
                     Text(
-                        text = status,
+                        text = order.status.name.replace("_", " "),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                        color = if (status == "Ready") Color(0xFF31912E) else Color(0xFFE8640C),
+                        color = statusColor,
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = time,
+                    text = deliveryTime,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ScheduleViewScreenPreview() {
-    MaterialTheme {
-        ScheduleViewScreen()
     }
 }
