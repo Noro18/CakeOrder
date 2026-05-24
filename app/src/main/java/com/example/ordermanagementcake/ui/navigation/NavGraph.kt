@@ -25,9 +25,7 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -159,12 +157,41 @@ fun AppNavHost(
                 popExitTransition = { fadeOut(animationSpec = tween(150)) }
             ) {
                 composable(Routes.ORDERS)    { OrderListScreen(orderViewModel) }
-                composable(Routes.CLIENTS)   { ClientsListScreen(
-                    clientViewModel,
-                    onClientClick = { clientId ->
-                        navController.navigate(Routes.clientDetail(clientId))
+                composable(Routes.CLIENTS)   {
+                    var clientToEdit by remember { mutableStateOf<ClientEntity?>(null) }
 
-                    }) }
+                    ClientsListScreen(
+                        clientViewModel,
+                        onClientClick = { clientId ->
+                            navController.navigate(Routes.clientDetail(clientId))
+                        },
+                        onEditClient = { client ->
+                            clientToEdit = client
+                        }
+                    )
+
+                    clientToEdit?.let { client ->
+                        NewClientForm(
+                            title = "Atualiza Kliente",
+                            initialName = client.name,
+                            initialPhone = client.phone,
+                            initialAddress = client.address,
+                            initialNotes = client.notes,
+                            onDismiss = { clientToEdit = null },
+                            onSave = { name, phone, address, notes ->
+                                clientViewModel.updateClient(
+                                    client.copy(
+                                        name = name,
+                                        phone = phone,
+                                        address = address,
+                                        notes = notes
+                                    )
+                                )
+                                clientToEdit = null
+                            }
+                        )
+                    }
+                }
                 composable(Routes.DASHBOARD) { DashboardScreen() }
                 composable(Routes.SCHEDULES) { ScheduleViewScreen() }
                 composable(
