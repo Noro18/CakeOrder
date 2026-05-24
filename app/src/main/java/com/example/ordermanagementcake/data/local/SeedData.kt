@@ -33,32 +33,32 @@ suspend fun seedDatabase(database: OrderDatabase) {
     val orderIds = listOf(
         OrderEntity(
             customerId = clientIds[0].toInt(),
-            orderDate = "2026-04-10",
-            deliveryDate = "Oct 24, 14:00",
+            orderDate = "2026-05-10",
+            deliveryDate = "2026-05-24 14:00",
             status = OrderStatus.PENDING,
             orderNotes = "Extra fudge on top",
             totalPrice = 45.0
         ),
         OrderEntity(
             customerId = clientIds[1].toInt(),
-            orderDate = "2026-04-10",
-            deliveryDate = "Oct 24, 16:30",
+            orderDate = "2026-05-10",
+            deliveryDate = "2026-05-24 16:30",
             status = OrderStatus.PENDING,
             orderNotes = "Allergy: no nuts",
             totalPrice = 35.0
         ),
         OrderEntity(
             customerId = clientIds[2].toInt(),
-            orderDate = "2026-04-11",
-            deliveryDate = "Today, 10:00",
+            orderDate = "2026-05-11",
+            deliveryDate = "2026-05-28 10:00",
             status = OrderStatus.IN_PROGRESS,
             orderNotes = "Write Happy Birthday Ana",
             totalPrice = 120.0
         ),
         OrderEntity(
             customerId = clientIds[3].toInt(),
-            orderDate = "2026-04-08",
-            deliveryDate = "Yesterday",
+            orderDate = "2026-05-08",
+            deliveryDate = "2026-05-20 09:00",
             status = OrderStatus.COMPLETED,
             orderNotes = "Grand wedding cake",
             totalPrice = 500.0
