@@ -36,6 +36,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.ordermanagementcake.data.local.entities.ClientEntity
+import com.example.ordermanagementcake.ui.clients.ClientDetail
 import com.example.ordermanagementcake.ui.clients.ClientViewModel
 import com.example.ordermanagementcake.ui.clients.ClientsListScreen
 import com.example.ordermanagementcake.ui.components.AppDrawer
@@ -58,6 +60,9 @@ object Routes {
 
     const val NEW_ORDER = "new_order"
     const val NEW_CLIENT = "new_client"
+    const val DETAIL_CLIENT = "client_detail/{clientID}" // route based on
+
+    fun clientDetail(clientId: Int) = "client_detail/$clientId"
 
 }
 
@@ -154,7 +159,12 @@ fun AppNavHost(
                 popExitTransition = { fadeOut(animationSpec = tween(150)) }
             ) {
                 composable(Routes.ORDERS)    { OrderListScreen(orderViewModel) }
-                composable(Routes.CLIENTS)   { ClientsListScreen(clientViewModel) }
+                composable(Routes.CLIENTS)   { ClientsListScreen(
+                    clientViewModel,
+                    onClientClick = { clientId ->
+                        navController.navigate(Routes.clientDetail(clientId))
+
+                    }) }
                 composable(Routes.DASHBOARD) { DashboardScreen() }
                 composable(Routes.SCHEDULES) { ScheduleViewScreen() }
                 composable(
@@ -176,10 +186,21 @@ fun AppNavHost(
                     NewClientForm(
                         onDismiss = { navController.popBackStack() },  // ← was onBack
                         onSave = { name, phone, address ->
-                            // TODO: save logic
+                            clientViewModel.insertClient(
+                                ClientEntity(
+                                    name = name.trim(),
+                                    phone = phone.trim(),
+                                    address = phone.trim()
+                                )
+                            )
                             navController.popBackStack()
                         }
                     )
+                }
+                composable(route = Routes.DETAIL_CLIENT) {
+                    ClientDetail (
+
+                    ) {  }
                 }
             }
         }

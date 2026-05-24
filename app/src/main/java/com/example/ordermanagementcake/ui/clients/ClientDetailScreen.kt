@@ -37,57 +37,7 @@ fun ClientDetail(
     var address by remember { mutableStateOf("72 Oakwood Crescent, Maplewood Heights, NY 10012") }
     var notes by remember { mutableStateOf("note iha ne") }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = if (isEditing) "Edit Kliente" else name,
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { if (isEditing) isEditing = false else onBackClick() }) {
-                        Icon(
-                            imageVector = if (isEditing) Icons.Default.Close else Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = if (isEditing) "Kansela" else "Fila",
-                            tint = Color.White
-                        )
-                    }
-                },
-                actions = {
-                    if (!isEditing) {
-                        IconButton(onClick = { isEditing = true }) {
-                            Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Color.White)
-                        }
-                        IconButton(onClick = onDeleteClick) {
-                            Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.White)
-                        }
-                    }
-                    // Profile Image
-                    Box(
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .background(Color.White)
-                    ) {
-                        Icon(
-                            Icons.Default.Person,
-                            contentDescription = "Perfil",
-                            modifier = Modifier.align(Alignment.Center),
-                            tint = Color.Gray
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF8B4513)
-                )
-            )
-        }
-    ) { paddingValues ->
+    Scaffold() { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
