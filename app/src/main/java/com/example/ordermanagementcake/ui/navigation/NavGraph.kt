@@ -47,6 +47,7 @@ import com.example.ordermanagementcake.ui.forms.orders.NewOrderForm
 import com.example.ordermanagementcake.ui.orders.OrderListScreen
 import com.example.ordermanagementcake.ui.forms.orders.NewOrderScreen
 import com.example.ordermanagementcake.ui.orders.OrderViewModel
+import com.example.ordermanagementcake.ui.schedule.ScheduleViewModel
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewScreen
 import kotlinx.coroutines.launch
 
@@ -66,7 +67,8 @@ fun AppNavHost(
     navController: NavHostController,
     startDestination: String = Routes.DASHBOARD,
     orderViewModel: OrderViewModel,
-    clientViewModel: ClientViewModel
+    clientViewModel: ClientViewModel,
+    scheduleViewModel: ScheduleViewModel
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -156,7 +158,7 @@ fun AppNavHost(
                 composable(Routes.ORDERS)    { OrderListScreen(orderViewModel) }
                 composable(Routes.CLIENTS)   { ClientsListScreen(clientViewModel) }
                 composable(Routes.DASHBOARD) { DashboardScreen() }
-                composable(Routes.SCHEDULES) { ScheduleViewScreen() }
+                composable(Routes.SCHEDULES) { ScheduleViewScreen(scheduleViewModel) }
                 composable(
                     route = Routes.NEW_ORDER,
                     enterTransition = {
