@@ -65,6 +65,10 @@ object Routes {
 
 }
 
+data class TopBarConfig (
+    val title: String
+)
+
 @Composable
 fun AppNavHost(
     navController: NavHostController,
@@ -75,6 +79,14 @@ fun AppNavHost(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
+    // ROutes that uses the global topbar
+    val showGlobalTopBar = currentRoute in listOf(
+        Routes.DASHBOARD,
+        Routes.ORDERS,
+        Routes.CLIENTS,
+        Routes.SCHEDULES
+    )
 
     val selectedItem = when (currentRoute) {
         Routes.DASHBOARD -> 0
@@ -101,7 +113,16 @@ fun AppNavHost(
     ) {
         Scaffold(
             topBar = {
-                AppTopBar(onMenuClick = { scope.launch { drawerState.open() } })
+                AppTopBar(
+                    title = when (currentRoute) {
+                        Routes.DASHBOARD -> "The Artisanal Bakery"
+                        Routes.ORDERS    -> "Orders"
+                        Routes.CLIENTS   -> "Clients"
+                        Routes.SCHEDULES -> "Schedules"
+                        else             -> ""
+                    },
+                    onMenuClick = { scope.launch { drawerState.open() } }
+                )
             },
             bottomBar = {
                 BottomNavigationBar(
