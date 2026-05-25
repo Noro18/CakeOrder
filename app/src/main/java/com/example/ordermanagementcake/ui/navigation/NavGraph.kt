@@ -29,6 +29,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -40,6 +41,7 @@ import com.example.ordermanagementcake.ui.clients.ClientViewModel
 import com.example.ordermanagementcake.ui.clients.ClientsListScreen
 import com.example.ordermanagementcake.ui.components.AppDrawer
 import com.example.ordermanagementcake.ui.components.AppTopBar
+import com.example.ordermanagementcake.ui.components.AppTopBarDelete
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
 import com.example.ordermanagementcake.ui.forms.clients.NewClientForm
@@ -65,6 +67,10 @@ object Routes {
 
 }
 
+data class TopBarConfig (
+    val title: String
+)
+
 @Composable
 fun AppNavHost(
     navController: NavHostController,
@@ -75,6 +81,18 @@ fun AppNavHost(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
+    val ScreensWithOwnTopBar = listOf(
+        Routes.DETAIL_CLIENT,
+        //Auenta routes seluk ne'ebe nia top bar iha hotu
+    )
+    // ROutes that uses the global topbar
+    val showGlobalTopBar = currentRoute in listOf(
+        Routes.DASHBOARD,
+        Routes.ORDERS,
+        Routes.CLIENTS,
+        Routes.SCHEDULES
+    )
 
     val selectedItem = when (currentRoute) {
         Routes.DASHBOARD -> 0
@@ -101,7 +119,24 @@ fun AppNavHost(
     ) {
         Scaffold(
             topBar = {
-                AppTopBar(onMenuClick = { scope.launch { drawerState.open() } })
+                if (showGlobalTopBar) {
+                    AppTopBar(
+                        title = when (currentRoute) {
+                            Routes.DASHBOARD -> "The Artisanal Bakery"
+                            Routes.ORDERS    -> "Orders"
+                            Routes.CLIENTS   -> "Clients"
+                            Routes.SCHEDULES -> "Schedules"
+                            else             -> ""
+                        },
+                        onMenuClick = { scope.launch { drawerState.open() } }
+                    )
+                } else if (currentRoute?.startsWith("client_detail/") == true) {
+                    AppTopBarDelete(
+                        title = "Detalhu Kliente",
+                        onBackClick = { navController.popBackStack() },
+                        onDeleteClick = { /* Logic for deletion to be handled later */ }
+                    )
+                }
             },
             bottomBar = {
                 BottomNavigationBar(
@@ -152,11 +187,7 @@ fun AppNavHost(
             NavHost(
                 navController = navController,
                 startDestination = startDestination,
-                modifier = Modifier.padding(paddingValues),
-                enterTransition = { fadeIn(animationSpec = tween(150)) },
-                exitTransition = { fadeOut(animationSpec = tween(150)) },
-                popEnterTransition = { fadeIn(animationSpec = tween(150)) },
-                popExitTransition = { fadeOut(animationSpec = tween(150)) }
+                modifier = Modifier.padding(paddingValues)
             ) {
                 composable(Routes.ORDERS)    { OrderListScreen(orderViewModel) }
                 composable(Routes.CLIENTS)   {
@@ -227,10 +258,22 @@ fun AppNavHost(
                         }
                     )
                 }
-                composable(route = Routes.DETAIL_CLIENT) {
-                    ClientDetail (
+                composable(route = Routes.DETAIL_CLIENT) { navBackStackEntry ->
+                    val clientId = navBackStackEntry.arguments?.getString("clientID")?.toIntOrNull()
 
-                    ) {  }
+                    LaunchedEffect(clientId) {
+                        clientId?.let { clientViewModel.loadClientDetail(it) }
+                    }
+
+                    val uiState by clientViewModel.uiState.collectAsStateWithLifecycle()
+
+                    ClientDetail(
+                        clientWithOrders = uiState.selectedClient,
+                        onBackClick = { navController.popBackStack() },
+                        onUpdateClient = { updatedClient ->
+                            clientViewModel.updateClient(updatedClient)
+                        }
+                    )
                 }
             }
         }

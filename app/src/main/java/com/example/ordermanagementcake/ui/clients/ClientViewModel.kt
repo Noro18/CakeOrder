@@ -54,4 +54,16 @@ class ClientViewModel(private val repository: ClientRepository) : ViewModel() {
             repository.deleteClient(client)
         }
     }
+
+    fun loadClientDetail(clientId: Int) {
+        viewModelScope.launch {
+            repository.getClientWithOrders(clientId)
+                .catch { e->
+                    _uiState.update { it.copy(errorMessage = e.message) }
+                }
+                .collect { clientWithOrders ->
+                    _uiState.update { it.copy(selectedClient = clientWithOrders) }
+                }
+        }
+    }
 }

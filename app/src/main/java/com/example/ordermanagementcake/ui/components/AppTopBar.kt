@@ -1,5 +1,6 @@
 package com.example.ordermanagementcake.ui.components
 
+import android.R.attr.fontWeight
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -32,11 +33,14 @@ import com.example.ordermanagementcake.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBar(onMenuClick: () -> Unit = {}) {
+fun AppTopBar(
+    title: String =  "The Artisanal Bakery",
+    onMenuClick: () -> Unit = {})
+{
     TopAppBar(
         title = {
             Text(
-                text = "The Artisanal Bakery",
+                text = title,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
