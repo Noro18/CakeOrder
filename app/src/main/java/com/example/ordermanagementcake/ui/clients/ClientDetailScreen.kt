@@ -33,7 +33,7 @@ fun ClientDetail(
 ) {
     if (clientWithOrders == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator(color = Color(0xFFC23C12))
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
         }
         return
     }
@@ -45,7 +45,7 @@ fun ClientDetail(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8F8F8))
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
@@ -71,10 +71,10 @@ fun ClientDetail(
                 text = "Istóriku Enkomenda",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
             Surface(
-                color = Color(0xFFC23C12).copy(alpha = 0.1f),
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
@@ -82,7 +82,7 @@ fun ClientDetail(
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFFC23C12)
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }
@@ -93,7 +93,7 @@ fun ClientDetail(
             Text(
                 text = "La iha istóriku enkomenda.",
                 modifier = Modifier.padding(vertical = 16.dp),
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         } else {
             orders.forEach { order ->
@@ -107,7 +107,7 @@ fun ClientDetail(
                         "COMPLETED" -> Color(0xFF4CAF50)
                         "PENDING" -> Color(0xFFFF9800)
                         "CANCELLED" -> Color(0xFFF44336)
-                        else -> Color(0xFF9E9E9E)
+                        else -> MaterialTheme.colorScheme.outline
                     }
                 )
             }
@@ -126,15 +126,15 @@ fun ClientDetail(
                 icon = Icons.Default.Add,
                 label = "Enkomenda Foun",
                 modifier = Modifier.weight(1f),
-                containerColor = Color(0xFFC23C12),
-                contentColor = Color.White
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             )
             ActionButton(
                 icon = Icons.Default.Email,
                 label = "Kontaktu",
                 modifier = Modifier.weight(1f),
-                containerColor = Color.White,
-                contentColor = Color(0xFFC23C12)
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -175,7 +175,7 @@ fun ClientInfoCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
@@ -184,14 +184,14 @@ fun ClientInfoCard(
                 Surface(
                     modifier = Modifier.size(64.dp),
                     shape = CircleShape,
-                    color = Color(0xFFC23C12).copy(alpha = 0.1f)
+                    color = MaterialTheme.colorScheme.primaryContainer
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Text(
                             text = name.take(1).uppercase(),
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFC23C12)
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 }
@@ -201,19 +201,19 @@ fun ClientInfoCard(
                         text = name,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = "ID KLIENTE: $id",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
-            HorizontalDivider(color = Color(0xFFF0F0F0))
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             Spacer(modifier = Modifier.height(24.dp))
 
             // Info Rows
@@ -230,7 +230,7 @@ fun ClientInfoCard(
                 FilledIconButton(
                     onClick = onEditClick,
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = Color(0xFFC23C12)
+                        containerColor = MaterialTheme.colorScheme.primary
                     ),
                     modifier = Modifier.size(44.dp)
                 ) {
@@ -238,7 +238,7 @@ fun ClientInfoCard(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edita",
                         modifier = Modifier.size(20.dp),
-                        tint = Color.White
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -252,14 +252,14 @@ fun InfoDetailRow(icon: ImageVector, label: String, value: String) {
         Surface(
             modifier = Modifier.size(36.dp),
             shape = RoundedCornerShape(10.dp),
-            color = Color(0xFFF8F8F8)
+            color = MaterialTheme.colorScheme.surfaceVariant
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
                     modifier = Modifier.size(18.dp),
-                    tint = Color(0xFFC23C12)
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -269,14 +269,14 @@ fun InfoDetailRow(icon: ImageVector, label: String, value: String) {
                 text = label,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 0.5.sp
             )
             Text(
                 text = value,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 lineHeight = 20.sp
             )
         }
@@ -289,7 +289,7 @@ fun OrderItem(title: String, date: String, time: String, price: String, status: 
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -303,13 +303,13 @@ fun OrderItem(title: String, date: String, time: String, price: String, status: 
                 modifier = Modifier
                     .size(56.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFF8F8F8))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Icon(
                     Icons.Default.Cake,
                     contentDescription = null,
                     modifier = Modifier.align(Alignment.Center).size(24.dp),
-                    tint = Color(0xFFC23C12).copy(alpha = 0.5f)
+                    tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                 )
             }
 
@@ -321,19 +321,19 @@ fun OrderItem(title: String, date: String, time: String, price: String, status: 
                         text = title,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.weight(1f)
                     )
                     Text(
                         text = price,
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 14.sp,
-                        color = Color(0xFFC23C12)
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "$date • $time", fontSize = 12.sp, color = Color.Gray)
+                    Text(text = "$date • $time", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Surface(
