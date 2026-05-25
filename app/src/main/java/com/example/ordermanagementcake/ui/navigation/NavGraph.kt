@@ -173,11 +173,7 @@ fun AppNavHost(
             NavHost(
                 navController = navController,
                 startDestination = startDestination,
-                modifier = Modifier.padding(paddingValues),
-                enterTransition = { fadeIn(animationSpec = tween(150)) },
-                exitTransition = { fadeOut(animationSpec = tween(150)) },
-                popEnterTransition = { fadeIn(animationSpec = tween(150)) },
-                popExitTransition = { fadeOut(animationSpec = tween(150)) }
+                modifier = Modifier.padding(paddingValues)
             ) {
                 composable(Routes.ORDERS)    { OrderListScreen(orderViewModel) }
                 composable(Routes.CLIENTS)   {
