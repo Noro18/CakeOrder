@@ -29,6 +29,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -257,10 +258,22 @@ fun AppNavHost(
                         }
                     )
                 }
-                composable(route = Routes.DETAIL_CLIENT) {
-                    ClientDetail (
+                composable(route = Routes.DETAIL_CLIENT) { navBackStackEntry ->
+                    val clientId = navBackStackEntry.arguments?.getString("clientID")?.toIntOrNull()
 
-                    ) {  }
+                    LaunchedEffect(clientId) {
+                        clientId?.let { clientViewModel.loadClientDetail(it) }
+                    }
+
+                    val uiState by clientViewModel.uiState.collectAsStateWithLifecycle()
+
+                    ClientDetail(
+                        clientWithOrders = uiState.selectedClient,
+                        onBackClick = { navController.popBackStack() },
+                        onUpdateClient = { updatedClient ->
+                            clientViewModel.updateClient(updatedClient)
+                        }
+                    )
                 }
             }
         }
