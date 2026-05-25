@@ -80,6 +80,10 @@ fun AppNavHost(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    val ScreensWithOwnTopBar = listOf(
+        Routes.DETAIL_CLIENT,
+        //Auenta routes seluk ne'ebe nia top bar iha hotu
+    )
     // ROutes that uses the global topbar
     val showGlobalTopBar = currentRoute in listOf(
         Routes.DASHBOARD,
@@ -113,16 +117,18 @@ fun AppNavHost(
     ) {
         Scaffold(
             topBar = {
-                AppTopBar(
-                    title = when (currentRoute) {
-                        Routes.DASHBOARD -> "The Artisanal Bakery"
-                        Routes.ORDERS    -> "Orders"
-                        Routes.CLIENTS   -> "Clients"
-                        Routes.SCHEDULES -> "Schedules"
-                        else             -> ""
-                    },
-                    onMenuClick = { scope.launch { drawerState.open() } }
-                )
+                if (showGlobalTopBar) {
+                    AppTopBar(
+                        title = when (currentRoute) {
+                            Routes.DASHBOARD -> "The Artisanal Bakery"
+                            Routes.ORDERS    -> "Orders"
+                            Routes.CLIENTS   -> "Clients"
+                            Routes.SCHEDULES -> "Schedules"
+                            else             -> ""
+                        },
+                        onMenuClick = { scope.launch { drawerState.open() } }
+                    )
+                }
             },
             bottomBar = {
                 BottomNavigationBar(
