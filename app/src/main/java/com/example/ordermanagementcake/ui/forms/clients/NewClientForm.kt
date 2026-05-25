@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.ordermanagementcake.R
+import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 
 /**
  * Modern Popup for adding a new client.
@@ -113,12 +114,12 @@ fun NewClientForm(
                                     text = title,
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.ExtraBold,
-                                    color = MaterialTheme.colorScheme.onSurface
+                                    color = MaterialTheme.colorScheme.primary // Orange
                                 )
                                 Text(
                                     text = if (initialName.isEmpty()) "Adisiona ho lais dadus foun." else "Atualiza dadus kliente nian.",
                                     fontSize = 12.sp,
-                                    color = Color.Gray
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
 
@@ -126,12 +127,12 @@ fun NewClientForm(
                             Surface(
                                 modifier = Modifier.size(44.dp),
                                 shape = RoundedCornerShape(12.dp),
-                                color = Color(0xFFFFEDE6)
+                                color = MaterialTheme.colorScheme.primaryContainer
                             ) {
                                 Icon(
                                     imageVector = if (initialName.isEmpty()) Icons.Default.PersonAdd else Icons.Default.Edit,
                                     contentDescription = null,
-                                    tint = Color(0xFFF37B21),
+                                    tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.padding(10.dp)
                                 )
                             }
@@ -187,7 +188,10 @@ fun NewClientForm(
                                 .fillMaxWidth()
                                 .height(56.dp),
                             shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE36D25))
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary
+                            )
                         ) {
                             Text(
                                 text = if (initialName.isEmpty()) "Rai & Kontinua" else "Rai Mudansa",
@@ -205,7 +209,7 @@ fun NewClientForm(
                         ) {
                             Text(
                                 text = "Kansela",
-                                color = Color.Gray,
+                                color = MaterialTheme.colorScheme.secondary,
                                 fontWeight = FontWeight.Medium
                             )
                         }
@@ -222,13 +226,12 @@ fun InputFieldLabel(text: String) {
         text = text,
         fontSize = 11.sp,
         fontWeight = FontWeight.Bold,
-        color = Color(0xFF8C280E),
+        color = MaterialTheme.colorScheme.primary, // Orange
         letterSpacing = 0.5.sp,
         modifier = Modifier.padding(bottom = 6.dp)
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomFormTextField(
     value: String,
@@ -242,11 +245,13 @@ fun CustomFormTextField(
         placeholder = { Text(text = placeholder, fontSize = 14.sp) },
         shape = RoundedCornerShape(14.dp),
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color(0xFFF3F3F3),
-            unfocusedContainerColor = Color(0xFFF3F3F3),
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            cursorColor = Color(0xFFE36D25)
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
         ),
         singleLine = true
     )
@@ -255,5 +260,7 @@ fun CustomFormTextField(
 @Preview(showBackground = true)
 @Composable
 fun NewClientFormPreview() {
-    NewClientForm()
+    OrderManagementCakeTheme {
+        NewClientForm()
+    }
 }

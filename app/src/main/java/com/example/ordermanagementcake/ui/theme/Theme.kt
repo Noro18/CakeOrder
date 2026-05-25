@@ -13,35 +13,49 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
-    background = Color(0xFF121212),
-    surface = Color(0xFF1E1E1E),
-    onBackground = Color.White,   // ← teks nia kor iha dark mode
-    onSurface = Color.White,     // teks nia kor iha on Surface nia leten
-    onPrimary = Color.Black,
-    onSecondary = Color.Black,
-    onTertiary = Color.Black,
+    primary = Orange80,
+    onPrimary = Color(0xFF4E1D00),
+    primaryContainer = Color(0xFF702B00),
+    onPrimaryContainer = Color(0xFFFFDBCF),
+    secondary = OrangeGrey80,
+    onSecondary = Color(0xFF442B23),
+    secondaryContainer = Color(0xFF5D4138),
+    onSecondaryContainer = Color(0xFFFFDBCF),
+    tertiary = Orange80,
+    onTertiary = Color(0xFF4E1D00),
+    background = Color(0xFF1F1B19),
+    surface = Color(0xFF1F1B19),
+    onBackground = Color(0xFFEAE0DC),
+    onSurface = Color(0xFFEAE0DC),
+    surfaceVariant = Color(0xFF52443D),
+    onSurfaceVariant = Color(0xFFD7C2B9),
+    outline = Color(0xFFA08D84)
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onBackground = Color(0xFF1C1B1F),  // ← warna teks di light mode
-    onSurface = Color(0xFF1C1B1F),
+    primary = OrangePrimary,
     onPrimary = Color.White,
+    primaryContainer = Color(0xFFFFEDE6),
+    onPrimaryContainer = Color(0xFF3B0900),
+    secondary = OrangeSecondary,
     onSecondary = Color.White,
+    secondaryContainer = Color(0xFFFFDBCF),
+    onSecondaryContainer = Color(0xFF350B00),
+    tertiary = OrangeSecondary,
     onTertiary = Color.White,
+    background = Color(0xFFFFFBFF),
+    surface = Color(0xFFFFFBFF),
+    onBackground = Color(0xFF201A18),
+    onSurface = Color(0xFF201A18),
+    surfaceVariant = Color(0xFFF3F3F3),
+    onSurfaceVariant = Color(0xFF52443D),
+    outline = Color(0xFF85736B)
 )
 
 @Composable
 fun OrderManagementCakeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,   // ← ubah jadi false!
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

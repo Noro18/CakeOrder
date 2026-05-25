@@ -7,7 +7,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.ordermanagementcake.data.local.entities.ClientEntity
 import com.example.ordermanagementcake.data.local.relations.ClientWithOrders
 import com.example.ordermanagementcake.ui.forms.clients.NewClientForm
+import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 
 @Composable
 fun ClientDetail(
@@ -49,7 +49,7 @@ fun ClientDetail(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        // THE ONE CARD: Consolidated Client Information
+        // Consolidated Client Information Card
         ClientInfoCard(
             name = client.name,
             id = "#CL-${client.id}",
@@ -61,7 +61,7 @@ fun ClientDetail(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Order History Section
+        // Order History Section Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -69,7 +69,7 @@ fun ClientDetail(
         ) {
             Text(
                 text = "Istóriku Enkomenda",
-                fontSize = 20.sp,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -80,9 +80,9 @@ fun ClientDetail(
                 Text(
                     text = "Totál ${orders.size}",
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                    fontSize = 12.sp,
+                    style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -133,7 +133,7 @@ fun ClientDetail(
                 icon = Icons.Default.Email,
                 label = "Kontaktu",
                 modifier = Modifier.weight(1f),
-                containerColor = MaterialTheme.colorScheme.surface,
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 contentColor = MaterialTheme.colorScheme.primary
             )
         }
@@ -189,9 +189,9 @@ fun ClientInfoCard(
                     Box(contentAlignment = Alignment.Center) {
                         Text(
                             text = name.take(1).uppercase(),
-                            fontSize = 28.sp,
+                            style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -199,13 +199,13 @@ fun ClientInfoCard(
                 Column {
                     Text(
                         text = name,
-                        fontSize = 20.sp,
+                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.ExtraBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = "ID KLIENTE: $id",
-                        fontSize = 12.sp,
+                        style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -225,7 +225,7 @@ fun ClientInfoCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Edit Button at the bottom of the card
+            // Edit Button
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
                 FilledIconButton(
                     onClick = onEditClick,
@@ -252,7 +252,7 @@ fun InfoDetailRow(icon: ImageVector, label: String, value: String) {
         Surface(
             modifier = Modifier.size(36.dp),
             shape = RoundedCornerShape(10.dp),
-            color = MaterialTheme.colorScheme.surfaceVariant
+            color = MaterialTheme.colorScheme.primaryContainer
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Icon(
@@ -267,14 +267,14 @@ fun InfoDetailRow(icon: ImageVector, label: String, value: String) {
         Column {
             Text(
                 text = label,
-                fontSize = 10.sp,
+                style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.primary,
                 letterSpacing = 0.5.sp
             )
             Text(
                 text = value,
-                fontSize = 15.sp,
+                style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface,
                 lineHeight = 20.sp
@@ -303,13 +303,13 @@ fun OrderItem(title: String, date: String, time: String, price: String, status: 
                 modifier = Modifier
                     .size(56.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .background(MaterialTheme.colorScheme.primaryContainer)
             ) {
                 Icon(
                     Icons.Default.Cake,
                     contentDescription = null,
                     modifier = Modifier.align(Alignment.Center).size(24.dp),
-                    tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -319,21 +319,25 @@ fun OrderItem(title: String, date: String, time: String, price: String, status: 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(
                         text = title,
+                        style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.weight(1f)
                     )
                     Text(
                         text = price,
+                        style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.ExtraBold,
-                        fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "$date • $time", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        text = "$date • $time", 
+                        style = MaterialTheme.typography.bodySmall, 
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Surface(
@@ -343,7 +347,7 @@ fun OrderItem(title: String, date: String, time: String, price: String, status: 
                     Text(
                         text = status.uppercase(),
                         color = statusColor,
-                        fontSize = 10.sp,
+                        style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
@@ -373,14 +377,22 @@ fun ActionButton(
     ) {
         Icon(icon, contentDescription = null, modifier = Modifier.size(18.dp))
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = label, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+        Text(text = label, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
     }
 }
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 fun ClientDetailPreview() {
-    ClientDetail(
-        clientWithOrders = null // Shows loading state in preview
-    )
+    OrderManagementCakeTheme(darkTheme = false) {
+        ClientDetail(clientWithOrders = null)
+    }
+}
+
+@Composable
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+fun ClientDetailDarkPreview() {
+    OrderManagementCakeTheme(darkTheme = true) {
+        ClientDetail(clientWithOrders = null)
+    }
 }
