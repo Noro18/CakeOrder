@@ -81,7 +81,7 @@ fun ClientsListScreen(
         OutlinedTextField(
             value = uiState.searchQuery,
             onValueChange = { viewModel.onSearchQueryChange(it) },
-            placeholder = { Text("Buka client liu husi naran ka telefone...") },
+            placeholder = { Text("Naran, Numeru Telefone") },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             shape = RoundedCornerShape(28.dp),
             modifier = Modifier
