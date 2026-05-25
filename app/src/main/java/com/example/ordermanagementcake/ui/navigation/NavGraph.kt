@@ -40,6 +40,7 @@ import com.example.ordermanagementcake.ui.clients.ClientViewModel
 import com.example.ordermanagementcake.ui.clients.ClientsListScreen
 import com.example.ordermanagementcake.ui.components.AppDrawer
 import com.example.ordermanagementcake.ui.components.AppTopBar
+import com.example.ordermanagementcake.ui.components.AppTopBarDelete
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
 import com.example.ordermanagementcake.ui.forms.clients.NewClientForm
@@ -127,6 +128,12 @@ fun AppNavHost(
                             else             -> ""
                         },
                         onMenuClick = { scope.launch { drawerState.open() } }
+                    )
+                } else if (currentRoute?.startsWith("client_detail/") == true) {
+                    AppTopBarDelete(
+                        title = "Detalhu Kliente",
+                        onBackClick = { navController.popBackStack() },
+                        onDeleteClick = { /* Logic for deletion to be handled later */ }
                     )
                 }
             },

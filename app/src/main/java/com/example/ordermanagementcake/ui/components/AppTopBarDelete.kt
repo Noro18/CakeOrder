@@ -1,6 +1,8 @@
 package com.example.ordermanagementcake.ui.components
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,7 +21,9 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun AppTopBarDelete(
     title: String = "The Artisanal Bakery",
-    onMenuClick: () -> Unit = {}
+    onBackClick: (() -> Unit)? = null,
+    onMenuClick: (() -> Unit)? = null,
+    onDeleteClick: () -> Unit = {}
 ) {
     TopAppBar(
         title = {
@@ -32,17 +36,27 @@ fun AppTopBarDelete(
         },
 
         navigationIcon = {
-            IconButton(onClick = { onMenuClick() }) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "Menu",
-                    tint = Color.White
-                )
+            if (onBackClick != null) {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.White
+                    )
+                }
+            } else {
+                IconButton(onClick = { onMenuClick?.invoke() }) {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "Menu",
+                        tint = Color.White
+                    )
+                }
             }
         },
 
         actions = {
-            IconButton(onClick = { }) {
+            IconButton(onClick = onDeleteClick) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete",

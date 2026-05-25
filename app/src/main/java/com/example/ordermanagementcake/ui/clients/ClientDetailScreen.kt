@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ordermanagementcake.ui.forms.clients.NewClientForm
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClientDetail(
     onBackClick: () -> Unit = {},
@@ -36,123 +35,101 @@ fun ClientDetail(
     var address by remember { mutableStateOf("72 Oakwood Crescent, Maplewood Heights, NY 10012") }
     var notes by remember { mutableStateOf("Kliente ne'e gosta bolu strawberry ho dekorasaun minimalista.") }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Detallu Kliente", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = onDeleteClick) {
-                        Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.Red)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
-                )
-            )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .background(Color(0xFFF8F8F8))
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF8F8F8))
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp)
+    ) {
+        // THE ONE CARD: Consolidated Client Information
+        ClientInfoCard(
+            name = name,
+            id = "#BC-8821",
+            phone = phone,
+            address = address,
+            notes = notes,
+            onEditClick = { showEditForm = true }
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Order History Section
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // THE ONE CARD: Consolidated Client Information
-            ClientInfoCard(
-                name = name,
-                id = "#BC-8821",
-                phone = phone,
-                address = address,
-                notes = notes,
-                onEditClick = { showEditForm = true }
+            Text(
+                text = "Istóriku Enkomenda",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
             )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Order History Section
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Surface(
+                color = Color(0xFFC23C12).copy(alpha = 0.1f),
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
-                    text = "Istóriku Enkomenda",
-                    fontSize = 20.sp,
+                    text = "Totál 3",
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-                Surface(
-                    color = Color(0xFFC23C12).copy(alpha = 0.1f),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Text(
-                        text = "Totál 3",
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFC23C12)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OrderItem(
-                title = "Bolu Selebrasaun Triple Berry",
-                date = "OUT 14",
-                time = "Foti iha tuku 11:30 AM",
-                price = "$85.00",
-                status = "Kompletu",
-                statusColor = Color(0xFF4CAF50)
-            )
-            OrderItem(
-                title = "Kaixa Macaron Signatura (24)",
-                date = "NOV 02",
-                time = "Entrega Horáriu",
-                price = "$45.00",
-                status = "HEIN HELA",
-                statusColor = Color(0xFFFF9800)
-            )
-            OrderItem(
-                title = "Lembransa Kazamentu Custom",
-                date = "AGO 20",
-                time = "Entrega ona ba Fatin",
-                price = "$210.00",
-                status = "Kompletu",
-                statusColor = Color(0xFF9E9E9E)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Bottom Actions
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                ActionButton(
-                    icon = Icons.Default.Add,
-                    label = "Enkomenda Foun",
-                    modifier = Modifier.weight(1f),
-                    containerColor = Color(0xFFC23C12),
-                    contentColor = Color.White
-                )
-                ActionButton(
-                    icon = Icons.Default.Email,
-                    label = "Kontaktu",
-                    modifier = Modifier.weight(1f),
-                    containerColor = Color.White,
-                    contentColor = Color(0xFFC23C12)
+                    color = Color(0xFFC23C12)
                 )
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OrderItem(
+            title = "Bolu Selebrasaun Triple Berry",
+            date = "OUT 14",
+            time = "Foti iha tuku 11:30 AM",
+            price = "$85.00",
+            status = "Kompletu",
+            statusColor = Color(0xFF4CAF50)
+        )
+        OrderItem(
+            title = "Kaixa Macaron Signatura (24)",
+            date = "NOV 02",
+            time = "Entrega Horáriu",
+            price = "$45.00",
+            status = "HEIN HELA",
+            statusColor = Color(0xFFFF9800)
+        )
+        OrderItem(
+            title = "Lembransa Kazamentu Custom",
+            date = "AGO 20",
+            time = "Entrega ona ba Fatin",
+            price = "$210.00",
+            status = "Kompletu",
+            statusColor = Color(0xFF9E9E9E)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Bottom Actions
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            ActionButton(
+                icon = Icons.Default.Add,
+                label = "Enkomenda Foun",
+                modifier = Modifier.weight(1f),
+                containerColor = Color(0xFFC23C12),
+                contentColor = Color.White
+            )
+            ActionButton(
+                icon = Icons.Default.Email,
+                label = "Kontaktu",
+                modifier = Modifier.weight(1f),
+                containerColor = Color.White,
+                contentColor = Color(0xFFC23C12)
+            )
         }
     }
 
@@ -391,7 +368,7 @@ fun ActionButton(
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 fun ClientDetailPreview() {
     ClientDetail()
 }
