@@ -24,7 +24,11 @@ import com.example.ordermanagementcake.R
 import com.example.ordermanagementcake.ui.theme.extendedColors
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(
+    onAddClient: () -> Unit,
+    onAddOrder: () -> Unit
+
+) {
     val extendedColors = MaterialTheme.extendedColors
     
     Column(
@@ -92,12 +96,14 @@ fun DashboardScreen() {
                 QuickActionItem(
                     label = "New Order",
                     icon = Icons.Default.AddShoppingCart,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    onClick = onAddOrder
                 )
                 QuickActionItem(
                     label = "New Client",
                     icon = Icons.Default.PersonAdd,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    onClick = onAddClient
                 )
             }
 
@@ -256,9 +262,9 @@ fun RevenueCard() {
 }
 
 @Composable
-fun QuickActionItem(label: String, icon: ImageVector, modifier: Modifier = Modifier) {
+fun QuickActionItem(label: String, icon: ImageVector, modifier: Modifier = Modifier, onClick: () -> Unit) {
     ElevatedButton(
-        onClick = { /* TODO */ },
+        onClick = onClick,
         modifier = modifier.height(56.dp),
         shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.elevatedButtonColors(
@@ -417,10 +423,10 @@ fun SectionHeader(title: String, actionText: String) {
     }
 }
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun DashboardScreenPreview() {
     MaterialTheme {
         DashboardScreen()
     }
-}
+}*/
