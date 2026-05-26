@@ -1,6 +1,6 @@
 package com.example.ordermanagementcake.ui.clients
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,20 +16,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.ordermanagementcake.R
 import com.example.ordermanagementcake.data.local.OrderDatabase
 import com.example.ordermanagementcake.data.repository.ClientRepository
 import com.example.ordermanagementcake.data.local.entities.ClientEntity
+import kotlin.math.absoluteValue
 
 @Composable
 fun ClientsListScreen(
@@ -182,14 +181,42 @@ fun ClientCard(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(12.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.foto_profile),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+            // Initials Avatar
+            val initials = client.name
+                .split(" ")
+                .filter { it.isNotBlank() }
+                .take(2)
+                .joinToString("") { it.first().uppercaseChar().toString() }
+
+            val avatarColors = listOf(
+                Color(0xFFF87146), // Orange
+                Color(0xFF6C63FF), // Purple
+                Color(0xFF00BFA5), // Teal
+                Color(0xFFFF6B6B), // Coral
+                Color(0xFF4FC3F7), // Light Blue
+                Color(0xFFFFB74D), // Amber
+                Color(0xFF81C784), // Green
+                Color(0xFFBA68C8), // Violet
+                Color(0xFFE57373), // Soft Red
+                Color(0xFF4DB6AC), // Sea Green
+            )
+            val avatarColor = avatarColors[client.name.hashCode().absoluteValue % avatarColors.size]
+
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(56.dp)
                     .clip(CircleShape)
-            )
+                    .background(avatarColor)
+            ) {
+                Text(
+                    text = initials,
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+            }
             
             Spacer(modifier = Modifier.width(16.dp))
             
