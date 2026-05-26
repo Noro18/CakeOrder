@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -259,7 +260,14 @@ fun AppNavHost(
                         )
                     }
                 }
-                composable(Routes.DASHBOARD) { DashboardScreen() }
+                composable(Routes.DASHBOARD) { DashboardScreen(
+                    onAddClient  = {
+                        navController.navigate(Routes.NEW_CLIENT)
+                    },
+                    onAddOrder = {
+                        navController.navigate(Routes.NEW_ORDER)
+                    }
+                ) }
                 composable(Routes.SCHEDULES) { ScheduleViewScreen(scheduleViewModel) }
                 composable(
                     route = Routes.NEW_ORDER,
