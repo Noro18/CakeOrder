@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ordermanagementcake.R
+import com.example.ordermanagementcake.ui.theme.extendedColors
 
 @Composable
 fun DashboardScreen() {
@@ -98,10 +98,13 @@ fun DashboardScreen() {
 
 @Composable
 fun StatCard(label: String, value: String, modifier: Modifier = Modifier) {
+    val extendedColors = MaterialTheme.extendedColors
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+        colors = CardDefaults.cardColors(
+            containerColor = extendedColors.surfaceContainer
+        )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = value, style = MaterialTheme.typography.displaySmall, fontWeight = FontWeight.ExtraBold)
@@ -120,7 +123,7 @@ fun SectionHeader(title: String, actionText: String) {
     ) {
         Text(text = title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
         TextButton(onClick = { /* TODO */ }) {
-            Text(text = actionText, color = Color(0xFF9A2A07))
+            Text(text = actionText, color = MaterialTheme.colorScheme.primary)
         }
     }
 }
@@ -129,7 +132,10 @@ fun SectionHeader(title: String, actionText: String) {
 fun PickupItem() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        )
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
@@ -139,16 +145,34 @@ fun PickupItem() {
                 painter = painterResource(id = R.drawable.double_chodolate_fudge),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(64.dp).clip(CircleShape)
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = "Eleanor Shellstrop", fontWeight = FontWeight.Bold)
-                Text(text = "Salted Caramel Macaron Tower", style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = "Eleanor Shellstrop",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "Salted Caramel Macaron Tower",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
             Column(horizontalAlignment = Alignment.End) {
-                Text(text = "Today", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-                Text(text = "09:00 AM", style = MaterialTheme.typography.bodySmall)
+                Text(
+                    text = "Today",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = "09:00 AM",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
@@ -156,39 +180,60 @@ fun PickupItem() {
 
 @Composable
 fun OrderItem() {
+    val extendedColors = MaterialTheme.extendedColors
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = extendedColors.surfaceContainerLow
+        )
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = "Jason Mendoza", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Text(text = "6x Jalapeno Cornbread Loaves", style = MaterialTheme.typography.bodySmall)
-                Text(text = "Order #8841", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                Text(
+                    text = "Jason Mendoza",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "6x Jalapeno Cornbread Loaves",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = "Order #8841",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.outline
+                )
             }
             Column(horizontalAlignment = Alignment.End) {
                 Surface(
-                    color = Color(0xFFA9EF95),
+                    color = extendedColors.successContainer,
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
                         text = "Ready",
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                        color = Color(0xFF31912E),
+                        color = extendedColors.onSuccessContainer,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "$48.00", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(
+                    text = "$48.00",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun DashboardScreenPreview() {
