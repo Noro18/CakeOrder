@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -44,6 +45,7 @@ import com.example.ordermanagementcake.ui.clients.ClientsListScreen
 import com.example.ordermanagementcake.ui.components.AppDrawer
 import com.example.ordermanagementcake.ui.components.AppTopBar
 import com.example.ordermanagementcake.ui.components.AppTopBarDelete
+import com.example.ordermanagementcake.ui.components.AppTopBarNewOrder
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
 import com.example.ordermanagementcake.ui.forms.clients.NewClientForm
@@ -93,7 +95,8 @@ fun AppNavHost(
         Routes.DASHBOARD,
         Routes.ORDERS,
         Routes.CLIENTS,
-        Routes.SCHEDULES
+        Routes.SCHEDULES,
+        Routes.NEW_CLIENT
     )
 
     val selectedItem = when (currentRoute) {
@@ -169,6 +172,8 @@ fun AppNavHost(
                             }
                         )
                     }
+                } else if (currentRoute == Routes.NEW_ORDER) {
+                    AppTopBarNewOrder(onBackClick = { navController.popBackStack()}, title = "New Order")
                 }
             },
             bottomBar = {
