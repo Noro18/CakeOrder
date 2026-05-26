@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -24,6 +25,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
@@ -131,11 +133,42 @@ fun AppNavHost(
                         onMenuClick = { scope.launch { drawerState.open() } }
                     )
                 } else if (currentRoute?.startsWith("client_detail/") == true) {
+                    val clientUiState by clientViewModel.uiState.collectAsStateWithLifecycle()
+                    var showDeleteDialog by remember { mutableStateOf(false) }
+
                     AppTopBarDelete(
                         title = "Detalhu Kliente",
                         onBackClick = { navController.popBackStack() },
-                        onDeleteClick = { /* Logic for deletion to be handled later */ }
+                        onDeleteClick = { showDeleteDialog = true }
                     )
+
+                    if (showDeleteDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showDeleteDialog = false },
+                            title = { Text("Konfirma Delete") },
+                            text = {
+                                Text(
+                                    "Ita boot hakarak delete kliente \"${clientUiState.selectedClient?.client?.name}\"?"
+                                )
+                            },
+                            confirmButton = {
+                                TextButton(onClick = {
+                                    clientUiState.selectedClient?.client?.let { client ->
+                                        clientViewModel.deleteClient(client)
+                                        navController.popBackStack()
+                                    }
+                                    showDeleteDialog = false
+                                }) {
+                                    Text("Delete", color = Color.Red)
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showDeleteDialog = false }) {
+                                    Text("Kansela")
+                                }
+                            }
+                        )
+                    }
                 }
             },
             bottomBar = {

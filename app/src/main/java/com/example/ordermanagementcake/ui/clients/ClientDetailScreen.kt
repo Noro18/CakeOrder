@@ -170,7 +170,7 @@ fun ClientInfoCard(
     phone: String,
     address: String,
     notes: String,
-    onEditClick: () -> Unit
+    onEditClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),

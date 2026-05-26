@@ -40,6 +40,7 @@ fun ClientsListScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
+
     val filteredClients = remember(uiState.clients, uiState.searchQuery) {
         if (uiState.searchQuery.isBlank()) uiState.clients
         else uiState.clients.filter {
@@ -169,6 +170,9 @@ fun ClientCard(
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
+
+    var showDeleteConfirm by remember { mutableStateOf(false) }
+
     val extendedColors = MaterialTheme.extendedColors
     Card(
         onClick = onClick,
@@ -259,12 +263,29 @@ fun ClientCard(
                         text = { Text("Delete") },
                         leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null) },
                         onClick = {
-                            onDelete()
+                            showDeleteConfirm = true
                             expanded = false
                         }
                     )
                 }
             }
         }
+
+    }
+    if (showDeleteConfirm) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirm = false },
+            title = { Text("Konfirma Delete") },
+            text = { Text("Ita boot hakarak delete kliente \"${client.name}\"?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    onDelete()              // ← parent's callback, fires only after confirm
+                    showDeleteConfirm = false
+                }) { Text("Delete", color = Color.Red) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteConfirm = false }) { Text("Kansela") }
+            }
+        )
     }
 }
