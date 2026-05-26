@@ -18,10 +18,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Search
@@ -33,13 +31,11 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,13 +47,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ordermanagementcake.ui.theme.extendedColors
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -69,15 +65,10 @@ fun NewOrderForm(
     onSaveOrder: () -> Unit = {}
 ) {
     var searchText by remember { mutableStateOf("") }
-    
-    // State to control DatePicker visibility
     var showDatePicker by remember { mutableStateOf(false) }
-    // State to store the selected date text
     var selectedDateText by remember { mutableStateOf("Select pickup or delivery date") }
-    
     val datePickerState = rememberDatePickerState()
 
-    // DatePicker Dialog logic
     if (showDatePicker) {
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
@@ -89,12 +80,12 @@ fun NewOrderForm(
                     }
                     showDatePicker = false
                 }) {
-                    Text("OK", color = Color(0xFF8C280E))
+                    Text("OK", color = MaterialTheme.colorScheme.primary)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("CANCEL", color = Color.Gray)
+                    Text("CANCEL", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         ) {
@@ -102,111 +93,57 @@ fun NewOrderForm(
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text  = "Order Form",
-                        fontWeight = FontWeight.Bold
-                ) },
-                navigationIcon = {
-                    IconButton(onClick = { }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "back"
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { }) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = "Menu"
-                        )
-                    }
-                }
-            )
-        },
-        bottomBar = {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shadowElevation = 16.dp,
-                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-                color = Color.White
-            ) {
-                Box(
-                    modifier = Modifier
-                        .padding(24.dp)
-                        .fillMaxWidth()
-                ) {
-                    Button(
-                        onClick = onSaveOrder,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFA6510F))
-                    ) {
-                        Text(
-                            text = "Rai Pedidu",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            color = Color.White
-                        )
-                    }
-                }
-            }
-        }
-
-    ) { innerPadding ->
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
                 .verticalScroll(rememberScrollState())
-                .padding(innerPadding),
+                .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Main Card: Search and Selected Client
+            Spacer(modifier = Modifier.height(16.dp))
+
             Card(
                 modifier = Modifier
-                    .padding(top = 16.dp)
-                    .width(360.dp)
+                    .fillMaxWidth()
                     .height(230.dp),
-                shape = RoundedCornerShape(16.dp)
-            ){
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                ) {
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.extendedColors.surfaceContainerLow
+                )
+            ) {
+                Column(modifier = Modifier.fillMaxSize()) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
-                    ){
+                    ) {
                         Box(
                             modifier = Modifier
                                 .padding(top = 16.dp, start = 16.dp)
                                 .size(50.dp)
                                 .clip(CircleShape)
-                                .background(Color.LightGray),
+                                .background(MaterialTheme.extendedColors.surfaceContainerHigh),
                             contentAlignment = Alignment.Center
                         ) {
-                            IconButton(onClick = {}) {
-                                Icon(
-                                    imageVector = Icons.Default.Person,
-                                    contentDescription = "Profile",
-                                    modifier = Modifier.size(24.dp),
-                                    tint = Color.White
-                                )
-                            }
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Profile",
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
                         Text(
                             text = "La iha Cliente Selecionado",
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(top = 16.dp, start = 12.dp),
-                            lineHeight = 28.sp
+                            lineHeight = 28.sp,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
 
@@ -219,27 +156,27 @@ fun NewOrderForm(
                         placeholder = {
                             Text(
                                 text = "buka clinet ne'ebe eziste...",
-                                color = Color(0xFF8C280E)
-                            ) },
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Search,
                                 contentDescription = "Search",
-                                tint = Color(0xFF8C280E)
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true
                     )
 
-                    // Add New Client Card inside the main card
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF96340F)
+                            containerColor = MaterialTheme.colorScheme.primary
                         )
                     ) {
                         Row(
@@ -253,12 +190,12 @@ fun NewOrderForm(
                             Icon(
                                 imageVector = Icons.Default.PersonAdd,
                                 contentDescription = "Add",
-                                tint = Color(0xFFFCF9F8)
+                                tint = MaterialTheme.colorScheme.onPrimary
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = "Adisiona Kliente Foun",
-                                color = Color(0xFFF6F0EF),
+                                color = MaterialTheme.colorScheme.onPrimary,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
                             )
@@ -267,73 +204,63 @@ fun NewOrderForm(
                 }
             }
 
-
             Spacer(modifier = Modifier.height(25.dp))
-            // cake items row
+
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column {
                     Text(
                         text = "contem order sira",
-                        color = Color(0xFF8C280E)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-
                     Text(
                         text = "Elemento Cake",
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(top = 2.dp),
                         fontSize = 25.sp,
-                        color = Color(0xFF8C280E)
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
-                Column(
-                    horizontalAlignment = Alignment.End
-                ) {
+                Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = "draft order",
-                        color = Color.Gray,
-                        modifier = Modifier
-                            .clickable { /* Handle change */ }
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.clickable { }
                     )
-
                     Text(
                         text = "$0.00",
                         fontWeight = FontWeight.Bold,
                         fontSize = 25.sp,
-                        color = Color(0xFF8C280E),
-                        modifier = Modifier
-                            .clickable { /* Handle change */ }
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable { }
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Dashed Border "Add First Cake" Section
             val stroke = Stroke(
                 width = 2f,
                 pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
             )
+            val dashBorderColor = MaterialTheme.colorScheme.outlineVariant
 
             Box(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
                     .fillMaxWidth()
                     .height(140.dp)
                     .drawBehind {
                         drawRoundRect(
-                            color = Color.LightGray,
+                            color = dashBorderColor,
                             style = stroke,
                             cornerRadius = CornerRadius(12.dp.toPx())
                         )
                     }
-                    .clickable { /* Handle add first cake */ },
+                    .clickable { },
                 contentAlignment = Alignment.Center
             ) {
                 Column(
@@ -344,13 +271,13 @@ fun NewOrderForm(
                         modifier = Modifier
                             .size(45.dp)
                             .clip(CircleShape)
-                            .background(Color(0xFFF3F3F3)),
+                            .background(MaterialTheme.extendedColors.surfaceContainerHigh),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = "Add",
-                            tint = Color(0xFF8C280E),
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp)
                         )
                     }
@@ -359,28 +286,23 @@ fun NewOrderForm(
                         text = "Aumenta Cake Primeiro",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "Select from your menu or create custom",
                         fontSize = 13.sp,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Delivery Details Section
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "DELIVERY DETAILS",
-                    color = Color(0xFF8C280E),
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 12.sp,
                     letterSpacing = 1.sp
@@ -392,9 +314,11 @@ fun NewOrderForm(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp)
-                        .clickable { showDatePicker = true }, // Click to show calendar
+                        .clickable { showDatePicker = true },
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.extendedColors.surfaceContainerLow
+                    ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
                     Row(
@@ -406,25 +330,59 @@ fun NewOrderForm(
                     ) {
                         Text(
                             text = selectedDateText,
-                            color = if (selectedDateText == "hili data entrega") Color.Gray else Color.Black,
+                            color = if (selectedDateText == "hili data entrega")
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            else MaterialTheme.colorScheme.onSurface,
                             fontSize = 14.sp
                         )
                         Icon(
                             imageVector = Icons.Default.CalendarToday,
                             contentDescription = "Calendar",
-                            tint = Color.Gray,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(20.dp)
                         )
                     }
                 }
             }
+
             Spacer(modifier = Modifier.height(32.dp))
+        }
+
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shadowElevation = 16.dp,
+            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth()
+            ) {
+                Button(
+                    onClick = onSaveOrder,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text(
+                        text = "Rai Pedidu",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
 @Preview(showBackground = true)
-fun OrderFormPreview (){
+fun OrderFormPreview() {
     NewOrderForm()
 }
