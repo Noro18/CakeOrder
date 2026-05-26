@@ -28,6 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ordermanagementcake.data.local.OrderDatabase
 import com.example.ordermanagementcake.data.repository.ClientRepository
 import com.example.ordermanagementcake.data.local.entities.ClientEntity
+import com.example.ordermanagementcake.ui.theme.extendedColors
 import kotlin.math.absoluteValue
 
 @Composable
@@ -94,8 +95,8 @@ fun ClientsListScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 unfocusedIndicatorColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent
             ),
@@ -115,7 +116,7 @@ fun ClientsListScreen(
                 uiState.isLoading -> {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center),
-                        color = Color(0xFFF87146)
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
                 uiState.errorMessage != null -> {
@@ -172,14 +173,14 @@ fun ClientCard(
 
     var showDeleteConfirm by remember { mutableStateOf(false) }
 
+    val extendedColors = MaterialTheme.extendedColors
     Card(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            containerColor = extendedColors.surfaceContainerLow
+        )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
