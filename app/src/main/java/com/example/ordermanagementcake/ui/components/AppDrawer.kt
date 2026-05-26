@@ -1,36 +1,22 @@
 package com.example.ordermanagementcake.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddShoppingCart
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Dashboard
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.People
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Store
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+import com.example.ordermanagementcake.ui.theme.extendedColors
 
 data class DrawerItem(
     var label: String,
@@ -40,86 +26,182 @@ data class DrawerItem(
 
 @Composable
 fun AppDrawer(
+    selectedItem: Int = 0,
     onClose: () -> Unit
 ) {
+    val extendedColors = MaterialTheme.extendedColors
     val items = listOf(
-            DrawerItem("Dashboard",  Icons.Default.Dashboard)   { onClose() },
-        DrawerItem("Orders",     Icons.Default.AddShoppingCart) { onClose() },
-        DrawerItem("Clients",    Icons.Default.People)      { onClose() },
-        DrawerItem("Schedules",  Icons.Default.CalendarMonth) { onClose() },
+        DrawerItem("Dashboard",  Icons.Default.Dashboard)        { onClose() },
+        DrawerItem("Orders",     Icons.Default.AddShoppingCart)  { onClose() },
+        DrawerItem("Clients",    Icons.Default.People)           { onClose() },
+        DrawerItem("Schedules",  Icons.Default.CalendarMonth)    { onClose() },
     )
 
     val bottomItems = listOf(
-        DrawerItem("Settings",   Icons.Default.Settings)    { onClose() },
-        DrawerItem("About",      Icons.Default.Info)        { onClose() },
+        DrawerItem("Settings",   Icons.Default.Settings)         { onClose() },
+        DrawerItem("About",      Icons.Default.Info)             { onClose() },
     )
 
-    ModalDrawerSheet() {
+    ModalDrawerSheet(
+        drawerContainerColor = extendedColors.surfaceContainer,
+        drawerContentColor   = MaterialTheme.colorScheme.onSurface,
+    ) {
+
+        // ── Header ────────────────────────────────────────────
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFC23C12))
-                .padding(24.dp)
+                .background(extendedColors.surfaceContainer)
+                .padding(horizontal = 24.dp, vertical = 28.dp)
         ) {
-            Column() {
+            Column {
+                // Avatar circle
                 Box(
                     modifier = Modifier
                         .size(56.dp)
                         .clip(CircleShape)
-                        .background(Color.White.copy(alpha = 0.3f)),
+                        .background(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Store,
                         contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(30.dp)
                     )
                 }
-                Spacer(Modifier.height(12.dp))
+
+                Spacer(Modifier.height(14.dp))
+
                 Text(
                     text = "The Artisanal Bakery",
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.3.sp
                 )
+
+                Spacer(Modifier.height(2.dp))
+
                 Text(
                     text = "Order Management",
-                    color = Color.White.copy(alpha = 0.7f),
-                    fontSize = 13.sp
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f),
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Normal
                 )
             }
         }
-        Spacer(Modifier.height(8.dp))
 
-        // ── Navigation items ──────────────────────────────────
-        items.forEach { item ->
+        Spacer(Modifier.height(12.dp))
+
+        // ── Section label ──────────────────────────────────────
+        Text(
+            text = "MENU",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.outline,
+            modifier = Modifier.padding(horizontal = 28.dp, vertical = 4.dp),
+            letterSpacing = 1.5.sp
+        )
+
+        Spacer(Modifier.height(4.dp))
+
+        // ── Navigation items ───────────────────────────────────
+        items.forEachIndexed { index, item ->
+            val isSelected = selectedItem == index
             NavigationDrawerItem(
-                icon = { Icon(item.icon, contentDescription = null) },
-                label = { Text(item.label) },
-                selected = false,
+                icon = {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = null,
+                        modifier = Modifier.size(22.dp)
+                    )
+                },
+                label = {
+                    Text(
+                        text = item.label,
+                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+                    )
+                },
+                selected = isSelected,
                 onClick = item.onClick,
-                modifier = Modifier.padding(horizontal = 12.dp)
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    selectedIconColor      = MaterialTheme.colorScheme.onPrimaryContainer,
+                    selectedTextColor      = MaterialTheme.colorScheme.onPrimaryContainer,
+                    unselectedIconColor    = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor    = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             )
         }
 
         Spacer(Modifier.weight(1f))
 
-        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+        // ── Divider + bottom section label ────────────────────
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
+
         Spacer(Modifier.height(8.dp))
 
-        // ── Bottom items (Settings, About) ────────────────────
+        Text(
+            text = "GENERAL",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.outline,
+            modifier = Modifier.padding(horizontal = 28.dp, vertical = 4.dp),
+            letterSpacing = 1.5.sp
+        )
+
+        Spacer(Modifier.height(4.dp))
+
+        // ── Bottom items ───────────────────────────────────────
         bottomItems.forEach { item ->
             NavigationDrawerItem(
-                icon = { Icon(item.icon, contentDescription = null) },
-                label = { Text(item.label) },
+                icon = {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = null,
+                        modifier = Modifier.size(22.dp)
+                    )
+                },
+                label = {
+                    Text(
+                        text = item.label,
+                        fontWeight = FontWeight.Normal
+                    )
+                },
                 selected = false,
                 onClick = item.onClick,
-                modifier = Modifier.padding(horizontal = 12.dp)
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
+                colors = NavigationDrawerItemDefaults.colors(
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             )
         }
 
-        Spacer(Modifier.height(16.dp))
+        // ── Footer version tag ─────────────────────────────────
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 20.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Surface(
+                shape = RoundedCornerShape(6.dp),
+                color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                tonalElevation = 0.dp
+            ) {
+                Text(
+                    text = "v1.0.0",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                )
+            }
+        }
     }
 }
-
