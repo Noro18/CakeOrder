@@ -19,11 +19,10 @@ import com.example.ordermanagementcake.ui.theme.extendedColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBarDelete(
+fun AppTopBarNewOrder(
     title: String = "The Artisanal Bakery",
     onBackClick: (() -> Unit)? = null,
     onMenuClick: (() -> Unit)? = null,
-    onDeleteClick: () -> Unit = {}
 ) {
     val extendedColors = MaterialTheme.extendedColors
     TopAppBar(
@@ -54,15 +53,6 @@ fun AppTopBarDelete(
                 }
             }
         },
-        actions = {
-            IconButton(onClick = onDeleteClick) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-            }
-        },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor             = extendedColors.sourceColor,
             navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -71,10 +61,9 @@ fun AppTopBarDelete(
         )
     )
 }
-/*
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TopBarDeletePreview() {
     AppTopBarDelete()
-}*/
+}
