@@ -21,8 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.AutoFixHigh
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -95,7 +93,7 @@ fun NewCakeForm(
             
             // Screen Title: Artisanal Choice
             Text(
-                text = "Escolha Artesanál",
+                text = "Konfigurasaun Cake",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -117,17 +115,6 @@ fun NewCakeForm(
             }
 
             Spacer(modifier = Modifier.height(28.dp))
-
-            // Row containing client contact information chips
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                InfoChip(Icons.Default.Phone, "+1 (555) 012-3456", Modifier.weight(1f))
-                InfoChip(Icons.Default.LocationOn, "Brooklyn, NY", Modifier.weight(1f))
-            }
-
-            Spacer(modifier = Modifier.height(36.dp))
 
             // Section for Cake Title
             Text(
@@ -189,36 +176,7 @@ fun NewCakeForm(
     }
 }
 
-// Reusable component for displaying an information chip with an icon
-@Composable
-fun InfoChip(icon: ImageVector, text: String, modifier: Modifier = Modifier) {
-    Surface(
-        color = MaterialTheme.extendedColors.surfaceContainerHigh,
-        shape = RoundedCornerShape(12.dp),
-        tonalElevation = 1.dp,
-        modifier = modifier
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(16.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = text, 
-                style = MaterialTheme.typography.labelLarge, 
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1
-            )
-        }
-    }
-}
+
 
 // Reusable card container for different form sections
 @Composable
