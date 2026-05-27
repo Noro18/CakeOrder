@@ -46,7 +46,7 @@ data class TierData(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TierForm(
+fun NewTierForm(
     onDismiss: () -> Unit = {},
     onSave: (Map<Int, TierData>) -> Unit = { _ -> }
 ) {
@@ -620,5 +620,5 @@ fun ColorSwatchCircle(
 @Preview(showBackground = true)
 @Composable
 fun TierFormPreview() {
-    TierForm()
+    NewTierForm()
 }

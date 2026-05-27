@@ -324,7 +324,7 @@ fun AppNavHost(
                     )
                 }
                 composable (route = Routes.NEW_CAKE)  {
-                    NewCakeForm(onAddTier, onSaveCake)
+                    NewCakeForm {  }
                 }
             }
         }
