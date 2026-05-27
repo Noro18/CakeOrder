@@ -166,7 +166,8 @@ fun NewCakeForm(
                     icon = Icons.Default.AddPhotoAlternate,
                     title = "AUMENTA IMAJEN REFERÉNSIA",
                     description = "Muda foto husi dezeñu bolo ne'ebé Ita gosta",
-                    mainColor = textBrown
+                    mainColor = textBrown,
+                    onClick = onAddReference
                 )
             }
 
@@ -178,7 +179,8 @@ fun NewCakeForm(
                     icon = Icons.Default.Add,
                     title = "AUMENTA NIVÉL",
                     description = null,
-                    mainColor = textBrown
+                    mainColor = textBrown,
+                    onClick = onAddTier
                 )
             }
             
@@ -242,7 +244,8 @@ fun DashedAddBox(
     icon: ImageVector,
     title: String,
     description: String?,
-    mainColor: Color
+    mainColor: Color,
+    onClick: () -> Unit
 ) {
     // Define the style for the dashed border
     val stroke = Stroke(
@@ -261,7 +264,7 @@ fun DashedAddBox(
                     cornerRadius = CornerRadius(16.dp.toPx())
                 )
             }
-            .clickable { /* Action when clicking the dashed box */ }
+            .clickable { onClick() }
             .padding(vertical = 32.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -275,7 +278,7 @@ fun DashedAddBox(
                 contentAlignment = Alignment.Center
             ) {
                 // Clickable icon button
-                IconButton(onClick = {}) {
+                IconButton(onClick = { onClick() }) {
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
