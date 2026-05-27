@@ -18,9 +18,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.AutoFixHigh
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -31,6 +34,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
@@ -59,6 +64,9 @@ fun NewCakeForm(
     onAddReference: () -> Unit = {}
 ) {
     var cakeTitle by remember { mutableStateOf("") }
+    var estimatedTotal by remember { mutableStateOf("85.00") }
+    var showEditTotalDialog by remember { mutableStateOf(false) }
+    var tempTotalInput by remember { mutableStateOf(estimatedTotal) }
     val extendedColors = MaterialTheme.extendedColors
 
     // Main UI structure without Scaffold (to avoid double padding in NavGraph)
@@ -93,7 +101,7 @@ fun NewCakeForm(
             
             // Screen Title: Artisanal Choice
             Text(
-                text = "Konfigurasaun Cake",
+                text = "Escolha Artesanál",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -172,11 +180,76 @@ fun NewCakeForm(
         }
         
         // Bottom bar containing the estimated total and save button
-        BottomSummaryBar(onSaveCake = onSaveCake)
+        BottomSummaryBar(
+            estimatedTotal = estimatedTotal,
+            onEditTotalClick = {
+                tempTotalInput = estimatedTotal
+                showEditTotalDialog = true
+            },
+            onSaveCake = onSaveCake
+        )
+    }
+
+    // Modern Dialog to Edit Total
+    if (showEditTotalDialog) {
+        AlertDialog(
+            onDismissRequest = { showEditTotalDialog = false },
+            title = {
+                Text(
+                    text = "Muda Estimasaun Totál",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
+            text = {
+                Column {
+                    Text(
+                        text = "Insere valór foun ba estimasaun totál bolo nian:",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    OutlinedTextField(
+                        value = tempTotalInput,
+                        onValueChange = { tempTotalInput = it },
+                        label = { Text("Estimasaun Totál ($)") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                            focusedContainerColor = extendedColors.surfaceContainerLow,
+                            unfocusedContainerColor = extendedColors.surfaceContainerLowest,
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        estimatedTotal = tempTotalInput
+                        showEditTotalDialog = false
+                    },
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Rai")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showEditTotalDialog = false }
+                ) {
+                    Text("Kansela")
+                }
+            },
+            shape = RoundedCornerShape(28.dp),
+            containerColor = extendedColors.surfaceContainerLow
+        )
     }
 }
-
-
 
 // Reusable card container for different form sections
 @Composable
@@ -274,7 +347,11 @@ fun DashedAddBox(
 
 // Bottom bar containing the price summary and save button
 @Composable
-fun BottomSummaryBar(onSaveCake: () -> Unit) {
+fun BottomSummaryBar(
+    estimatedTotal: String,
+    onEditTotalClick: () -> Unit,
+    onSaveCake: () -> Unit
+) {
     Surface(
         color = MaterialTheme.extendedColors.surfaceContainerLowest,
         modifier = Modifier.fillMaxWidth(),
@@ -289,7 +366,12 @@ fun BottomSummaryBar(onSaveCake: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Price estimation display
-            Column {
+            Column(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable { onEditTotalClick() }
+                    .padding(4.dp)
+            ) {
                 Text(
                     text = "ESTIMASAUN TOTÁL",
                     style = MaterialTheme.typography.labelSmall,
@@ -297,12 +379,23 @@ fun BottomSummaryBar(onSaveCake: () -> Unit) {
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.5.sp
                 )
-                Text(
-                    text = "$85.00",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = "$$estimatedTotal",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Muda Estimasaun",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
             }
             
             // Primary action button to save changes
