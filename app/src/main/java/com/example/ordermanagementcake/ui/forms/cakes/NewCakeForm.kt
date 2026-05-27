@@ -28,12 +28,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -52,6 +50,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
+import com.example.ordermanagementcake.ui.theme.extendedColors
 
 // Main composable function for the Customize Cake screen
 @Composable
@@ -60,105 +60,104 @@ fun NewCakeForm(
     onSaveCake: () -> Unit = {},
     onAddReference: () -> Unit = {}
 ) {
-    val mainOrange = Color(0xFFF37B21)
-    val textBrown = Color(0xFF8C280E)
-    val bgColor = Color(0xFFF8F8F8)
-
     var cakeTitle by remember { mutableStateOf("") }
+    val extendedColors = MaterialTheme.extendedColors
 
-    // Main UI structure using Scaffold
-    Scaffold(
-        bottomBar = {
-            // Bottom bar containing the estimated total and save button
-            BottomSummaryBar(mainOrange)
-        }
-    ) { innerPadding ->
+    // Main UI structure without Scaffold (to avoid double padding in NavGraph)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(bgColor)
+                .fillMaxWidth()
+                .weight(1f)
                 .verticalScroll(rememberScrollState())
-                .padding(24.dp)
+                .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
             // Header tag for Order Configuration
             Surface(
-                color = Color(0xFFFFEDE6),
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
                     text = "KONFIGURASAUN PEDIDU",
-                    color = Color(0xFFD48259),
-                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                     letterSpacing = 0.5.sp
                 )
             }
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             
             // Screen Title: Artisanal Choice
             Text(
                 text = "Escolha Artesanál",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF4A4A4A)
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.ExtraBold,
+                color = MaterialTheme.colorScheme.onBackground
             )
             
             // Subtitle showing the client name
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
                 Text(
                     text = "Personaliza ba ",
-                    fontSize = 16.sp,
-                    color = Color.Gray
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = "Sophie Chen",
-                    fontSize = 16.sp,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFFD48259)
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
             // Row containing client contact information chips
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                InfoChip(Icons.Default.Phone, "+1 (555) 012-3456")
-                InfoChip(Icons.Default.LocationOn, "Brooklyn, NY")
+                InfoChip(Icons.Default.Phone, "+1 (555) 012-3456", Modifier.weight(1f))
+                InfoChip(Icons.Default.LocationOn, "Brooklyn, NY", Modifier.weight(1f))
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(36.dp))
 
             // Section for Cake Title
+            Text(
+                text = "TITULU CAKE",
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.8.sp,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            
+            OutlinedTextField(
+                value = cakeTitle,
+                onValueChange = { cakeTitle = it },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { 
+                    Text("Ez: Bolo Kazamentu Ezequiel", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) 
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                    focusedContainerColor = extendedColors.surfaceContainerLow,
+                    unfocusedContainerColor = extendedColors.surfaceContainerLowest,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                ),
+                shape = RoundedCornerShape(16.dp),
+                singleLine = true
+            )
 
-                Text(
-                    text = "TITULU CAKE",
-                    color = Color(0xFF8C280E),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.8.sp
-                )
-                TextField(
-                    value = cakeTitle,
-                    onValueChange = { cakeTitle = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Ez: Bolo Kazamentu Ezequiel", color = Color.LightGray, fontSize = 14.sp) },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedIndicatorColor = mainOrange,
-                        unfocusedIndicatorColor = Color(0xFFE0D1D1),
-                        cursorColor = mainOrange
-                    ),
-                    singleLine = true
-                )
-
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             // Section for adding a Reference Image
             SectionCard(title = "IMAJEN REFERÉNSIA") {
@@ -166,7 +165,6 @@ fun NewCakeForm(
                     icon = Icons.Default.AddPhotoAlternate,
                     title = "AUMENTA IMAJEN REFERÉNSIA",
                     description = "Muda foto husi dezeñu bolo ne'ebé Ita gosta",
-                    mainColor = textBrown,
                     onClick = onAddReference
                 )
             }
@@ -179,36 +177,45 @@ fun NewCakeForm(
                     icon = Icons.Default.Add,
                     title = "AUMENTA NIVÉL",
                     description = null,
-                    mainColor = textBrown,
                     onClick = onAddTier
                 )
             }
             
             Spacer(modifier = Modifier.height(40.dp))
         }
+        
+        // Bottom bar containing the estimated total and save button
+        BottomSummaryBar(onSaveCake = onSaveCake)
     }
 }
 
 // Reusable component for displaying an information chip with an icon
 @Composable
-fun InfoChip(icon: ImageVector, text: String) {
+fun InfoChip(icon: ImageVector, text: String, modifier: Modifier = Modifier) {
     Surface(
-        color = Color.White,
+        color = MaterialTheme.extendedColors.surfaceContainerHigh,
         shape = RoundedCornerShape(12.dp),
-        shadowElevation = 0.5.dp
+        tonalElevation = 1.dp,
+        modifier = modifier
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Color(0xFFD48259),
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = text, fontSize = 13.sp, color = Color.DarkGray)
+            Text(
+                text = text, 
+                style = MaterialTheme.typography.labelLarge, 
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1
+            )
         }
     }
 }
@@ -219,15 +226,15 @@ fun SectionCard(title: String, content: @Composable () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.extendedColors.surfaceContainerLowest),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(modifier = Modifier.padding(20.dp)) {
+        Column(modifier = Modifier.padding(24.dp)) {
             // Section Title
             Text(
                 text = title,
-                color = Color(0xFF8C280E),
-                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 0.8.sp
             )
@@ -244,9 +251,10 @@ fun DashedAddBox(
     icon: ImageVector,
     title: String,
     description: String?,
-    mainColor: Color,
     onClick: () -> Unit
 ) {
+    val outlineColor = MaterialTheme.colorScheme.outlineVariant
+    
     // Define the style for the dashed border
     val stroke = Stroke(
         width = 4f,
@@ -259,49 +267,47 @@ fun DashedAddBox(
             .drawBehind {
                 // Draw the dashed rounded rectangle border
                 drawRoundRect(
-                    color = Color.LightGray.copy(alpha = 0.8f),
+                    color = outlineColor,
                     style = stroke,
-                    cornerRadius = CornerRadius(16.dp.toPx())
+                    cornerRadius = CornerRadius(24.dp.toPx())
                 )
             }
+            .clip(RoundedCornerShape(24.dp))
             .clickable { onClick() }
-            .padding(vertical = 32.dp),
+            .padding(vertical = 32.dp, horizontal = 16.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             // Icon container with circular background
             Box(
                 modifier = Modifier
-                    .size(50.dp)
+                    .size(56.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFFFFEDE6)),
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
-                // Clickable icon button
-                IconButton(onClick = { onClick() }) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = mainColor,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(28.dp)
+                )
             }
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             // Label for the add action
             Text(
                 text = title,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                color = Color(0xFF333333)
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface
             )
             // Optional description text below the title
             if (description != null) {
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = description,
-                    fontSize = 11.sp,
-                    color = Color.Gray
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -310,16 +316,16 @@ fun DashedAddBox(
 
 // Bottom bar containing the price summary and save button
 @Composable
-fun BottomSummaryBar(orangeColor: Color) {
+fun BottomSummaryBar(onSaveCake: () -> Unit) {
     Surface(
-        color = Color.White,
+        color = MaterialTheme.extendedColors.surfaceContainerLowest,
         modifier = Modifier.fillMaxWidth(),
-        shadowElevation = 16.dp,
-        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+        shadowElevation = 24.dp,
+        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
     ) {
         Row(
             modifier = Modifier
-                .padding(24.dp)
+                .padding(horizontal = 24.dp, vertical = 20.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -328,39 +334,42 @@ fun BottomSummaryBar(orangeColor: Color) {
             Column {
                 Text(
                     text = "ESTIMASAUN TOTÁL",
-                    fontSize = 10.sp,
-                    color = Color.Gray,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.5.sp
                 )
                 Text(
                     text = "$85.00",
-                    fontSize = 24.sp,
+                    style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.ExtraBold,
-                    color = Color(0xFF333333)
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
             
             // Primary action button to save changes
             Button(
-                onClick = { },
+                onClick = onSaveCake,
                 modifier = Modifier
-                    .height(56.dp)
+                    .height(60.dp)
                     .width(180.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = orangeColor)
+                shape = RoundedCornerShape(20.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.AutoFixHigh,
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Rai Mudansa sira",
+                        text = "Rai Mudansa",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
+                        style = MaterialTheme.typography.titleSmall
                     )
                 }
             }
@@ -371,6 +380,8 @@ fun BottomSummaryBar(orangeColor: Color) {
 // Preview function for Android Studio IDE
 @Preview(showBackground = true)
 @Composable
-fun customizeCakeFormPreview() {
-    NewCakeForm()
+fun CustomizeCakeFormPreview() {
+    OrderManagementCakeTheme {
+        NewCakeForm()
+    }
 }
