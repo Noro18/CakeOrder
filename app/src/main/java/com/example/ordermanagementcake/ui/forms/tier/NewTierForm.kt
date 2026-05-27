@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -22,6 +23,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -72,6 +74,10 @@ fun NewTierForm(
     // Estadu ba Dropdown Forma
     var shapeExpanded by remember { mutableStateOf(false) }
     val shapes = listOf("Round", "Square", "Heart")
+
+    // Estadu ba Edit Price Dialog
+    var showEditPriceDialog by remember { mutableStateOf(false) }
+    var tempPriceInput by remember { mutableStateOf("") }
 
     // Estadu ba Color Picker Dialog
     var showColorPicker by remember { mutableStateOf(false) }
@@ -261,7 +267,14 @@ fun NewTierForm(
                                 text = "$${"%.0f".format(currentTierData.price)}", 
                                 fontWeight = FontWeight.Bold, 
                                 color = MaterialTheme.colorScheme.onSurface,
-                                fontSize = 15.sp
+                                fontSize = 15.sp,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .clickable {
+                                        tempPriceInput = "%.0f".format(currentTierData.price)
+                                        showEditPriceDialog = true
+                                    }
+                                    .padding(horizontal = 8.dp, vertical = 4.dp)
                             )
 
                             IconButton(
@@ -369,27 +382,6 @@ fun NewTierForm(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Markup adisionál
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Aumentu Adisionál", 
-                    style = MaterialTheme.typography.titleMedium, 
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = "+ $15.00", 
-                    style = MaterialTheme.typography.titleMedium, 
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-
-            Spacer(modifier = Modifier.height(40.dp))
-
             // Botão Save
             Button(
                 onClick = { onSave(tiersState.toMap()) },
@@ -409,6 +401,67 @@ fun NewTierForm(
             
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+
+    // Modern Dialog to Edit Tier Price
+    if (showEditPriceDialog) {
+        AlertDialog(
+            onDismissRequest = { showEditPriceDialog = false },
+            title = {
+                Text(
+                    text = "Muda Presu Nívél $activeTierLevel",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
+            text = {
+                Column {
+                    Text(
+                        text = "Insere valór foun ba presu nívél ida-ne'e nian:",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    OutlinedTextField(
+                        value = tempPriceInput,
+                        onValueChange = { tempPriceInput = it },
+                        label = { Text("Presu Nívél ($)") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                            focusedContainerColor = extendedColors.surfaceContainerLow,
+                            unfocusedContainerColor = extendedColors.surfaceContainerLowest,
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        val parsedPrice = tempPriceInput.toDoubleOrNull() ?: currentTierData.price
+                        tiersState[activeTierLevel] = currentTierData.copy(price = parsedPrice)
+                        showEditPriceDialog = false
+                    },
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Rai")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showEditPriceDialog = false }
+                ) {
+                    Text("Kansela")
+                }
+            },
+            shape = RoundedCornerShape(28.dp),
+            containerColor = extendedColors.surfaceContainerLow
+        )
     }
 }
 
