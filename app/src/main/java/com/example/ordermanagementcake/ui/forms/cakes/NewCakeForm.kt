@@ -1,4 +1,4 @@
-package com.example.ordermanagementcake.ui.customizecakeform
+package com.example.ordermanagementcake.ui.forms.cakes
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,7 +55,11 @@ import androidx.compose.ui.unit.sp
 
 // Main composable function for the Customize Cake screen
 @Composable
-fun customizeCakeForm() {
+fun NewCakeForm(
+    onAddTier: () -> Unit = {},
+    onSaveCake: () -> Unit = {},
+    onAddReference: () -> Unit = {}
+) {
     val mainOrange = Color(0xFFF37B21)
     val textBrown = Color(0xFF8C280E)
     val bgColor = Color(0xFFF8F8F8)
@@ -162,7 +166,8 @@ fun customizeCakeForm() {
                     icon = Icons.Default.AddPhotoAlternate,
                     title = "AUMENTA IMAJEN REFERÉNSIA",
                     description = "Muda foto husi dezeñu bolo ne'ebé Ita gosta",
-                    mainColor = textBrown
+                    mainColor = textBrown,
+                    onClick = onAddReference
                 )
             }
 
@@ -174,7 +179,8 @@ fun customizeCakeForm() {
                     icon = Icons.Default.Add,
                     title = "AUMENTA NIVÉL",
                     description = null,
-                    mainColor = textBrown
+                    mainColor = textBrown,
+                    onClick = onAddTier
                 )
             }
             
@@ -238,7 +244,8 @@ fun DashedAddBox(
     icon: ImageVector,
     title: String,
     description: String?,
-    mainColor: Color
+    mainColor: Color,
+    onClick: () -> Unit
 ) {
     // Define the style for the dashed border
     val stroke = Stroke(
@@ -257,7 +264,7 @@ fun DashedAddBox(
                     cornerRadius = CornerRadius(16.dp.toPx())
                 )
             }
-            .clickable { /* Action when clicking the dashed box */ }
+            .clickable { onClick() }
             .padding(vertical = 32.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -271,7 +278,7 @@ fun DashedAddBox(
                 contentAlignment = Alignment.Center
             ) {
                 // Clickable icon button
-                IconButton(onClick = {}) {
+                IconButton(onClick = { onClick() }) {
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
@@ -365,5 +372,5 @@ fun BottomSummaryBar(orangeColor: Color) {
 @Preview(showBackground = true)
 @Composable
 fun customizeCakeFormPreview() {
-    customizeCakeForm()
+    NewCakeForm()
 }
