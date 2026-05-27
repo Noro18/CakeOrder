@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -25,10 +26,7 @@ import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.DynamicSelectionState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.YearMonth
 import java.time.format.TextStyle
-import java.util.Locale
 import com.example.ordermanagementcake.data.local.entities.OrderEntity
 import com.example.ordermanagementcake.data.local.entities.OrderStatus
 
@@ -36,6 +34,8 @@ import com.example.ordermanagementcake.data.local.entities.OrderStatus
 fun ScheduleViewScreen(viewModel: ScheduleViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val brandOrange = Color(0xFFE8640C)
+    val config = LocalConfiguration.current
+    val locale = config.locales[0]
 
     val calendarState = rememberSelectableCalendarState(
         initialSelectionMode = SelectionMode.Single
@@ -127,6 +127,9 @@ fun ScheduleViewScreen(viewModel: ScheduleViewModel) {
                                 monthState = monthState,
                                 brandOrange = brandOrange
                             )
+                        },
+                        daysOfWeekHeader = { daysOfWeek ->
+                            WeekHeader(daysOfWeek = daysOfWeek)
                         }
                     )
                 }
@@ -147,14 +150,14 @@ fun ScheduleViewScreen(viewModel: ScheduleViewModel) {
                 Column {
                     Text(
                         text = "Entrega ba ${uiState.selectedDate.dayOfWeek.getDisplayName(
-                            TextStyle.FULL, Locale.getDefault()
+                            TextStyle.FULL, locale
                         )}",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = "${uiState.selectedDate.month.getDisplayName(
-                            TextStyle.SHORT, Locale.getDefault()
+                            TextStyle.SHORT, locale
                         )} ${uiState.selectedDate.dayOfMonth} · " +
                                 "${uiState.ordersForSelectedDay.size} orders total",
                         style = MaterialTheme.typography.bodySmall,
@@ -200,6 +203,8 @@ fun ScheduleViewScreen(viewModel: ScheduleViewModel) {
 
 @Composable
 fun MonthHeader(monthState: MonthState, brandOrange: Color) {
+    val config = LocalConfiguration.current
+    val locale = config.locales[0]
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -209,7 +214,7 @@ fun MonthHeader(monthState: MonthState, brandOrange: Color) {
     ) {
         Text(
             text = "${monthState.currentMonth.month.getDisplayName(
-                TextStyle.FULL, Locale.getDefault()
+                TextStyle.FULL, locale
             )} ${monthState.currentMonth.year}",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
@@ -230,14 +235,16 @@ fun MonthHeader(monthState: MonthState, brandOrange: Color) {
 
 @Composable
 fun WeekHeader(daysOfWeek: List<DayOfWeek>) {
+    val config = LocalConfiguration.current
+    val locale = config.locales[0]
     Row(modifier = Modifier.fillMaxWidth()) {
         daysOfWeek.forEach { dayOfWeek ->
             Text(
-                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                text = dayOfWeek.getDisplayName(TextStyle.SHORT, locale),
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
         }
@@ -254,7 +261,7 @@ fun DayCell(
 ) {
     val date = state.date
     val isSelected = state.selectionState.isDateSelected(date)
-    val isCurrentMonth = !state.isFromCurrentMonth.not()
+    val isCurrentMonth = state.isFromCurrentMonth
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
