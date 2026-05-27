@@ -62,7 +62,8 @@ import java.util.Locale
 @Composable
 fun NewOrderForm(
     onAddNewClient: () -> Unit = {},
-    onSaveOrder: () -> Unit = {}
+    onSaveOrder: () -> Unit = {},
+    onNewCake: () -> Unit = {}
 ) {
     var searchText by remember { mutableStateOf("") }
     var showDatePicker by remember { mutableStateOf(false) }
@@ -260,7 +261,7 @@ fun NewOrderForm(
                             cornerRadius = CornerRadius(12.dp.toPx())
                         )
                     }
-                    .clickable { },
+                    .clickable { onNewCake() },
                 contentAlignment = Alignment.Center
             ) {
                 Column(
