@@ -53,6 +53,7 @@ import com.example.ordermanagementcake.ui.forms.clients.NewClientForm
 import com.example.ordermanagementcake.ui.forms.orders.NewOrderForm
 import com.example.ordermanagementcake.ui.orders.OrderListScreen
 import com.example.ordermanagementcake.ui.forms.orders.NewOrderScreen
+import com.example.ordermanagementcake.ui.forms.tier.NewTierForm
 import com.example.ordermanagementcake.ui.orders.OrderViewModel
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewModel
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewScreen
@@ -68,6 +69,7 @@ object Routes {
     const val NEW_CLIENT = "new_client"
     const val DETAIL_CLIENT = "client_detail/{clientID}" // route based on
     const val NEW_CAKE = "new_cake"
+    const val NEW_TIER = "new_tier"
 
     fun clientDetail(clientId: Int) = "client_detail/$clientId"
 
@@ -324,7 +326,13 @@ fun AppNavHost(
                     )
                 }
                 composable (route = Routes.NEW_CAKE)  {
-                    NewCakeForm {  }
+                    NewCakeForm (
+                        onAddTier = { navController.navigate(Routes.NEW_TIER)}
+                    ) {  }
+                }
+
+                composable(route = Routes.NEW_TIER) {
+                    NewTierForm {  }
                 }
             }
         }
