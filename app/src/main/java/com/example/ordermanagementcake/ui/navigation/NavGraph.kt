@@ -48,6 +48,7 @@ import com.example.ordermanagementcake.ui.components.AppTopBarDelete
 import com.example.ordermanagementcake.ui.components.AppTopBarNewOrder
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
+import com.example.ordermanagementcake.ui.forms.cakes.NewCakeForm
 import com.example.ordermanagementcake.ui.forms.clients.NewClientForm
 import com.example.ordermanagementcake.ui.forms.orders.NewOrderForm
 import com.example.ordermanagementcake.ui.orders.OrderListScreen
@@ -66,6 +67,7 @@ object Routes {
     const val NEW_ORDER = "new_order"
     const val NEW_CLIENT = "new_client"
     const val DETAIL_CLIENT = "client_detail/{clientID}" // route based on
+    const val NEW_CAKE = "new_cake"
 
     fun clientDetail(clientId: Int) = "client_detail/$clientId"
 
@@ -286,7 +288,7 @@ fun AppNavHost(
                                 fadeOut(tween(300))
                     }
                 ) {
-                    NewOrderForm(onAddNewClient = { navController.navigate(Routes.NEW_CLIENT) })
+                    NewOrderForm(onAddNewClient = { navController.navigate(Routes.NEW_CLIENT) }, onNewCake = {navController.navigate(Routes.NEW_CAKE)})
                 }
                 composable(route = Routes.NEW_CLIENT) {
                     NewClientForm(
@@ -320,6 +322,9 @@ fun AppNavHost(
                             clientViewModel.updateClient(updatedClient)
                         }
                     )
+                }
+                composable (route = Routes.NEW_CAKE)  {
+                    NewCakeForm(onAddTier, onSaveCake)
                 }
             }
         }
