@@ -69,7 +69,6 @@ object Routes {
     const val NEW_CLIENT = "new_client"
     const val DETAIL_CLIENT = "client_detail/{clientID}" // route based on
     const val NEW_CAKE = "new_cake"
-    const val NEW_TIER = "new_tier"
 
     fun clientDetail(clientId: Int) = "client_detail/$clientId"
 
@@ -325,14 +324,24 @@ fun AppNavHost(
                         }
                     )
                 }
-                composable (route = Routes.NEW_CAKE)  {
-                    NewCakeForm (
-                        onAddTier = { navController.navigate(Routes.NEW_TIER)}
-                    ) {  }
-                }
+                composable(route = Routes.NEW_CAKE) {
+                    var showTierSheet by remember { mutableStateOf(false) }
 
-                composable(route = Routes.NEW_TIER) {
-                    NewTierForm {  }
+                    NewCakeForm(
+                        onAddTier = { showTierSheet = true },
+                        onSaveCake = { /* Saving logic */ },
+                        onAddReference = { /* Reference Action */ }
+                    )
+
+                    if (showTierSheet) {
+                        NewTierForm(
+                            onDismiss = { showTierSheet = false },
+                            onSave = { tiersState ->
+                                // Process the tier specifications here
+                                showTierSheet = false
+                            }
+                        )
+                    }
                 }
             }
         }
