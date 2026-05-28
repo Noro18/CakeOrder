@@ -44,6 +44,7 @@ import com.example.ordermanagementcake.ui.theme.extendedColors
  */
 data class TierData(
     val shape: String = "Round",
+    val size: String = "20inch",
     val color: Color = Color.White,
     val price: Double = 120.0
 )
@@ -64,7 +65,7 @@ fun NewTierForm(
     val tiersState = remember { 
         val initialMap = mutableStateMapOf<Int, TierData>()
         for (i in 1..12) {
-            initialMap[i] = TierData(shape = "Round", color = Color.White, price = 120.0)
+            initialMap[i] = TierData(shape = "Round", size = "20inch", color = Color.White, price = 120.0)
         }
         initialMap
     }
@@ -74,6 +75,10 @@ fun NewTierForm(
     // Estadu ba Dropdown Forma
     var shapeExpanded by remember { mutableStateOf(false) }
     val shapes = listOf("Round", "Square", "Heart")
+
+    // Estadu ba Dropdown Tamanhu
+    var sizeExpanded by remember { mutableStateOf(false) }
+    val sizes = listOf("15inch", "20inch", "25inch", "30inch", "35inch", "40inch")
 
     // Estadu ba Edit Price Dialog
     var showEditPriceDialog by remember { mutableStateOf(false) }
@@ -170,13 +175,13 @@ fun NewTierForm(
 
             Spacer(modifier = Modifier.height(28.dp))
 
-            // FORMA no PRESU
+            // FORMA, TAMANHU, no PRESU
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 // Dropdown ba Forma
-                Column(modifier = Modifier.weight(1.2f)) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "FORMA", 
                         style = MaterialTheme.typography.labelMedium, 
@@ -198,7 +203,7 @@ fun NewTierForm(
                             color = extendedColors.surfaceContainerLow
                         ) {
                             Row(
-                                modifier = Modifier.padding(horizontal = 16.dp),
+                                modifier = Modifier.padding(horizontal = 12.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
@@ -206,12 +211,14 @@ fun NewTierForm(
                                     text = currentTierData.shape, 
                                     style = MaterialTheme.typography.bodyLarge,
                                     fontWeight = FontWeight.Bold, 
-                                    color = MaterialTheme.colorScheme.onSurface
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    maxLines = 1
                                 )
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowDown,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.size(20.dp)
                                 )
                             }
                         }
@@ -234,10 +241,71 @@ fun NewTierForm(
                     }
                 }
 
-                // Presu Nívél
+                // Dropdown ba Tamanhu
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "PRESU NÍVÉL", 
+                        text = "TAMANHU", 
+                        style = MaterialTheme.typography.labelMedium, 
+                        fontWeight = FontWeight.Bold, 
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    ExposedDropdownMenuBox(
+                        expanded = sizeExpanded,
+                        onExpandedChange = { sizeExpanded = !sizeExpanded }
+                    ) {
+                        Surface(
+                            modifier = Modifier
+                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true)
+                                .fillMaxWidth()
+                                .height(56.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            color = extendedColors.surfaceContainerLow
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = currentTierData.size, 
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.Bold, 
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    maxLines = 1
+                                )
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowDown,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                        
+                        ExposedDropdownMenu(
+                            expanded = sizeExpanded,
+                            onDismissRequest = { sizeExpanded = false },
+                            containerColor = extendedColors.surfaceContainer
+                        ) {
+                            sizes.forEach { size ->
+                                DropdownMenuItem(
+                                    text = { Text(size, color = MaterialTheme.colorScheme.onSurface) },
+                                    onClick = {
+                                        tiersState[activeTierLevel] = currentTierData.copy(size = size)
+                                        sizeExpanded = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Presu Nívél
+                Column(modifier = Modifier.weight(1.1f)) {
+                    Text(
+                        text = "PRESU", 
                         style = MaterialTheme.typography.labelMedium, 
                         fontWeight = FontWeight.Bold, 
                         color = MaterialTheme.colorScheme.primary
@@ -249,7 +317,7 @@ fun NewTierForm(
                         color = extendedColors.surfaceContainerLow
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 4.dp),
+                            modifier = Modifier.padding(horizontal = 2.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
@@ -258,23 +326,23 @@ fun NewTierForm(
                                     val newPrice = (currentTierData.price - 1.0).coerceAtLeast(0.0)
                                     tiersState[activeTierLevel] = currentTierData.copy(price = newPrice)
                                 },
-                                modifier = Modifier.size(32.dp)
+                                modifier = Modifier.size(30.dp)
                             ) {
-                                Icon(Icons.Default.Remove, contentDescription = "Menos", tint = MaterialTheme.colorScheme.primary)
+                                Icon(Icons.Default.Remove, contentDescription = "Menos", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
                             }
                             
                             Text(
                                 text = "$${"%.0f".format(currentTierData.price)}", 
                                 fontWeight = FontWeight.Bold, 
                                 color = MaterialTheme.colorScheme.onSurface,
-                                fontSize = 15.sp,
+                                fontSize = 14.sp,
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(8.dp))
                                     .clickable {
                                         tempPriceInput = "%.0f".format(currentTierData.price)
                                         showEditPriceDialog = true
                                     }
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                                    .padding(horizontal = 4.dp, vertical = 4.dp)
                             )
 
                             IconButton(
@@ -282,9 +350,9 @@ fun NewTierForm(
                                     val newPrice = currentTierData.price + 1.0
                                     tiersState[activeTierLevel] = currentTierData.copy(price = newPrice)
                                 },
-                                modifier = Modifier.size(32.dp)
+                                modifier = Modifier.size(30.dp)
                             ) {
-                                Icon(Icons.Default.Add, contentDescription = "Aumenta", tint = MaterialTheme.colorScheme.primary)
+                                Icon(Icons.Default.Add, contentDescription = "Aumenta", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
                             }
                         }
                     }
