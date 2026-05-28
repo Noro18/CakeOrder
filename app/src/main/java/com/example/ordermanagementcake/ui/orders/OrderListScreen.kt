@@ -80,9 +80,8 @@ fun OrderListScreen(viewModel: OrderViewModel) {
     var searchText by remember { mutableStateOf("") }
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 16.dp)
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 88.dp)
     ) {
         // Header
         item {
