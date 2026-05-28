@@ -44,7 +44,7 @@ import com.example.ordermanagementcake.ui.theme.extendedColors
  */
 data class TierData(
     val shape: String = "Round",
-    val size: String = "20cm",
+    val size: String = "20inch",
     val color: Color = Color.White,
     val price: Double = 120.0
 )
