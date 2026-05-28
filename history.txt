@@ -1,0 +1,678 @@
+*   3adfe94 Merge pull request #121 from Noro18/fix/117-date-label-schedule-screen
+|\  
+| * 73df1a9 fix(schedulescreen): resolve Locale.getDefault error and fix day label color for dark mode
+|/  
+*   5163637 Merge pull request #118 from Noro18/feat/navigation-order-cake-tier
+|\  
+| * 6f3d146 feat(nav): cake to tier nav
+| * c3a743e update(nav): New route for tier
+| * 1cae53c Fix branch history
+| * 73e2468 update(nav): new route
+| * b4a83f8 udpate(Tier): refactor tier
+| * 554d6b1 update(Order): new parameter for NewOrderorm
+| * f3f180b update(Cake): refactor cake form to antoher
+|/  
+*   e41a0b6 Merge pull request #116 from Noro18/feat/redesign-newOrderForm
+|\  
+| * 81fcc94 feat(ui): conditional Topabar ba NewOrder nian
+| * b9cc9df feat(ui): redesign NewOrderForm.kt
+* |   e902d7f Merge pull request #115 from Noro18/feat/routing-dashbaord
+|\ \  
+| |/  
+|/|   
+| * 12d0bc5 feat(navigation): QuickAction Button for navigation on DashbaordScreen
+|/  
+*   810c0e9 Merge pull request #114 from Noro18/feat/color-update
+|\  
+| * 0ebeafd feat(ui): redesign Dashboard screen with modern overview layout and timeline
+* |   23ce515 Merge pull request #112 from Noro18/feat/client-detail-delete
+|\ \  
+| * \   9f4f36f Merge branch 'main' into feat/client-detail-delete
+| |\ \  
+| |/ /  
+|/| |   
+* | |   fd4823a Merge pull request #113 from Noro18/feat/color-update
+|\ \ \  
+| | |/  
+| |/|   
+| * | 08f5f54 style(ui): update BottomNavigationBar to use theme colors
+| * | 5d529a3 style(ui): update ClientCard and search bar to MD3 colors
+| * | cf9da0b style(ui): update Dashboard cards to use theme surfaceContainer colors
+| * | 3518b91 style(ui): update FAB to use Material3 theme colors
+| * | 3dda0a6 style(ui): simplify AppDrawer background to solid surfaceContainer
+| * | 40b645d style(ui): update AppTopBarDelete to use theme sourceColor background
+| * | 52b1b15 style(ui): update AppTopBar to use theme sourceColor background
+| * | c12a67c feat(ui): update ExtendedColors to include surfaceContainer and sourceColor
+|/ /  
+| * 29cb3b5 feat: add delete confirmation dialogs for clients in list and detail screens
+|/  
+*   9245086 Merge pull request #110 from Noro18/feat/client-profile-pic
+|\  
+| * 74ce6e4 refactor: replace static profile photo with dynamic initials avatar in ClientCard
+|/  
+*   931d5b1 Merge pull request #107 from Noro18/fix/106-dark-mode-field
+|\  
+| * 174ec30 fix(newclientform): mudansa kor iha color no theme hotu iha file client nian hotu
+| * 1e76746 fix(newclientform): hadia ona hodi ajusta iha dark mode theme
+|/  
+*   514af10 Merge pull request #105 from Noro18/feature/client-detail
+|\  
+| * 6a54bb7 feat(ui): implement dynamic client detail view and editing
+| * 20d0263 refactor(ui): implement single shell architecture and fix topbar padding
+| * ce7f485 new AppTopBarDelete.kt component for unique topbars
+| * 02f2285 update(NavHost): Aumenta condition atu topBar hide ou lalika
+| * 2fb2a9e updaet(Client): aumenta fali ClientListScreen nia header
+| * d89656e feat(navitaion_: remove animation
+| * 253f36f feat(navigation): topbar title based on screen
+| * b427bcf feat(client): Remove header section
+|/  
+*   ac1f42e Merge pull request #98 from Noro18/feature/client-detail-insert
+|\  
+| * a0e89ab update(Client): redesign client card and added moreVert icon for faster edti and delete
+* |   34f0a3b Merge pull request #97 from Noro18/fix/serachfield-naruk-client
+|\ \  
+| * | 824b3a6 habadak serach field iha
+* | |   016d4fa Merge pull request #93 from Noro18/fix/schedule-screen-simplify
+|\ \ \  
+| * | | 54df015 refactor(MainActivity/NavGraph): integra ScheduleViewModel iha MainActivity no NavGraph atu uza iha ScheduleViewScreen
+| * | | 8176262 feat(schedule): implement ScheduleViewModel and repository methods for calendar integration
+| * | | e1938ce feat(schedule): implement ScheduleViewModel and repository methods for calendar integration
+| |/ /  
+* | |   1b085cb Merge pull request #94 from Noro18/feature/client-detail-insert
+|\ \ \  
+| |/ /  
+|/| /   
+| |/    
+| * c9d9126 udpate(client): update client list, detail,
+| * a2ced51 update routint for client list and detail
+* |   b90bbbb Merge pull request #92 from Noro18/feature/new-image-field-cake
+|\ \  
+| |/  
+|/|   
+| * 3da6323 update typo
+| * 7d50a96 "udpate Databse shema, added image field for cake entity
+* |   8dbc086 Merge pull request #90 from Noro18/feature/fab-routing
+|\ \  
+| |/  
+|/|   
+| * 7e89d9a feat(dynamic Fab): icosn and route depends on the CurrenRoute
+|/  
+*   63aa01b Merge pull request #86 from Noro18/feature/clientdetail
+|\  
+| * c100bbe feature(clientdetail): modifie note ba liafuan simples
+| * 699b54b feature(clientdetail): modifie status information iha tetun
+| * 730500f feature(clientdetail): design ona screen ba clietn detail nian
+|/  
+*   aea6e6c Merge pull request #85 from Noro18/feat/customizecakeform
+|\  
+| * 94baa76 feat(customizecakeform): aumenta field cake title iha form
+|/  
+*   9d083bc Merge pull request #83 from Noro18/fix/routing-and-backstack
+|\  
+| * 22d2bc1 Add raspberry layer cake drawable and update client form/navigation
+* |   8f887fb Merge pull request #81 from Noro18/refactor/newclientform
+|\ \  
+| * | afed927 refactor(newclietnform): update screen new client form
+| |/  
+* |   abace58 Merge pull request #82 from Noro18/feature/tierform
+|\ \  
+| |/  
+|/|   
+| * b17f810 feature(tierform) design ona form ba tier(level) nian
+|/  
+*   b6fba3f Merge pull request #74 from Noro18/redesign/neworderform
+|\  
+| * a604fbb redesign(neworderform): aumenta button save
+* |   748c6c6 Merge pull request #72 from Noro18/feature/newclientform
+|\ \  
+| |/  
+|/|   
+| * c36cb0d feature(newclientform): hadia lable field sira
+| * f0ffce0 feature(newclientform): design ona form cliente foun screen
+|/  
+*   c857444 Merge pull request #71 from Noro18/feat/routing-new-client-screen
+|\  
+| * a514373 feat(forms): add NewClientForm and NewOrderForm components with navigation integration
+|/  
+*   8febb0e Merge pull request #69 from Noro18/feat/routing-new-screens
+|\  
+| * 05deecb refactor(order): replace OrderFormNewScreen with NewOrderForm and update navigation
+| * b0a4c10 fix(main): viewModle declaration
+|/  
+*   de67e6d Merge pull request #65 from Noro18/feature/customizecakeform
+|\  
+| *   04c112f Merge branch 'main' into feature/customizecakeform
+| |\  
+| |/  
+|/|   
+* |   f848fe6 Merge pull request #56 from Noro18/orderform_newscreen
+|\ \  
+| * | 8097282 feature(orderformnew): aumenta screen form order nebe foun
+* | |   9d7461f Merge pull request #62 from Noro18/fix/inconsistent-drawer-closing
+|\ \ \  
+| * \ \   8546ab5 Merge branch 'main' into fix/inconsistent-drawer-closing
+| |\ \ \  
+| |/ / /  
+|/| | |   
+* | | |   9195acf Merge pull request #64 from Noro18/fix/slow-navigation-improvement
+|\ \ \ \  
+| | * | | d83366e refactor(NavGraph): hadia logic drawer no optimiza navigasaun bottom bar
+| |/ / /  
+|/| | |   
+| | | * 234ae56 update(customizecakeform): ajusta file mainactivity local hanesan ho remote
+| | | * 0b37dab update(customizecakeform): aumenta order detail screen
+| | | * b61a949 feature(customizecakeform): design customize cake form screen
+| | | * 42adccf Merge branch 'main' of https://github.com/Noro18/CakeOrder
+| | |/| 
+| |_|/  
+|/| |   
+| | * 53e85a1 resolve conflict MainActivity
+| | | * b1b42c4 refacot(Client): change `ClientsListScreen.kt` to uze LazyColumn
+| | | * 4f886ed refactor(navigation): changed navigation transition to default fade in
+| | |/  
+| |/|   
+| * | dce718e refactor(navigation): Aumenta transition fade animation ba NavHost
+| * | 2455a48 refactor(OrderViewModel): hadia logika isLoading iha loadOrders
+| * | 6610220 refactor(Theme): troka Theme no la uza dynamic color ona
+| * | 13f6f16 refactor(OrderListScreen): restrusutra item sira iha OrderLsitScreen atu uza LazyColumn
+|/ /  
+* |   f3fd3cf Merge pull request #57 from Noro18/fix/order-status-filtering
+|\ \  
+| * | 43f5686 chores
+| * | 4b1612f fix(order): button agora update status upward
+* | |   a599823 Merge pull request #58 from Noro18/update/docs-image
+|\ \ \  
+| |/ /  
+|/| |   
+| * | 0f44ef3 update(docs): udpate foto prinsipal README nian
+|/ /  
+* |   8f2883e Merge pull request #53 from Noro18/refactor/update-entity-schema
+|\ \  
+| * | e5faf3b new libs.version.toml
+| * | d250d92 refactor(ViewViewModel): Haida View no view model atu integra data entity ho repoisotyr foun no fo sai Seed data
+| * | ca50e97 refactor(Repository): Aumetna repository ba query fon sira iha dao
+| * | 70387f2 refactor(entitty): hadia naran entity cusotmer ba client
+| * | 4465efa refacto(dao): aumenta Qury foun ba status mian
+| * | 2b969dd refacotr(data): aumetna seed data
+| * | fb88e74 Hadia OrderDatabse `Converted` msimatch
+| * | e74b1d2 hadia `customer_id` ba `client_id`
+| * | 3e1a792 hadia `customer_id` ba `client_id`
+| * | 6b3e1ec fix(CakeEntity): add index for order_id foreign key
+| * | ab2df4a feat(dao): implement and refactor database DAOs for cake order management
+| * | 0716e35 client with order databse reation
+| * | 64c5a95 feat(data): implement Room relation classes for orders, cakes, and tiers
+| * | 5d7a395 refacotr(database): added enum class, converter and register it in singleton databse
+* | |   a562540 Merge pull request #54 from Noro18/chores/udpate-db-docs
+|\ \ \  
+| * | | 372fd91 update databse docs
+| | |/  
+| |/|   
+* | |   28cf3e0 Merge pull request #55 from Noro18/fix/drawer-unregistered-backstack
+|\ \ \  
+| |/ /  
+|/| |   
+| * | 529a0b9 fix(drawer): fix bug drawer la tama iha bacstack
+|/ /  
+* |   530fe82 Merge pull request #52 from Noro18/refactor/update-entity-schema
+|\ \  
+| | | * 521bfb2 reactor(database): aumetna relationshitp ba room entity sira
+| | |/  
+| | * 7e7a12f refactor(database): update schema and implement new entities for cake order management
+| |/  
+| * 6281eb2 docs: uamenta image database schema
+| * 97abac5 chore(docs): Aumenta dokumentasaun ba DATABASE
+|/  
+*   af3da35 Merge pull request #50 from Noro18/fix/no-navigation-animation
+|\  
+| * 7b4d2d4 refactor(Screens): remove default ViewModel initialization in UI components
+| * c79ac5f feat(MainActivity): implement ViewModel injection and navigation integration
+| * dc41488 build nad libraires sync
+|/  
+| * ea841c8 minor fixes
+| * c98b4a1 feat(AppDrawer): aumenta item iha drawer menu.
+|/  
+*   929ef73 Merge pull request #49 from Noro18/feature/drawer-menu
+|\  
+| * a2ca345 feat(AppDrawer): update UI layout and implement navigation items
+| * a561c8a chores(NavGraph): bolu componenete drawer ba iha NavHost
+| * 20ae6ea feature(drawer): aumenta drawer ba navigation ba app ho itmes sira
+| * b933a18 feature(AppNavHost): aumenta drawer functionality ba app
+| * e1445e6 feature(TopBar): aumenta on click behaviour ba burger menu icon
+* |   62805b9 Merge pull request #47 from Noro18/feature/ui-schedule-update
+|\ \  
+| |/  
+|/|   
+| * fe80530 Update(docs): aumenta imagem ERD final ba sistema
+| * f1a9c18 test coommit
+| * 598d94d udpate(UI): halo dynamic color theme
+| * a1d7c80 docs(data): aumenta comment ba dokumentasaun no aprendizagem
+| * de75720 refactor(ScheduleScreen): redesign calendar and delivery list UI
+|/  
+*   29d878c Merge pull request #46 from Noro18/fix/bug-form-not-working
+|\  
+| * 003ce63 refactor(navigation): update NewOrderScreen import path and cleanup MainActivity
+| * 71c4942 feat(OrderNew): implementa field interativu ba form
+|/  
+*   08ad887 Merge pull request #45 from Noro18/docs/update-reqruiements
+|\  
+| * dbc7599 udpate(docs): Aumenta iformasaun hetan husi interview
+|/  
+*   129338c Merge pull request #44 from Noro18/feature/ui-update-clients
+|\  
+| * df39b9d refactor(ClientsListScreen): enhance UI design and extract ClientCard component
+* | 5f23831 Merge pull request #43 from Noro18/feature/ui-update-orders
+|\| 
+| * dfd9dd4 refactor(OrderListScreen): modernize UI layout and improve component architecture
+* | 467aa11 Merge pull request #42 from Noro18/feature/ui-update-dashboard
+|\| 
+| * 4fd0ad3 refactor(DashboardScreen): modernize UI layout and improve component structure
+| * 632c284 refactor(ScheduleScreen): update package name and clean up imports
+|/  
+| * c004078 refactor(schedule): hadia package defujciont ba `ScheduleScreen.kt`
+|/  
+*   f370d35 Merge pull request #40 from Noro18/feature/FAB-ba-new-orders
+|\  
+| * 5b43c72 refactor(OrderNew): remove Scaffold and TopAppBar from OrderNew screen
+| * a7c7af4 chore(SeedData): add new client record to local seed data
+| * f4bebd1 feature(navigation): add FloatingActionButton and NewOrderScreen route
+* |   e7a22e0 Merge pull request #36 from Noro18/feature/update-navigation-schedule
+|\ \  
+| * \   bb8c6a1 refactor(ScheduleScreen): update layout constraints and theme color styling
+| |\ \  
+| |/ /  
+|/| /   
+| |/    
+* |   9b3532d Merge pull request #39 from Noro18/fixbug/35-color-&-size-calendar
+|\ \  
+| * | a072db4 refactor(scheduleScrenView): muda size no padding iha calendar no ajusta font ba dark/bright mode
+|/ /  
+| * 3965bfa feat(navigation): integra ScheduleViewScreen ba NavGraph.kt
+| * 579989d refactor(ui): reorganiza OrderNewScreen no Rename Schedule View nia naran
+|/  
+*   0a92673 Merge pull request #34 from Noro18/feature/scheduleviewscreen
+|\  
+| * f3426dc refactor(scheduleScrenView): muda padding iha button
+| * 2d46a06 feature(scheduleScrenView): design ona schedule view screen
+* |   136a7c3 Merge pull request #33 from Noro18/feature/orderviewscreen
+|\ \  
+| * | 1a86997 fix: rename OrderNiew to OrderNewScreen
+| * | 08d075b feat: add new order screen design
+| |/  
+* |   2c24eee Merge pull request #32 from Noro18/feature/add-viewmodel-layer
+|\ \  
+| |/  
+|/|   
+| * 8c59186 docs(ARCHITECTURE.md): refactor UiState section formatting
+| * 8a5e37b chores(docs): aumenta documentation ba ARCHITECTURE.md ba changes foun sira
+|/  
+*   0482d89 Merge pull request #31 from Noro18/feature/add-viewmodel-layer
+|\  
+| * 62895f9 feature(OrderListScreen): integrate OrderViewModel and display real order data
+| * c829f14 feature(OrderDatabase): add PrepopulateCallback to seed database
+| * 403a7fd refactor(ClientsListScreen): implement ClientViewModel and dynamic data loading
+| * f0a0909 feature(ui): add ViewModel, Factory, and UiState for Clients and Orders
+| * c54f8d7 refactor(ClientRepository): move to repository package
+| * 12c0bdd feature(OrderRepository, ClientRepository): kria repository foun no aumenta dependensia ViewModel
+* |   0f2a6f2 Merge pull request #30 from Noro18/bugfix/28-font-color-dark-mode
+|\ \  
+| |/  
+|/|   
+| * d502779 refactor(dashboardscreen): ajusta kor font ba dark/white mode
+|/  
+*   8924b5e Merge pull request #29 from Noro18/bugfix/missing_string_resource
+|\  
+| * 82e9c1f build(gradle): update dependencies and refactor resource strings
+|/  
+*   49fe3d0 Merge pull request #27 from Noro18/update_readme
+|\  
+| * 0a27738 Fix Typo in Readme Title
+* | 12a90ed Merge pull request #26 from Noro18/update_readme
+|\| 
+| * 414b9b8 Update Readme Title
+* | 731de19 Merge pull request #25 from Noro18/update_readme
+|\| 
+| * 117d575 Update Readme
+| * f11de39 update readme aumenta badges sira
+|/  
+*   7bed44a Merge pull request #24 from Noro18/fix/17-font-color-dark-mode
+|\  
+| * 03243f3 aumtenta comment
+* |   ad3ac65 Merge pull request #22 from Noro18/feature/model-layer
+|\ \  
+| * \   459256b Merge remote-tracking branch 'origin/feature/model-layer' into feature/model-layer
+| |\ \  
+| | * \   c6e246f Merge branch 'main' into feature/model-layer
+| | |\ \  
+| * | | | aa4024e update gitignore
+| * | | | 2886a27 feature(NavGraph): add dashboard screen and set as start destination
+| |/ / /  
+| * | | d4452e3 fix(OrderDatabase): add missing closing brace for OrderDatabase class
+| * | | e25a877 feat(OrderDatabase): implement Room database with Singleton pattern
+| * | | 857d891 feat(OrderItemDao): create OrderItemDao with CRUD operations
+| * | | 5a1a51b feature(OrderDao): create OrderDao interface
+| * | | 2231854 feat(ClientDao): create ClientDao for database operations
+| * | | 236e2e5 feat(data): add ClientWithOrder relation entity
+| * | | 74de5e1 feat(OrderWithItems): add OrderWithItems data class for Room relations
+| * | | f06ff52 feat(entities): add Client, Order, and OrderItem Room entities
+| * | | a89aac4 feat(entities): add Client, Order, and OrderItem Room entities
+| * | | 09c57c5 docs(ARCHITECTURE): update architecture documentation and add database schema details
+| * | | 17f4f7e chore(README): update screenshot and add new images
+| * | | 80b6768 feat(database): integrate Room database with ClientEntity and OrderEntity classes
+* | | |   4478b89 Merge pull request #21 from Noro18/feature/add-dashboard-route
+|\ \ \ \  
+* \ \ \ \   a644665 Merge pull request #23 from Noro18/fix/17-font-color-dark-mode
+|\ \ \ \ \  
+| |_|_|/ /  
+|/| | | /   
+| | |_|/    
+| |/| |     
+| * | | 31e402a refactor(17-font-color-dark-mode): muda kor sira hodi ajusta ho dark/white mode
+| | | | * ff4591d Edit test
+| | | | * 7e4f0ee fix: rename OrderNiew to OrderNewScreen
+| | | | * bf208ae feat: add new order screen design
+| | | | *   a6fd525 Merge pull request #31 from Noro18/feature/add-viewmodel-layer
+| | | | |\  
+| | | | | * 1b5e6bf feature(OrderListScreen): integrate OrderViewModel and display real order data
+| | | | | * d2da78a feature(OrderDatabase): add PrepopulateCallback to seed database
+| | | | | * 0cbeffe refactor(ClientsListScreen): implement ClientViewModel and dynamic data loading
+| | | | | * 3092d5d feature(ui): add ViewModel, Factory, and UiState for Clients and Orders
+| | | | | * eeb5f60 refactor(ClientRepository): move to repository package
+| | | | | * bcbcdfe feature(OrderRepository, ClientRepository): kria repository foun no aumenta dependensia ViewModel
+| | | | * |   a77a4f6 Merge pull request #30 from Noro18/bugfix/28-font-color-dark-mode
+| | | | |\ \  
+| | | | | |/  
+| | | | |/|   
+| | | | | * c984e93 refactor(dashboardscreen): ajusta kor font ba dark/white mode
+| | | | |/  
+| | | | *   27fba79 Merge pull request #29 from Noro18/bugfix/missing_string_resource
+| | | | |\  
+| | | | | * 8bc71b4 build(gradle): update dependencies and refactor resource strings
+| | | | |/  
+| | | | *   4cbf2a8 Merge pull request #27 from Noro18/update_readme
+| | | | |\  
+| | | | | * 123fabb Fix Typo in Readme Title
+| | | | * | 066ed89 Merge pull request #26 from Noro18/update_readme
+| | | | |\| 
+| | | | | * e020f01 Update Readme Title
+| | | | * | 34387d7 Merge pull request #25 from Noro18/update_readme
+| | | | |\| 
+| | | | | * 2d2ed74 Update Readme
+| | | | | * ed56ab9 update readme aumenta badges sira
+| | | | |/  
+| | | | *   b78880c Merge pull request #24 from Noro18/fix/17-font-color-dark-mode
+| | | | |\  
+| | | | | * 4ed6641 aumtenta comment
+| | | | * |   4cb7d9a Merge pull request #22 from Noro18/feature/model-layer
+| | | | |\ \  
+| | | | | * \   770afa6 Merge remote-tracking branch 'origin/feature/model-layer' into feature/model-layer
+| | | | | |\ \  
+| | | | | | * \   a779dfc Merge branch 'main' into feature/model-layer
+| | | | | | |\ \  
+| | | | | * | | | 5b2945e update gitignore
+| | | | | * | | | d7ecd0c feature(NavGraph): add dashboard screen and set as start destination
+| | | | | |/ / /  
+| | | | | * | | 4213bd0 fix(OrderDatabase): add missing closing brace for OrderDatabase class
+| | | | | * | | c78b17b feat(OrderDatabase): implement Room database with Singleton pattern
+| | | | | * | | 178840a feat(OrderItemDao): create OrderItemDao with CRUD operations
+| | | | | * | | 5e15a39 feature(OrderDao): create OrderDao interface
+| | | | | * | | 7982d63 feat(ClientDao): create ClientDao for database operations
+| | | | | * | | cf68d06 feat(data): add ClientWithOrder relation entity
+| | | | | * | | 2a006ff feat(OrderWithItems): add OrderWithItems data class for Room relations
+| | | | | * | | 8179d2e feat(entities): add Client, Order, and OrderItem Room entities
+| | | | | * | | 713b451 feat(entities): add Client, Order, and OrderItem Room entities
+| | | | | * | | bf08d8c docs(ARCHITECTURE): update architecture documentation and add database schema details
+| | | | | * | | 70f4c15 chore(README): update screenshot and add new images
+| | | | | * | | f40ae14 feat(database): integrate Room database with ClientEntity and OrderEntity classes
+| | | | * | | |   8b438af Merge pull request #21 from Noro18/feature/add-dashboard-route
+| | | | |\ \ \ \  
+| | | | | * | | | 8b81889 feature(NavGraph): add dashboard screen and set as start destination
+| | | | | | |/ /  
+| | | | | |/| |   
+| | | | * | | |   0812280 Merge pull request #23 from Noro18/fix/17-font-color-dark-mode
+| | | | |\ \ \ \  
+| | | | | |/ / /  
+| | | | |/| | /   
+| | | | | | |/    
+| | | | | |/|     
+| | | | | * | c3f5513 refactor(17-font-color-dark-mode): muda kor sira hodi ajusta ho dark/white mode
+| | | | * | |   2f9e275 Merge pull request #19 from Noro18/feature/dashboardscreen
+| | | | |\ \ \  
+| | | | | |/ /  
+| | | | |/| |   
+| | | | | * | 60a1243 aumenta comment ke 3
+| | | | | * |   3a5666b Merge branch 'feature/dashboardscreen' of https://github.com/Noro18/CakeOrder into feature/dashboardscreen
+| | | | | |\ \  
+| | | | | | * \   bce68af Merge branch 'main' into feature/dashboardscreen
+| | | | | | |\ \  
+| | | | | |_|/ /  
+| | | | |/| | |   
+| | | | * | | |   c364462 Merge pull request #20 from Noro18/fix/18-dashboard-bottom-bar-font
+| | | | |\ \ \ \  
+| | | | | * | | | ff8fced refactor(18-dashboard-bottom-bar-font): muda fontsize iha bottom bar
+| | | | | * | | |   e1f47f3 Merge branch 'main' of https://github.com/Noro18/CakeOrder
+| | | | | |\ \ \ \  
+| | | | | |/ / / /  
+| | | | |/| | | |   
+| | | | * | | | |   b37d6be Merge pull request #15 from Noro18/docs/readme-documentation-update
+| | | | |\ \ \ \ \  
+| | | | | |_|_|_|/  
+| | | | |/| | | |   
+| | | | | * | | | 419da6c docs(README, ARCHITECTURE): update project status and implementation details
+| | | | * | | | |   9b56dab Merge pull request #16 from Noro18/bugfix/fix-spacing-bugs
+| | | | |\ \ \ \ \  
+| | | | | |/ / / /  
+| | | | |/| | | |   
+| | | | | * | | | e9d2160 refactor(AppTopBar): improbe AppTopBar nia strucutre
+| | | | |/ / / /  
+| | | | | * | |   ec2ca02 resolve merge conflict
+| | | | | |\ \ \  
+| | | | | |/ / /  
+| | | | |/| | |   
+| | | | * | | |   c376c63 Merge pull request #14 from Noro18/feature/navigation
+| | | | |\ \ \ \  
+| | | | | * | | | 5e168ba Update README: add application screenshot
+| | | | | * | | | 219a112 docs(CHANGELOG, ARCHITECTURE): implementa Navigation Compose no update dokumentasaun nian
+| | | | | * | | | 5b5f581 fix(OrderListScreen): remove typo in comment
+| | | | | * | | | 49bf869 feature(MainActivity): add AppPreview and update AppNavHost start destination logic
+| | | | | * | | | 6ffe515 refactor(OrderListScreen): optimize layout atu uza layout dinamiku
+| | | | | * | | | b29845b build(app): add androidx-ui dependency and update search client string
+| | | | | * | | | d969406 refactor(navigation): muda Scaffold no bar sira ba iha AppNavHost
+| | | | | * | | | 4a0dc38 fix(OrderListScreen): implementa navigasaun iha BottomNavigationBar no hadia formatting iha NavGraph
+| | | | | * | | | 753b7b2 feature(ClientsListScreen): implementa navigasaun iha BottomNavigationBar
+| | | | | * | | | 77c2abe feature(MainActivity): Implementa AppNavHost ba navigasaun
+| | | | | * | | | b59c463 feature(NavGraph): Kria AppNavHost no define navigation nia routers sira
+| | | | | * | | | ea92a97 chores(main): hamoos composable la presiza
+| | | | | * | | | 7880dfa chores(navigation): aumenta dependencies navigation no hamoos main activity
+| | | | |/ / / /  
+| | | | * | | |   a3fd4c9 Merge pull request #13 from Noro18/pr_test
+| | | | |\ \ \ \  
+| | | | | * | | | dd464f5 UPDATE README.md: koko PR test
+| | | | |/ / / /  
+| | | | | | * | 9ac4c0a aumenta comment ke 2
+| | | | | | * | 3335351 refactor(18-dashboard-bottom-bar-font): aumenta commetn description
+| | | | | | |/  
+| | | | | | * 6d9b165 feature(dashboardscreen): aumenta dashboard screen nian
+| | | | | | * 485409e wip: dashboard change
+| | | | | |/  
+| | | | | * e52b7b0 resolve merge conflict
+| | | | |/  
+| | | | *   14e1c7d Merge pull request #12 from Noro18/chore/project-structure
+| | | | |\  
+| | | | | * 3df9230 Update README.md: add project structure and update visitor badge link
+| | | | * | 68de9c7 Merge pull request #11 from Noro18/chore/project-structure
+| | | | |\| 
+| | | | | * 01b1d93 Update README.md: add project structure and update visitor badge link
+| | | | | * c9365c7 fix(UI): muda OrderDatabase.kt ba iah data/local
+| | | | | * 9f29ef1 feature(UI): restructure project packages and implement ClientsListScreen
+| | | | |/  
+| | | | *   0f3ca13 Merge pull request #9 from Noro18/feature/clientlistscreen
+| | | | |\  
+| | | | | * 57c4652 refactor(clientslistscreen): hasai BottomNavigationBar hodi halo sai komponent reutilizável”
+| | | | * |   4f652d1 Merge pull request #10 from Noro18/feature/orderlistscreen
+| | | | |\ \  
+| | | | | * | 148add9 fix: muda naran string app_name ba app_name_order_management_cake atu evita konflitu resource
+| | | | | |/  
+| | | | | * 331c25f feature(orderlistscreen): design ona screen ba order list
+| | | | | * abcd649 feature(clientlistsreen): update icon top/bottom bar add string_clientlist
+| | | | * |   7c0f1ab Merge pull request #8 from Noro18/abindacarmo-patch-1
+| | | | |\ \  
+| | | | | |/  
+| | | | |/|   
+| | | | | * b98ce09 fix typo in README
+| | | | |/  
+| | | | *   a6147c6 Merge pull request #7 from Noro18/Noro18-patch-2
+| | | | |\  
+| | | | | * eee4ccd Replace visitor badge with new format
+| | | | |/  
+| | | | *   63b2211 Merge pull request #6 from Noro18/Noro18-patch-1
+| | | | |\  
+| | | | | * d047cdc Add visitor badge to README
+| | | | |/  
+| | | | *   1a353d4 Merge pull request #5 from Noro18/aumenta-docs
+| | | | |\  
+| | | | | * da140c5 Update README.md: add Tetum translation
+| | | | * | 2827b94 Merge pull request #4 from Noro18/aumenta-docs
+| | | | |\| 
+| | | | | * 86adfeb docs: add architecture documentation and update readme
+| | | | |/  
+| | | | *   02502d2 Merge pull request #2 from Noro18/feature/clientlistscreen
+| | | | |\  
+| | | | | * 5a23a15 feature(clientlistsreen): aumenta bottomBar no button add
+| | | | | * 9ff08cd feature(clientlistsreen): aumenta foto iha drawable hodi koko clientsreen
+| | | | | * 4ce6133 feature(clientlistsreen): design ona topbar no items client
+| | | | * |   cd29e58 Merge pull request #3 from Noro18/aumenta-docs
+| | | | |\ \  
+| | | | | |/  
+| | | | |/|   
+| | | | | * e3812cb docs(contribution): add contribution guide and update readme link
+| | | | |/  
+| | | | *   473be5d Merge pull request #1 from Noro18/feature/aumenta-button
+| | | | |\  
+| | | | | | * f82869f Commit unneded changes
+| | | |_|_|/  
+| | |/| | |   
+| | * | | | e33fc2b feature(NavGraph): add dashboard screen and set as start destination
+| |/ / / /  
+|/| | | |   
+* | | | |   728a43d Merge pull request #19 from Noro18/feature/dashboardscreen
+|\ \ \ \ \  
+| |/ / / /  
+|/| | | |   
+| * | | | b520d59 aumenta comment ke 3
+| * | | |   b607980 Merge branch 'feature/dashboardscreen' of https://github.com/Noro18/CakeOrder into feature/dashboardscreen
+| |\ \ \ \  
+| | * \ \ \   b4b456e Merge branch 'main' into feature/dashboardscreen
+| | |\ \ \ \  
+| |_|/ / / /  
+|/| | | | |   
+* | | | | |   97a2dc8 Merge pull request #20 from Noro18/fix/18-dashboard-bottom-bar-font
+|\ \ \ \ \ \  
+| * | | | | | 081cb61 refactor(18-dashboard-bottom-bar-font): muda fontsize iha bottom bar
+| * | | | | |   5548973 Merge branch 'main' of https://github.com/Noro18/CakeOrder
+| |\ \ \ \ \ \  
+| |/ / / / / /  
+|/| | | | | |   
+* | | | | | |   325805e Merge pull request #15 from Noro18/docs/readme-documentation-update
+|\ \ \ \ \ \ \  
+| |_|_|_|/ / /  
+|/| | | | | |   
+| * | | | | | 8fd5b6d docs(README, ARCHITECTURE): update project status and implementation details
+* | | | | | |   8024830 Merge pull request #16 from Noro18/bugfix/fix-spacing-bugs
+|\ \ \ \ \ \ \  
+| |/ / / / / /  
+|/| | | | | |   
+| * | | | | | a36fbfa refactor(AppTopBar): improbe AppTopBar nia strucutre
+|/ / / / / /  
+| * | | | |   b9e1ee4 resolve merge conflict
+| |\ \ \ \ \  
+| |/ / / / /  
+|/| | | | |   
+* | | | | |   f5e8f7c Merge pull request #14 from Noro18/feature/navigation
+|\ \ \ \ \ \  
+| * | | | | | 17d0119 Update README: add application screenshot
+| * | | | | | 3b7bdcf docs(CHANGELOG, ARCHITECTURE): implementa Navigation Compose no update dokumentasaun nian
+| * | | | | | 3821459 fix(OrderListScreen): remove typo in comment
+| * | | | | | 76278f4 feature(MainActivity): add AppPreview and update AppNavHost start destination logic
+| * | | | | | de7a3ad refactor(OrderListScreen): optimize layout atu uza layout dinamiku
+| * | | | | | c133a70 build(app): add androidx-ui dependency and update search client string
+| * | | | | | de49c70 refactor(navigation): muda Scaffold no bar sira ba iha AppNavHost
+| * | | | | | 90bed24 fix(OrderListScreen): implementa navigasaun iha BottomNavigationBar no hadia formatting iha NavGraph
+| * | | | | | cb1ceb1 feature(ClientsListScreen): implementa navigasaun iha BottomNavigationBar
+| * | | | | | 9e3cbc3 feature(MainActivity): Implementa AppNavHost ba navigasaun
+| * | | | | | c8636ab feature(NavGraph): Kria AppNavHost no define navigation nia routers sira
+| * | | | | | 79458a6 chores(main): hamoos composable la presiza
+| * | | | | | 07090e5 chores(navigation): aumenta dependencies navigation no hamoos main activity
+|/ / / / / /  
+* | | | | |   e8b5880 Merge pull request #13 from Noro18/pr_test
+|\ \ \ \ \ \  
+| * | | | | | f3dbf0d UPDATE README.md: koko PR test
+|/ / / / / /  
+| | * | | | 54616b8 aumenta comment ke 2
+| | * | | | 36b658f refactor(18-dashboard-bottom-bar-font): aumenta commetn description
+| | |/ / /  
+| | * | | 30e5252 feature(dashboardscreen): aumenta dashboard screen nian
+| | * | | 4774a2e wip: dashboard change
+| |/ / /  
+| * / / 03084a1 resolve merge conflict
+|/ / /  
+* | |   f731d73 Merge pull request #12 from Noro18/chore/project-structure
+|\ \ \  
+| * | | 2e77417 Update README.md: add project structure and update visitor badge link
+* | | | e3c29a1 Merge pull request #11 from Noro18/chore/project-structure
+|\| | | 
+| * | | c6c4ab8 Update README.md: add project structure and update visitor badge link
+| * | | 4891053 fix(UI): muda OrderDatabase.kt ba iah data/local
+| * | | a5e7ce8 feature(UI): restructure project packages and implement ClientsListScreen
+|/ / /  
+* | |   8fa28a3 Merge pull request #9 from Noro18/feature/clientlistscreen
+|\ \ \  
+| * | | 5bdd6a9 refactor(clientslistscreen): hasai BottomNavigationBar hodi halo sai komponent reutilizável”
+* | | |   9fc7796 Merge pull request #10 from Noro18/feature/orderlistscreen
+|\ \ \ \  
+| * | | | a401bfc fix: muda naran string app_name ba app_name_order_management_cake atu evita konflitu resource
+| |/ / /  
+| * | | d3f18cb feature(orderlistscreen): design ona screen ba order list
+| * | | 7b34404 feature(clientlistsreen): update icon top/bottom bar add string_clientlist
+* | | |   cb975c5 Merge pull request #8 from Noro18/abindacarmo-patch-1
+|\ \ \ \  
+| |/ / /  
+|/| | |   
+| * | | 6d06ac2 fix typo in README
+|/ / /  
+* | |   4958b69 Merge pull request #7 from Noro18/Noro18-patch-2
+|\ \ \  
+| * | | edf0fb5 Replace visitor badge with new format
+|/ / /  
+* | |   059f617 Merge pull request #6 from Noro18/Noro18-patch-1
+|\ \ \  
+| * | | 5bd37e1 Add visitor badge to README
+|/ / /  
+* | |   919e011 Merge pull request #5 from Noro18/aumenta-docs
+|\ \ \  
+| * | | 7b01aaf Update README.md: add Tetum translation
+* | | | bc5d45d Merge pull request #4 from Noro18/aumenta-docs
+|\| | | 
+| * | | 453483c docs: add architecture documentation and update readme
+|/ / /  
+* | |   3c0055d Merge pull request #2 from Noro18/feature/clientlistscreen
+|\ \ \  
+| * | | c1c1fef feature(clientlistsreen): aumenta bottomBar no button add
+| * | | d2a7387 feature(clientlistsreen): aumenta foto iha drawable hodi koko clientsreen
+| * | | add6c51 feature(clientlistsreen): design ona topbar no items client
+* | | |   fa59583 Merge pull request #3 from Noro18/aumenta-docs
+|\ \ \ \  
+| |/ / /  
+|/| | |   
+| * | | 88851fc docs(contribution): add contribution guide and update readme link
+|/ / /  
+* | |   a6fe402 Merge pull request #1 from Noro18/feature/aumenta-button
+|\ \ \  
+| |/ /  
+|/| /   
+| |/    
+| * c532224 feature(MainActivity): AUmenta Button Click Me
+|/  
+* 97c62f1 fix(mainActivity): troka android ba ediko
+* 920bb75 Update Readme
+* ccbdb00 update gitignore
+* b3ee347 Initial Commit

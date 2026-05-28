@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -22,6 +23,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -34,6 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
+import com.example.ordermanagementcake.ui.theme.extendedColors
 
 /**
  * Data class hodi rai informasaun nívél ida-idak nian.
@@ -50,9 +54,8 @@ fun NewTierForm(
     onDismiss: () -> Unit = {},
     onSave: (Map<Int, TierData>) -> Unit = { _ -> }
 ) {
-    val mainOrange = Color(0xFFE36D25)
-    val textBrown = Color(0xFF8C280E)
-    val surfaceColor = MaterialTheme.colorScheme.surface
+    val extendedColors = MaterialTheme.extendedColors
+    val surfaceColor = extendedColors.surfaceContainerLowest
 
     // Estadu ba nívél ne'ebé sedang hili (Active tier level selection)
     var activeTierLevel by remember { mutableIntStateOf(1) }
@@ -71,6 +74,10 @@ fun NewTierForm(
     // Estadu ba Dropdown Forma
     var shapeExpanded by remember { mutableStateOf(false) }
     val shapes = listOf("Round", "Square", "Heart")
+
+    // Estadu ba Edit Price Dialog
+    var showEditPriceDialog by remember { mutableStateOf(false) }
+    var tempPriceInput by remember { mutableStateOf("") }
 
     // Estadu ba Color Picker Dialog
     var showColorPicker by remember { mutableStateOf(false) }
@@ -118,20 +125,20 @@ fun NewTierForm(
             ) {
                 Text(
                     text = "Espesifikasaun Nívél",
-                    fontSize = 24.sp,
+                    style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Surface(
                     onClick = onDismiss,
                     shape = CircleShape,
-                    color = Color(0xFFF3F3F3)
+                    color = extendedColors.surfaceContainerHigh
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Taka",
-                        modifier = Modifier.padding(6.dp).size(20.dp),
-                        tint = Color.Gray
+                        modifier = Modifier.padding(8.dp).size(20.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -141,9 +148,9 @@ fun NewTierForm(
             // SELESAUN NÍVÉL: 1 to'o 12
             Text(
                 text = "SELESIONA NÍVÉL (1 - 12)",
-                fontSize = 11.sp,
+                style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
-                color = textBrown,
+                color = MaterialTheme.colorScheme.primary,
                 letterSpacing = 0.5.sp
             )
             Spacer(modifier = Modifier.height(12.dp))
@@ -161,7 +168,7 @@ fun NewTierForm(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
             // FORMA no PRESU
             Row(
@@ -170,7 +177,12 @@ fun NewTierForm(
             ) {
                 // Dropdown ba Forma
                 Column(modifier = Modifier.weight(1.2f)) {
-                    Text(text = "FORMA", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = textBrown)
+                    Text(
+                        text = "FORMA", 
+                        style = MaterialTheme.typography.labelMedium, 
+                        fontWeight = FontWeight.Bold, 
+                        color = MaterialTheme.colorScheme.primary
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                     
                     ExposedDropdownMenuBox(
@@ -182,30 +194,36 @@ fun NewTierForm(
                                 .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true)
                                 .fillMaxWidth()
                                 .height(56.dp),
-                            shape = RoundedCornerShape(14.dp),
-                            color = Color(0xFFF3F3F3)
+                            shape = RoundedCornerShape(16.dp),
+                            color = extendedColors.surfaceContainerLow
                         ) {
                             Row(
                                 modifier = Modifier.padding(horizontal = 16.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text(text = currentTierData.shape, fontWeight = FontWeight.Bold, color = Color(0xFF333333))
+                                Text(
+                                    text = currentTierData.shape, 
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.Bold, 
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowDown,
                                     contentDescription = null,
-                                    tint = Color.Gray
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
                         
                         ExposedDropdownMenu(
                             expanded = shapeExpanded,
-                            onDismissRequest = { shapeExpanded = false }
+                            onDismissRequest = { shapeExpanded = false },
+                            containerColor = extendedColors.surfaceContainer
                         ) {
                             shapes.forEach { shape ->
                                 DropdownMenuItem(
-                                    text = { Text(shape) },
+                                    text = { Text(shape, color = MaterialTheme.colorScheme.onSurface) },
                                     onClick = {
                                         tiersState[activeTierLevel] = currentTierData.copy(shape = shape)
                                         shapeExpanded = false
@@ -218,15 +236,20 @@ fun NewTierForm(
 
                 // Presu Nívél
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(text = "PRESU NÍVÉL", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = textBrown)
+                    Text(
+                        text = "PRESU NÍVÉL", 
+                        style = MaterialTheme.typography.labelMedium, 
+                        fontWeight = FontWeight.Bold, 
+                        color = MaterialTheme.colorScheme.primary
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                     Surface(
                         modifier = Modifier.fillMaxWidth().height(56.dp),
-                        shape = RoundedCornerShape(14.dp),
-                        color = Color(0xFFF3F3F3)
+                        shape = RoundedCornerShape(16.dp),
+                        color = extendedColors.surfaceContainerLow
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 8.dp),
+                            modifier = Modifier.padding(horizontal = 4.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
@@ -235,16 +258,23 @@ fun NewTierForm(
                                     val newPrice = (currentTierData.price - 1.0).coerceAtLeast(0.0)
                                     tiersState[activeTierLevel] = currentTierData.copy(price = newPrice)
                                 },
-                                modifier = Modifier.size(24.dp)
+                                modifier = Modifier.size(32.dp)
                             ) {
-                                Icon(Icons.Default.Remove, contentDescription = "Menos", tint = textBrown)
+                                Icon(Icons.Default.Remove, contentDescription = "Menos", tint = MaterialTheme.colorScheme.primary)
                             }
                             
                             Text(
                                 text = "$${"%.0f".format(currentTierData.price)}", 
                                 fontWeight = FontWeight.Bold, 
-                                color = Color(0xFF333333),
-                                fontSize = 14.sp
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = 15.sp,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .clickable {
+                                        tempPriceInput = "%.0f".format(currentTierData.price)
+                                        showEditPriceDialog = true
+                                    }
+                                    .padding(horizontal = 8.dp, vertical = 4.dp)
                             )
 
                             IconButton(
@@ -252,16 +282,16 @@ fun NewTierForm(
                                     val newPrice = currentTierData.price + 1.0
                                     tiersState[activeTierLevel] = currentTierData.copy(price = newPrice)
                                 },
-                                modifier = Modifier.size(24.dp)
+                                modifier = Modifier.size(32.dp)
                             ) {
-                                Icon(Icons.Default.Add, contentDescription = "Aumenta", tint = textBrown)
+                                Icon(Icons.Default.Add, contentDescription = "Aumenta", tint = MaterialTheme.colorScheme.primary)
                             }
                         }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
             // KÓR FROSTING
             Row(
@@ -269,27 +299,35 @@ fun NewTierForm(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "KÓR FROSTING", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = textBrown)
-                Surface(color = Color(0xFFFFEDE6), shape = RoundedCornerShape(6.dp)) {
+                Text(
+                    text = "KÓR FROSTING", 
+                    style = MaterialTheme.typography.labelMedium, 
+                    fontWeight = FontWeight.Bold, 
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Surface(
+                    color = MaterialTheme.colorScheme.primaryContainer, 
+                    shape = RoundedCornerShape(8.dp)
+                ) {
                     Text(
                         text = "LEVEL $activeTierLevel",
-                        color = Color(0xFFD48259),
-                        fontSize = 10.sp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                     )
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                color = Color(0xFFF3F3F3)
+                shape = RoundedCornerShape(20.dp),
+                color = extendedColors.surfaceContainerLow
             ) {
                 Row(
-                    modifier = Modifier.padding(12.dp),
+                    modifier = Modifier.padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     // Hatudu kór sira ne'ebé hili lalais
                     quickFrostingColors.forEach { color ->
@@ -310,12 +348,12 @@ fun NewTierForm(
                     
                     Box(
                         modifier = Modifier
-                            .size(44.dp)
+                            .size(48.dp)
                             .clip(CircleShape)
-                            .background(if (isCustomColor) Color.White else Color.Transparent)
+                            .background(if (isCustomColor) extendedColors.surfaceContainerHigh else Color.Transparent)
                             .border(
                                 width = if (isCustomColor) 2.dp else 0.dp,
-                                color = if (isCustomColor) textBrown else Color.Transparent,
+                                color = if (isCustomColor) MaterialTheme.colorScheme.primary else Color.Transparent,
                                 shape = CircleShape
                             )
                             .clickable { showColorPicker = true },
@@ -323,10 +361,10 @@ fun NewTierForm(
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(32.dp)
+                                .size(36.dp)
                                 .clip(CircleShape)
-                                .background(if (isCustomColor) currentTierData.color else Color.White.copy(alpha = 0.5f))
-                                .border(1.dp, Color.LightGray.copy(alpha = 0.3f), CircleShape),
+                                .background(if (isCustomColor) currentTierData.color else extendedColors.surfaceContainerHighest)
+                                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -334,7 +372,7 @@ fun NewTierForm(
                                 contentDescription = "Color Picker",
                                 tint = if (isCustomColor) {
                                     if (currentTierData.color.toArgb() == Color.White.toArgb()) Color.Gray else Color.White
-                                } else Color.Gray,
+                                } else MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -344,29 +382,86 @@ fun NewTierForm(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Markup adisionál
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = "Aumentu Adisionál", fontSize = 16.sp, color = Color.Gray)
-                Text(text = "+ $15.00", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
             // Botão Save
             Button(
                 onClick = { onSave(tiersState.toMap()) },
-                modifier = Modifier.fillMaxWidth().height(64.dp),
+                modifier = Modifier.fillMaxWidth().height(60.dp),
                 shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = mainOrange)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
-                Text(text = "Atualiza Espesifikasaun Nívél", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    text = "Atualiza Espesifikasaun Nívél", 
+                    style = MaterialTheme.typography.titleMedium, 
+                    fontWeight = FontWeight.Bold
+                )
             }
             
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+
+    // Modern Dialog to Edit Tier Price
+    if (showEditPriceDialog) {
+        AlertDialog(
+            onDismissRequest = { showEditPriceDialog = false },
+            title = {
+                Text(
+                    text = "Muda Presu Nívél $activeTierLevel",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
+            text = {
+                Column {
+                    Text(
+                        text = "Insere valór foun ba presu nívél ida-ne'e nian:",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    OutlinedTextField(
+                        value = tempPriceInput,
+                        onValueChange = { tempPriceInput = it },
+                        label = { Text("Presu Nívél ($)") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                            focusedContainerColor = extendedColors.surfaceContainerLow,
+                            unfocusedContainerColor = extendedColors.surfaceContainerLowest,
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        val parsedPrice = tempPriceInput.toDoubleOrNull() ?: currentTierData.price
+                        tiersState[activeTierLevel] = currentTierData.copy(price = parsedPrice)
+                        showEditPriceDialog = false
+                    },
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Rai")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showEditPriceDialog = false }
+                ) {
+                    Text("Kansela")
+                }
+            },
+            shape = RoundedCornerShape(28.dp),
+            containerColor = extendedColors.surfaceContainerLow
+        )
     }
 }
 
@@ -402,15 +497,20 @@ fun ModernColorPickerDialog(
         Card(
             shape = RoundedCornerShape(28.dp),
             modifier = Modifier.padding(16.dp).fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.extendedColors.surfaceContainerLowest)
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Hili Kór", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                Text(
+                    text = "Hili Kór", 
+                    fontWeight = FontWeight.Bold, 
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
                 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 SaturationValueSelector(
                     hue = hsvState[0],
@@ -422,26 +522,26 @@ fun ModernColorPickerDialog(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 HueSlider(
                     hue = hsvState[0],
                     onHueChange = { h -> hsvState[0] = h }
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(28.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Box(
                         modifier = Modifier
                             .size(56.dp)
-                            .clip(RoundedCornerShape(12.dp))
+                            .clip(RoundedCornerShape(16.dp))
                             .background(currentColor)
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
                     )
 
                     OutlinedTextField(
@@ -464,12 +564,18 @@ fun ModernColorPickerDialog(
                         label = { Text("HEX") },
                         prefix = { Text("# ") },
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(12.dp),
-                        singleLine = true
+                        shape = RoundedCornerShape(16.dp),
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                            focusedContainerColor = MaterialTheme.extendedColors.surfaceContainerLow,
+                            unfocusedContainerColor = MaterialTheme.extendedColors.surfaceContainerLowest
+                        )
                     )
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(28.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -477,14 +583,18 @@ fun ModernColorPickerDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text("KANSELA", color = Color.Gray)
+                        Text("KANSELA", color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
+                    Spacer(modifier = Modifier.width(8.dp))
                     Button(
                         onClick = { onColorSelected(currentColor) },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE36D25)),
-                        shape = RoundedCornerShape(12.dp)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        shape = RoundedCornerShape(16.dp)
                     ) {
-                        Text("SELESIONA")
+                        Text("SELESIONA", fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -503,7 +613,8 @@ fun SaturationValueSelector(
         modifier = Modifier
             .fillMaxWidth()
             .height(180.dp)
-            .clip(RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(16.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
             .pointerInput(Unit) {
                 detectDragGestures { change, _ ->
                     val s = (change.position.x / size.width).coerceIn(0f, 1f)
@@ -568,21 +679,21 @@ fun TierSelectionButton(
 ) {
     Surface(
         modifier = modifier
-            .height(50.dp)
+            .height(56.dp)
             .clickable { onClick() },
-        shape = RoundedCornerShape(12.dp),
-        color = if (isSelected) Color(0xFFFFEDE6) else Color.Transparent,
+        shape = RoundedCornerShape(16.dp),
+        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
         border = androidx.compose.foundation.BorderStroke(
-            width = 1.5.dp,
-            color = if (isSelected) Color(0xFF8C280E) else Color(0xFFEEEEEE)
+            width = if (isSelected) 2.dp else 1.dp,
+            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
         )
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(
                 text = tierNumber.toString(),
-                fontSize = 15.sp,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = if (isSelected) Color(0xFF8C280E) else Color.Gray
+                color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -596,12 +707,12 @@ fun ColorSwatchCircle(
 ) {
     Box(
         modifier = Modifier
-            .size(44.dp)
+            .size(48.dp)
             .clip(CircleShape)
-            .background(if (isSelected) Color.White else Color.Transparent)
+            .background(if (isSelected) MaterialTheme.extendedColors.surfaceContainerHigh else Color.Transparent)
             .border(
                 width = if (isSelected) 2.dp else 0.dp,
-                color = if (isSelected) Color(0xFF8C280E) else Color.Transparent,
+                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
                 shape = CircleShape
             )
             .clickable { onClick() },
@@ -609,10 +720,10 @@ fun ColorSwatchCircle(
     ) {
         Box(
             modifier = Modifier
-                .size(32.dp)
+                .size(36.dp)
                 .clip(CircleShape)
                 .background(color)
-                .border(1.dp, Color.LightGray.copy(alpha = 0.3f), CircleShape)
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
         )
     }
 }
@@ -620,5 +731,7 @@ fun ColorSwatchCircle(
 @Preview(showBackground = true)
 @Composable
 fun TierFormPreview() {
-    NewTierForm()
+    OrderManagementCakeTheme {
+        NewTierForm()
+    }
 }
