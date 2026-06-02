@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,8 +30,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -159,70 +159,62 @@ fun NewOrderForm(
                         )
                     }
 
-                    OutlinedTextField(
-                        value = searchQuery,
-                        onValueChange = { viewModel.onClientSearchQueryChange(it) },
+                    ExposedDropdownMenuBox(
+                        expanded = clientSuggestions.isNotEmpty(),
+                        onExpandedChange = { },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 16.dp),
-                        placeholder = {
-                            Text(
-                                text = "buka clinet ne'ebe eziste...",
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "Search",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        },
-                        trailingIcon = {
-                            if (draft.clientId != null) {
-                                Icon(
-                                    imageVector = Icons.Default.Person,
-                                    contentDescription = "Selected",
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        },
-                        shape = RoundedCornerShape(12.dp),
-                        singleLine = true
-                    )
-
-                    // Suggestions List
-                    if (clientSuggestions.isNotEmpty()) {
-                        Card(
+                            .padding(horizontal = 16.dp, vertical = 16.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = searchQuery,
+                            onValueChange = { viewModel.onClientSearchQueryChange(it) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .heightIn(max = 200.dp),
+                                .menuAnchor(),
+                            placeholder = {
+                                Text(
+                                    text = "buka clinet ne'ebe eziste...",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = "Search",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            },
+                            trailingIcon = {
+                                if (draft.clientId != null) {
+                                    Icon(
+                                        imageVector = Icons.Default.Person,
+                                        contentDescription = "Selected",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            },
                             shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                            singleLine = true
+                        )
+
+                        ExposedDropdownMenu(
+                            expanded = clientSuggestions.isNotEmpty(),
+                            onDismissRequest = { },
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                         ) {
-                            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                                clientSuggestions.forEach { client ->
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clickable { viewModel.selectClient(client) }
-                                            .padding(16.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.size(20.dp))
-                                        Spacer(modifier = Modifier.width(12.dp))
+                            clientSuggestions.forEach { client ->
+                                DropdownMenuItem(
+                                    text = {
                                         Column {
                                             Text(text = client.name, fontWeight = FontWeight.Bold)
                                             Text(text = client.phone, style = MaterialTheme.typography.bodySmall)
                                         }
-                                    }
-                                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), thickness = 0.5.dp)
-                                }
+                                    },
+                                    onClick = { viewModel.selectClient(client) }
+                                )
                             }
                         }
-                        Spacer(modifier = Modifier.height(16.dp))
                     }
 
                     Card(
