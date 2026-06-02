@@ -79,6 +79,9 @@ fun NewOrderForm(
     var showDatePicker by remember { mutableStateOf(false) }
     var selectedDateText by remember { mutableStateOf(if (draft.deliveryDate.isEmpty()) "hili data entrega" else draft.deliveryDate) }
     val datePickerState = rememberDatePickerState()
+    
+    // Explicit control for the dropdown
+    var expanded by remember { mutableStateOf(false) }
 
     if (showDatePicker) {
         DatePickerDialog(
@@ -160,15 +163,18 @@ fun NewOrderForm(
                     }
 
                     ExposedDropdownMenuBox(
-                        expanded = clientSuggestions.isNotEmpty(),
-                        onExpandedChange = { },
+                        expanded = expanded && clientSuggestions.isNotEmpty(),
+                        onExpandedChange = { expanded = !expanded },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 16.dp)
                     ) {
                         OutlinedTextField(
                             value = searchQuery,
-                            onValueChange = { viewModel.onClientSearchQueryChange(it) },
+                            onValueChange = { 
+                                expanded = true
+                                viewModel.onClientSearchQueryChange(it) 
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .menuAnchor(),
@@ -199,8 +205,8 @@ fun NewOrderForm(
                         )
 
                         ExposedDropdownMenu(
-                            expanded = clientSuggestions.isNotEmpty(),
-                            onDismissRequest = { },
+                            expanded = expanded && clientSuggestions.isNotEmpty(),
+                            onDismissRequest = { expanded = false },
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                         ) {
                             clientSuggestions.forEach { client ->
@@ -211,7 +217,10 @@ fun NewOrderForm(
                                             Text(text = client.phone, style = MaterialTheme.typography.bodySmall)
                                         }
                                     },
-                                    onClick = { viewModel.selectClient(client) }
+                                    onClick = { 
+                                        viewModel.selectClient(client)
+                                        expanded = false
+                                    }
                                 )
                             }
                         }
