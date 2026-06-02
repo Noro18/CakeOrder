@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Search
@@ -30,7 +32,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -50,9 +54,11 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.ordermanagementcake.data.draft.CakeDraft
+import com.example.ordermanagementcake.ui.orders.NewOrderViewModel
 import com.example.ordermanagementcake.ui.theme.extendedColors
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -61,13 +67,17 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewOrderForm(
+    viewModel: NewOrderViewModel,
     onAddNewClient: () -> Unit = {},
     onSaveOrder: () -> Unit = {},
     onNewCake: () -> Unit = {}
 ) {
-    var searchText by remember { mutableStateOf("") }
+    val draft = viewModel.orderDraft
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+    val clientSuggestions by viewModel.clientSuggestions.collectAsStateWithLifecycle()
+
     var showDatePicker by remember { mutableStateOf(false) }
-    var selectedDateText by remember { mutableStateOf("Select pickup or delivery date") }
+    var selectedDateText by remember { mutableStateOf(if (draft.deliveryDate.isEmpty()) "hili data entrega" else draft.deliveryDate) }
     val datePickerState = rememberDatePickerState()
 
     if (showDatePicker) {
@@ -77,7 +87,9 @@ fun NewOrderForm(
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let {
                         val sdf = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-                        selectedDateText = sdf.format(Date(it))
+                        val formattedDate = sdf.format(Date(it))
+                        selectedDateText = formattedDate
+                        viewModel.updateOrderDraft { it.copy(deliveryDate = formattedDate) }
                     }
                     showDatePicker = false
                 }) {
@@ -111,14 +123,13 @@ fun NewOrderForm(
 
             Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(230.dp),
+                    .fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.extendedColors.surfaceContainerLow
                 )
             ) {
-                Column(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
@@ -139,7 +150,7 @@ fun NewOrderForm(
                             )
                         }
                         Text(
-                            text = "La iha Cliente Selecionado",
+                            text = if (draft.clientName.isNullOrEmpty()) "La iha Cliente Selecionado" else draft.clientName,
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(top = 16.dp, start = 12.dp),
@@ -149,8 +160,8 @@ fun NewOrderForm(
                     }
 
                     OutlinedTextField(
-                        value = searchText,
-                        onValueChange = { searchText = it },
+                        value = searchQuery,
+                        onValueChange = { viewModel.onClientSearchQueryChange(it) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 16.dp),
@@ -167,9 +178,52 @@ fun NewOrderForm(
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },
+                        trailingIcon = {
+                            if (draft.clientId != null) {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Selected",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        },
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true
                     )
+
+                    // Suggestions List
+                    if (clientSuggestions.isNotEmpty()) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .heightIn(max = 200.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        ) {
+                            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                clientSuggestions.forEach { client ->
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable { viewModel.selectClient(client) }
+                                            .padding(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.size(20.dp))
+                                        Spacer(modifier = Modifier.width(12.dp))
+                                        Column {
+                                            Text(text = client.name, fontWeight = FontWeight.Bold)
+                                            Text(text = client.phone, style = MaterialTheme.typography.bodySmall)
+                                        }
+                                    }
+                                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), thickness = 0.5.dp)
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
 
                     Card(
                         modifier = Modifier
@@ -233,7 +287,7 @@ fun NewOrderForm(
                         modifier = Modifier.clickable { }
                     )
                     Text(
-                        text = "$0.00",
+                        text = "$${"%.2f".format(draft.totalPrice)}",
                         fontWeight = FontWeight.Bold,
                         fontSize = 25.sp,
                         color = MaterialTheme.colorScheme.primary,
@@ -244,57 +298,73 @@ fun NewOrderForm(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            val stroke = Stroke(
-                width = 2f,
-                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
-            )
-            val dashBorderColor = MaterialTheme.colorScheme.outlineVariant
+            if (draft.cakes.isEmpty()) {
+                val stroke = Stroke(
+                    width = 2f,
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+                )
+                val dashBorderColor = MaterialTheme.colorScheme.outlineVariant
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(140.dp)
-                    .drawBehind {
-                        drawRoundRect(
-                            color = dashBorderColor,
-                            style = stroke,
-                            cornerRadius = CornerRadius(12.dp.toPx())
-                        )
-                    }
-                    .clickable { onNewCake() },
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(140.dp)
+                        .drawBehind {
+                            drawRoundRect(
+                                color = dashBorderColor,
+                                style = stroke,
+                                cornerRadius = CornerRadius(12.dp.toPx())
+                            )
+                        }
+                        .clickable { onNewCake() },
+                    contentAlignment = Alignment.Center
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(45.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.extendedColors.surfaceContainerHigh),
-                        contentAlignment = Alignment.Center
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
+                        Box(
+                            modifier = Modifier
+                                .size(45.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.extendedColors.surfaceContainerHigh),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Add",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = "Aumenta Cake Primeiro",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Select from your menu or create custom",
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "Aumenta Cake Primeiro",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Select from your menu or create custom",
-                        fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                }
+            } else {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    draft.cakes.forEachIndexed { index, cake ->
+                        CakeDraftItem(cake, onDelete = { viewModel.removeCakeFromDraft(index) })
+                    }
+                    Button(
+                        onClick = onNewCake,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
+                        Text("Aumenta Cake Seluk", color = MaterialTheme.colorScheme.onSecondaryContainer)
+                    }
                 }
             }
 
@@ -361,7 +431,9 @@ fun NewOrderForm(
                     .fillMaxWidth()
             ) {
                 Button(
-                    onClick = onSaveOrder,
+                    onClick = {
+                        viewModel.saveOrder(onSuccess = onSaveOrder)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -383,7 +455,26 @@ fun NewOrderForm(
 }
 
 @Composable
-@Preview(showBackground = true)
-fun OrderFormPreview() {
-    NewOrderForm()
+fun CakeDraftItem(cake: CakeDraft, onDelete: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.extendedColors.surfaceContainerLow)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(text = cake.cakeTitle, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                Text(text = "${cake.tiers.size} Nívél", style = MaterialTheme.typography.bodySmall)
+            }
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Default.Close, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error)
+            }
+        }
+    }
 }
