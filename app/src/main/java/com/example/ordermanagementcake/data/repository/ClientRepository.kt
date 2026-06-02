@@ -7,6 +7,12 @@ import kotlinx.coroutines.flow.Flow
 
 class ClientRepository(private val clientDao: ClientDao) {
 
+    fun searchClientsByName(query: String): Flow<List<ClientEntity>> =
+        clientDao.searchClientsByName(query)
+
+    suspend fun getClientByName(name: String): ClientEntity? =
+        clientDao.getClientByName(name)
+
     fun getAllClients(): Flow<List<ClientEntity>> =
         clientDao.getAllClients()
 

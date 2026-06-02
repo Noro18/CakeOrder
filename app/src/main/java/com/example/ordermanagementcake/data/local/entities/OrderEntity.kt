@@ -23,6 +23,6 @@ data class OrderEntity (
     @ColumnInfo(name = "order_date") val orderDate: String,
     @ColumnInfo(name = "delivery_date") val deliveryDate: String,
     @ColumnInfo(name = "total_price") val totalPrice: Double,
-    @ColumnInfo(name = "order_notes") val orderNotes: String,
+    @ColumnInfo(name = "order_notes") val orderNotes: String = "",
     @ColumnInfo(name = "status") val status: OrderStatus = OrderStatus.PENDING // default value pending
 )
