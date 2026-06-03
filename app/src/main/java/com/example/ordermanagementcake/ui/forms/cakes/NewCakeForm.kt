@@ -207,6 +207,37 @@ fun NewCakeForm(
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Section for Cake Notes
+            Text(
+                text = "NOTA CAKE",
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.8.sp,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            OutlinedTextField(
+                value = cakeNotes,
+                onValueChange = { cakeNotes = it },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text("Adisiona nota ruma kona-ba dezeñu ka sabór bolo nian...", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                    focusedContainerColor = extendedColors.surfaceContainerLow,
+                    unfocusedContainerColor = extendedColors.surfaceContainerLowest,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                ),
+                shape = RoundedCornerShape(16.dp),
+                minLines = 4,
+                maxLines = 6
+            )
             
             Spacer(modifier = Modifier.height(40.dp))
         }
