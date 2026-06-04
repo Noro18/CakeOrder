@@ -29,14 +29,6 @@ import com.example.ordermanagementcake.data.local.relations.OrderWithCakes
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
-/** Returns the next logical status, or null if the order is already terminal. */
-fun nextStatus(current: OrderStatus): OrderStatus? = when (current) {
-    OrderStatus.PENDING     -> OrderStatus.IN_PROGRESS
-    OrderStatus.IN_PROGRESS -> OrderStatus.READY
-    OrderStatus.READY       -> OrderStatus.COMPLETED
-    else                    -> null   // COMPLETED / CANCELLED — nothing to do
-}
-
 /** Human-readable action label for the button, e.g. "Start Baking" */
 fun actionLabel(current: OrderStatus): String = when (current) {
     OrderStatus.PENDING     -> "Komesa Baking"
@@ -228,7 +220,7 @@ fun OrderCard(
 ) {
     val order     = orderWithCakes.orders
     val mainCake  = orderWithCakes.cakes.firstOrNull()
-    val next      = nextStatus(order.status) // foti status tuir mai
+    val next      = order.status.nextStatus() // foti status tuir mai
 
     // Controls whether the confirmation dialog is visible
     var showDialog by remember { mutableStateOf(false) }

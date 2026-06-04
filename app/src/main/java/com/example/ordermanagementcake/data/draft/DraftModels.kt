@@ -25,4 +25,10 @@ data class OrderDraft(
     val orderNotes: String = "",
     val totalPrice: Double = 0.0,
     val cakes: List<CakeDraft> = emptyList()
-)
+) {
+    fun calculateTotal(): Double {
+        return cakes.sumOf { cake ->
+            cake.tiers.sumOf { it.price }
+        }
+    }
+}

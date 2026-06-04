@@ -103,10 +103,7 @@ class NewOrderViewModel(
     }
 
     private fun calculateTotalPrice() {
-        val total = orderDraft.cakes.sumOf { cake ->
-            cake.tiers.sumOf { it.price }
-        }
-        orderDraft = orderDraft.copy(totalPrice = total)
+        orderDraft = orderDraft.copy(totalPrice = orderDraft.calculateTotal())
     }
 
     fun resetDraft() {
