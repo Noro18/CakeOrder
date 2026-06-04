@@ -54,6 +54,7 @@ import com.example.ordermanagementcake.ui.forms.orders.NewOrderForm
 import com.example.ordermanagementcake.ui.orders.OrderListScreen
 import com.example.ordermanagementcake.ui.forms.orders.NewOrderScreen
 import com.example.ordermanagementcake.ui.forms.tier.NewTierForm
+import com.example.ordermanagementcake.ui.orders.NewOrderViewModel
 import com.example.ordermanagementcake.ui.orders.OrderViewModel
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewModel
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewScreen
@@ -84,7 +85,8 @@ fun AppNavHost(
     startDestination: String = Routes.DASHBOARD,
     orderViewModel: OrderViewModel,
     clientViewModel: ClientViewModel,
-    scheduleViewModel: ScheduleViewModel
+    scheduleViewModel: ScheduleViewModel,
+    newOrderViewModel: NewOrderViewModel
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -289,7 +291,16 @@ fun AppNavHost(
                                 fadeOut(tween(300))
                     }
                 ) {
-                    NewOrderForm(onAddNewClient = { navController.navigate(Routes.NEW_CLIENT) }, onNewCake = {navController.navigate(Routes.NEW_CAKE)})
+                    NewOrderForm(
+                        viewModel = newOrderViewModel,
+                        onAddNewClient = { navController.navigate(Routes.NEW_CLIENT) },
+                        onNewCake = { navController.navigate(Routes.NEW_CAKE) },
+                        onSaveOrder = {
+                            navController.navigate(Routes.ORDERS) {
+                                popUpTo(Routes.DASHBOARD)
+                            }
+                        }
+                    )
                 }
                 composable(route = Routes.NEW_CLIENT) {
                     NewClientForm(
@@ -325,23 +336,14 @@ fun AppNavHost(
                     )
                 }
                 composable(route = Routes.NEW_CAKE) {
-                    var showTierSheet by remember { mutableStateOf(false) }
-
                     NewCakeForm(
-                        onAddTier = { showTierSheet = true },
-                        onSaveCake = { /* Saving logic */ },
-                        onAddReference = { /* Reference Action */ }
+                        onSaveCake = { cakeDraft ->
+                            newOrderViewModel.addCakeToDraft(cakeDraft)
+                            navController.popBackStack()
+                        },
+                        onBack = { navController.popBackStack() },
+                        clientName = newOrderViewModel.orderDraft.clientName ?: "Kliente foun"
                     )
-
-                    if (showTierSheet) {
-                        NewTierForm(
-                            onDismiss = { showTierSheet = false },
-                            onSave = { tiersState ->
-                                // Process the tier specifications here
-                                showTierSheet = false
-                            }
-                        )
-                    }
                 }
             }
         }

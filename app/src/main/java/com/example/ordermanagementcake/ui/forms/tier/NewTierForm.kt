@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.ordermanagementcake.data.draft.TierDraft
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 import com.example.ordermanagementcake.ui.theme.extendedColors
 
@@ -53,7 +54,7 @@ data class TierData(
 @Composable
 fun NewTierForm(
     onDismiss: () -> Unit = {},
-    onSave: (Map<Int, TierData>) -> Unit = { _ -> }
+    onSave: (List<TierDraft>) -> Unit = { _ -> }
 ) {
     val extendedColors = MaterialTheme.extendedColors
     val surfaceColor = extendedColors.surfaceContainerLowest
@@ -64,7 +65,9 @@ fun NewTierForm(
     // Inisializa nívél 1 to'o 12 (1..12)
     val tiersState = remember { 
         val initialMap = mutableStateMapOf<Int, TierData>()
-        for (i in 1..12) {
+        // Only initialize level 1 by default, or maybe let user add levels?
+        // The original code initialized 1..12. I'll stick to that but maybe it's too many.
+        for (i in 1..1) {
             initialMap[i] = TierData(shape = "Round", size = "20inch", color = Color.White, price = 120.0)
         }
         initialMap
@@ -150,14 +153,31 @@ fun NewTierForm(
 
             Spacer(modifier = Modifier.height(28.dp))
 
-            // SELESAUN NÍVÉL: 1 to'o 12
-            Text(
-                text = "SELESIONA NÍVÉL (1 - 12)",
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                letterSpacing = 0.5.sp
-            )
+            // SELESAUN NÍVÉL
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "SELESIONA NÍVÉL",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    letterSpacing = 0.5.sp
+                )
+                IconButton(
+                    onClick = {
+                        val nextLevel = tiersState.keys.maxOrNull()?.plus(1) ?: 1
+                        if (nextLevel <= 12) {
+                            tiersState[nextLevel] = TierData()
+                            activeTierLevel = nextLevel
+                        }
+                    }
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Add Level", tint = MaterialTheme.colorScheme.primary)
+                }
+            }
             Spacer(modifier = Modifier.height(12.dp))
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -452,7 +472,18 @@ fun NewTierForm(
 
             // Botão Save
             Button(
-                onClick = { onSave(tiersState.toMap()) },
+                onClick = { 
+                    val drafts = tiersState.map { (level, data) ->
+                        TierDraft(
+                            level = level,
+                            shape = data.shape,
+                            size = data.size,
+                            color = data.color,
+                            price = data.price
+                        )
+                    }.sortedBy { it.level }
+                    onSave(drafts) 
+                },
                 modifier = Modifier.fillMaxWidth().height(60.dp),
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(

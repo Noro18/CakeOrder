@@ -1,6 +1,8 @@
 package com.example.ordermanagementcake.ui.forms.cakes
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,21 +55,38 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ordermanagementcake.data.draft.CakeDraft
+import com.example.ordermanagementcake.data.draft.TierDraft
+import com.example.ordermanagementcake.ui.forms.tier.NewTierForm
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 import com.example.ordermanagementcake.ui.theme.extendedColors
 
 // Main composable function for the Customize Cake screen
 @Composable
 fun NewCakeForm(
-    onAddTier: () -> Unit = {},
-    onSaveCake: () -> Unit = {},
-    onAddReference: () -> Unit = {}
+    onSaveCake: (CakeDraft) -> Unit = {},
+    onBack: () -> Unit = {},
+    clientName: String = "Sophie Chen"
 ) {
     var cakeTitle by remember { mutableStateOf("") }
-    var estimatedTotal by remember { mutableStateOf("85.00") }
-    var showEditTotalDialog by remember { mutableStateOf(false) }
-    var tempTotalInput by remember { mutableStateOf(estimatedTotal) }
+    var cakeNotes by remember { mutableStateOf("") }
+    var imageUri by remember { mutableStateOf<String?>(null) }
+    var tiers by remember { mutableStateOf(emptyList<TierDraft>()) }
+    var showTierForm by remember { mutableStateOf(false) }
+
     val extendedColors = MaterialTheme.extendedColors
+    
+    val estimatedTotal = tiers.sumOf { it.price }
+
+    if (showTierForm) {
+        NewTierForm(
+            onDismiss = { showTierForm = false },
+            onSave = { newTiers ->
+                tiers = newTiers
+                showTierForm = false
+            }
+        )
+    }
 
     // Main UI structure without Scaffold (to avoid double padding in NavGraph)
     Column(
@@ -115,7 +134,7 @@ fun NewCakeForm(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Sophie Chen",
+                    text = clientName,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -160,7 +179,7 @@ fun NewCakeForm(
                     icon = Icons.Default.AddPhotoAlternate,
                     title = "AUMENTA IMAJEN REFERÉNSIA",
                     description = "Muda foto husi dezeñu bolo ne'ebé Ita gosta",
-                    onClick = onAddReference
+                    onClick = { /* Handle image selection */ }
                 )
             }
 
@@ -168,86 +187,124 @@ fun NewCakeForm(
 
             // Section for adding Tier Specifications
             SectionCard(title = "ESPESIFIKASAUN NIVÉL") {
-                DashedAddBox(
-                    icon = Icons.Default.Add,
-                    title = "AUMENTA NIVÉL",
-                    description = null,
-                    onClick = onAddTier
-                )
+                if (tiers.isEmpty()) {
+                    DashedAddBox(
+                        icon = Icons.Default.Add,
+                        title = "AUMENTA NIVÉL",
+                        description = null,
+                        onClick = { showTierForm = true }
+                    )
+                } else {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        tiers.forEach { tier ->
+                            TierItem(tier)
+                        }
+                        Button(
+                            onClick = { showTierForm = true },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                        ) {
+                            Text("Modifika Nívél", color = MaterialTheme.colorScheme.onSecondaryContainer)
+                        }
+                    }
+                }
             }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Section for Cake Notes
+            Text(
+                text = "NOTA CAKE",
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.8.sp,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            OutlinedTextField(
+                value = cakeNotes,
+                onValueChange = { cakeNotes = it },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text("Adisiona nota ruma kona-ba dezeñu ka sabór bolo nian...", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                    focusedContainerColor = extendedColors.surfaceContainerLow,
+                    unfocusedContainerColor = extendedColors.surfaceContainerLowest,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                ),
+                shape = RoundedCornerShape(16.dp),
+                minLines = 4,
+                maxLines = 6
+            )
             
             Spacer(modifier = Modifier.height(40.dp))
         }
         
         // Bottom bar containing the estimated total and save button
         BottomSummaryBar(
-            estimatedTotal = estimatedTotal,
+            estimatedTotal = "%.2f".format(estimatedTotal),
             onEditTotalClick = {
-                tempTotalInput = estimatedTotal
-                showEditTotalDialog = true
+                // Total is now calculated from tiers
             },
-            onSaveCake = onSaveCake
+            onSaveCake = {
+                onSaveCake(CakeDraft(cakeTitle = cakeTitle, cakeNotes = cakeNotes, imageUri = imageUri, tiers = tiers))
+            }
         )
     }
+}
 
-    // Modern Dialog to Edit Total
-    if (showEditTotalDialog) {
-        AlertDialog(
-            onDismissRequest = { showEditTotalDialog = false },
-            title = {
+@Composable
+fun TierItem(tier: TierDraft) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Visual Color Indicator
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(CircleShape)
+                    .background(tier.color)
+                    .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f), CircleShape)
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Muda Estimasaun Totál",
-                    style = MaterialTheme.typography.titleLarge,
+                    text = "Nívél ${tier.level}: ${tier.shape}",
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
-            },
-            text = {
-                Column {
-                    Text(
-                        text = "Insere valór foun ba estimasaun totál bolo nian:",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    OutlinedTextField(
-                        value = tempTotalInput,
-                        onValueChange = { tempTotalInput = it },
-                        label = { Text("Estimasaun Totál ($)") },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                            focusedContainerColor = extendedColors.surfaceContainerLow,
-                            unfocusedContainerColor = extendedColors.surfaceContainerLowest,
-                        ),
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        estimatedTotal = tempTotalInput
-                        showEditTotalDialog = false
-                    },
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text("Rai")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = { showEditTotalDialog = false }
-                ) {
-                    Text("Kansela")
-                }
-            },
-            shape = RoundedCornerShape(28.dp),
-            containerColor = extendedColors.surfaceContainerLow
-        )
+                Text(
+                    text = "Tamanho: ${tier.size}",
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            Text(
+                text = "$${"%.2f".format(tier.price)}",
+                fontWeight = FontWeight.ExtraBold,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 16.sp
+            )
+        }
     }
 }
 

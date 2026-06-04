@@ -17,6 +17,12 @@ interface ClientDao {
     @Query("SELECT * FROM clients WHERE phone = :phone")
     suspend fun findByPhone(phone: String): ClientEntity?
 
+    @Query("SELECT * FROM clients WHERE name LIKE '%' || :query || '%'")
+    fun searchClientsByName(query: String): Flow<List<ClientEntity>>
+
+    @Query("SELECT * FROM clients WHERE name = :name LIMIT 1")
+    suspend fun getClientByName(name: String): ClientEntity?
+
     @Transaction
     @Query("SELECT * FROM clients WHERE client_id = :id")
     fun getClientWithOrders(id: Int): Flow<ClientWithOrders?>
