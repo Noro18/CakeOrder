@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ClientDao {
 
-    @Query("SELECT * FROM clients")
+    @Query("SELECT * FROM clients ORDER BY created_at DESC")
     fun getAllClients(): Flow<List<ClientEntity>>
 
     @Query("SELECT * FROM clients WHERE client_id = :id")
@@ -17,7 +17,7 @@ interface ClientDao {
     @Query("SELECT * FROM clients WHERE phone = :phone")
     suspend fun findByPhone(phone: String): ClientEntity?
 
-    @Query("SELECT * FROM clients WHERE name LIKE '%' || :query || '%'")
+    @Query("SELECT * FROM clients WHERE name LIKE '%' || :query || '%' ORDER BY created_at DESC")
     fun searchClientsByName(query: String): Flow<List<ClientEntity>>
 
     @Query("SELECT * FROM clients WHERE name = :name LIMIT 1")
