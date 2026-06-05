@@ -36,7 +36,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ordermanagementcake.data.draft.TierDraft
+import com.example.ordermanagementcake.ui.orders.NewOrderViewModel
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 import com.example.ordermanagementcake.ui.theme.extendedColors
 
@@ -44,17 +46,18 @@ import com.example.ordermanagementcake.ui.theme.extendedColors
  * Data class hodi rai informasaun nívél ida-idak nian.
  */
 data class TierData(
-    val shape: String = "Round",
-    val size: String = "20inch",
+    val shape: String = "Circle",
+    val size: String = "8inch",
     val color: Color = Color.White,
-    val price: Double = 120.0
+    val price: Double = 45.0
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewTierForm(
     onDismiss: () -> Unit = {},
-    onSave: (List<TierDraft>) -> Unit = { _ -> }
+    onSave: (List<TierDraft>) -> Unit = { _ -> },
+    viewModel: NewOrderViewModel? = null
 ) {
     val extendedColors = MaterialTheme.extendedColors
     val surfaceColor = extendedColors.surfaceContainerLowest
@@ -68,20 +71,38 @@ fun NewTierForm(
         // Only initialize level 1 by default, or maybe let user add levels?
         // The original code initialized 1..12. I'll stick to that but maybe it's too many.
         for (i in 1..1) {
-            initialMap[i] = TierData(shape = "Round", size = "20inch", color = Color.White, price = 120.0)
+            initialMap[i] = TierData()
         }
         initialMap
     }
 
     val currentTierData = tiersState[activeTierLevel] ?: TierData()
 
+    // Fetch data from DB if viewModel is available
+    val dbShapes by (viewModel?.shapes?.collectAsStateWithLifecycle() ?: remember { mutableStateOf(emptyList()) })
+    val dbSizes by (viewModel?.sizes?.collectAsStateWithLifecycle() ?: remember { mutableStateOf(emptyList()) })
+
+    val shapes = if (dbShapes.isNotEmpty()) dbShapes.map { it.shapeName } else listOf("Circle", "Square", "Heart")
+    val sizes = if (dbSizes.isNotEmpty()) dbSizes.map { "${it.inches.toInt()}inch" } else listOf("6inch", "8inch", "10inch", "12inch")
+
+    // Auto-pricing logic
+    LaunchedEffect(currentTierData.shape, currentTierData.size) {
+        if (viewModel != null) {
+            val autoPrice = viewModel.getPriceFor(currentTierData.shape, currentTierData.size)
+            if (autoPrice != null) {
+                // Only update if the user hasn't manually edited the price?
+                // For now, let's always update when shape/size changes, 
+                // but user can still edit it after via the UI.
+                tiersState[activeTierLevel] = currentTierData.copy(price = autoPrice)
+            }
+        }
+    }
+
     // Estadu ba Dropdown Forma
     var shapeExpanded by remember { mutableStateOf(false) }
-    val shapes = listOf("Round", "Square", "Heart")
 
     // Estadu ba Dropdown Tamanhu
     var sizeExpanded by remember { mutableStateOf(false) }
-    val sizes = listOf("15inch", "20inch", "25inch", "30inch", "35inch", "40inch")
 
     // Estadu ba Edit Price Dialog
     var showEditPriceDialog by remember { mutableStateOf(false) }
