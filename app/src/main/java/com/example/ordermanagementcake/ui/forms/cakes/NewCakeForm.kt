@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import com.example.ordermanagementcake.data.draft.CakeDraft
 import com.example.ordermanagementcake.data.draft.TierDraft
 import com.example.ordermanagementcake.ui.forms.tier.NewTierForm
+import com.example.ordermanagementcake.ui.orders.NewOrderViewModel
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 import com.example.ordermanagementcake.ui.theme.extendedColors
 
@@ -66,7 +67,8 @@ import com.example.ordermanagementcake.ui.theme.extendedColors
 fun NewCakeForm(
     onSaveCake: (CakeDraft) -> Unit = {},
     onBack: () -> Unit = {},
-    clientName: String = "Sophie Chen"
+    clientName: String = "Sophie Chen",
+    viewModel: NewOrderViewModel? = null
 ) {
     var cakeTitle by remember { mutableStateOf("") }
     var cakeNotes by remember { mutableStateOf("") }
@@ -84,7 +86,8 @@ fun NewCakeForm(
             onSave = { newTiers ->
                 tiers = newTiers
                 showTierForm = false
-            }
+            },
+            viewModel = viewModel
         )
     }
 
