@@ -59,13 +59,18 @@ class NewOrderViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     suspend fun getPriceFor(shapeName: String, sizeLabel: String): Double? {
+        Log.d(TAG, "getPriceFor: shape=$shapeName, size=$sizeLabel")
         val shapeId = shapes.value.find { it.shapeName.equals(shapeName, ignoreCase = true) }?.id
         val inches = sizeLabel.replace("inch", "").toDoubleOrNull() ?: 0.0
         val sizeId = sizes.value.find { it.inches == inches }?.id
-        
+        Log.d(TAG, "getPriceFor: shapeId=$shapeId, sizeId=$sizeId, inches=$inches")
+
         if (shapeId != null && sizeId != null) {
-            return priceTableRepository.getPrice(shapeId, sizeId)?.price
+            val price = priceTableRepository.getPrice(shapeId, sizeId)?.price
+            Log.d(TAG, "getPriceFor: found price=$price")
+            return price
         }
+        Log.d(TAG, "getPriceFor: not found")
         return null
     }
 
