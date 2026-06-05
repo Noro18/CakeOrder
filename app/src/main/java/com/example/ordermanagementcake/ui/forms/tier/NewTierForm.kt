@@ -209,7 +209,26 @@ fun NewTierForm(
                         tierNumber = level,
                         isSelected = activeTierLevel == level,
                         onClick = { activeTierLevel = level },
-                        onDelete = { /* To be implemented in next step */ },
+                        onDelete = {
+                            if (tiersState.size > 1) {
+                                // 1. Calculate the new level to focus on BEFORE removing
+                                if (activeTierLevel == level) {
+                                    val sortedKeys = tiersState.keys.toList().sorted()
+                                    val currentIndex = sortedKeys.indexOf(level)
+                                    
+                                    activeTierLevel = if (currentIndex > 0) {
+                                        // Focus on the one "below" it (the previous level)
+                                        sortedKeys[currentIndex - 1]
+                                    } else {
+                                        // If it was the first level, focus on the new first one
+                                        sortedKeys[1] 
+                                    }
+                                }
+                                
+                                // 2. Now safe to remove
+                                tiersState.remove(level)
+                            }
+                        },
                         showDelete = tiersState.size > 1,
                         modifier = Modifier.width(65.dp)
                     )
