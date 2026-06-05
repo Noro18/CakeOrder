@@ -20,12 +20,14 @@ import com.example.ordermanagementcake.data.local.entities.TierEntity
 import com.example.ordermanagementcake.data.repository.CakeRepository
 import com.example.ordermanagementcake.data.repository.ClientRepository
 import com.example.ordermanagementcake.data.repository.OrderRepository
+import com.example.ordermanagementcake.data.repository.PriceTableRepository
 import com.example.ordermanagementcake.data.repository.ShapeRepository
 import com.example.ordermanagementcake.data.repository.SizeRepository
 import com.example.ordermanagementcake.data.repository.TierRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -38,7 +40,8 @@ class NewOrderViewModel(
     private val tierRepository: TierRepository,
     private val shapeRepository: ShapeRepository,
     private val sizeRepository: SizeRepository,
-    private val clientRepository: ClientRepository
+    private val clientRepository: ClientRepository,
+    private val priceTableRepository: PriceTableRepository
 ) : ViewModel() {
 
     companion object {
@@ -47,6 +50,24 @@ class NewOrderViewModel(
 
     var orderDraft by mutableStateOf(OrderDraft())
         private set
+
+    // Auto-pricing data
+    val shapes: StateFlow<List<ShapeEntity>> = shapeRepository.getAllShapes()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val sizes: StateFlow<List<SizeEntity>> = sizeRepository.getAllSizes()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    suspend fun getPriceFor(shapeName: String, sizeLabel: String): Double? {
+        val shapeId = shapes.value.find { it.shapeName.equals(shapeName, ignoreCase = true) }?.id
+        val inches = sizeLabel.replace("inch", "").toDoubleOrNull() ?: 0.0
+        val sizeId = sizes.value.find { it.inches == inches }?.id
+        
+        if (shapeId != null && sizeId != null) {
+            return priceTableRepository.getPrice(shapeId, sizeId)?.price
+        }
+        return null
+    }
 
     // Client search logic
     private val _searchQuery = MutableStateFlow("")
