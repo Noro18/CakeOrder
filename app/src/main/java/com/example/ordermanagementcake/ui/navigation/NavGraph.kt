@@ -342,7 +342,8 @@ fun AppNavHost(
                             navController.popBackStack()
                         },
                         onBack = { navController.popBackStack() },
-                        clientName = newOrderViewModel.orderDraft.clientName ?: "Kliente foun"
+                        clientName = newOrderViewModel.orderDraft.clientName ?: "Kliente foun",
+                        viewModel = newOrderViewModel
                     )
                 }
             }
