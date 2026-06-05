@@ -18,6 +18,7 @@ import com.example.ordermanagementcake.data.local.OrderDatabase
 import com.example.ordermanagementcake.data.repository.CakeRepository
 import com.example.ordermanagementcake.data.repository.ClientRepository
 import com.example.ordermanagementcake.data.repository.OrderRepository
+import com.example.ordermanagementcake.data.repository.PriceTableRepository
 import com.example.ordermanagementcake.data.repository.ShapeRepository
 import com.example.ordermanagementcake.data.repository.SizeRepository
 import com.example.ordermanagementcake.data.repository.TierRepository
@@ -61,7 +62,8 @@ class MainActivity : ComponentActivity() {
                 TierRepository(db.tierDao()),
                 ShapeRepository(db.shapeDao()),
                 SizeRepository(db.sizeDao()),
-                ClientRepository(db.clientDao())
+                ClientRepository(db.clientDao()),
+                PriceTableRepository(db.priceTableDao())
             )
         }
 
