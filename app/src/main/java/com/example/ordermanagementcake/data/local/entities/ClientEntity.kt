@@ -11,5 +11,6 @@ data class ClientEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "phone") val phone: String,
     @ColumnInfo(name = "address") val address: String,
-    @ColumnInfo(name = "notes") val notes: String = ""
+    @ColumnInfo(name = "notes") val notes: String = "",
+    @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis()
 )
