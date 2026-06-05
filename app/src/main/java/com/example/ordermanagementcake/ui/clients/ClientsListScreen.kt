@@ -236,6 +236,13 @@ fun ClientCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                val dateString = dateFormat.format(Date(client.createdAt))
+                Text(
+                    text = "Rejistu: $dateString",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f)
+                )
             }
 
             var expanded by remember { mutableStateOf(false) }
