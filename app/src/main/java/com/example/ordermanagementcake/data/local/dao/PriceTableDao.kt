@@ -16,6 +16,9 @@ interface PriceTableDao {
     @Insert
     suspend fun insertPrice(price: PriceTableEntity): Long
 
+    @Insert
+    suspend fun insertPrices(prices: List<PriceTableEntity>)
+
     @Update
     suspend fun updatePrice(price: PriceTableEntity)
 
