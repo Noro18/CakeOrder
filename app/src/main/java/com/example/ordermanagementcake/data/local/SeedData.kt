@@ -22,11 +22,12 @@ suspend fun seedDatabase(database: OrderDatabase) {
     val size12 = sizeDao.insertSize(SizeEntity(inches = 12.0))
 
     // 3. Seed Clients
+    val now = System.currentTimeMillis()
     val clientIds = listOf(
-        ClientEntity(name = "Eleanor Rigby", phone = "+670 77100001", address = "Dili, Timor-Leste"),
-        ClientEntity(name = "Arthur Dent", phone = "+670 77100002", address = "Baucau, Timor-Leste"),
-        ClientEntity(name = "Sarah Jenkins", phone = "+670 77100003", address = "Dili, Timor-Leste"),
-        ClientEntity(name = "Michael Scott", phone = "+670 77100004", address = "Dili, Timor-Leste")
+        ClientEntity(name = "Eleanor Rigby", phone = "+670 77100001", address = "Dili, Timor-Leste", createdAt = now - 1000 * 60 * 60 * 24 * 4), // 4 days ago
+        ClientEntity(name = "Arthur Dent", phone = "+670 77100002", address = "Baucau, Timor-Leste", createdAt = now - 1000 * 60 * 60 * 24 * 3), // 3 days ago
+        ClientEntity(name = "Sarah Jenkins", phone = "+670 77100003", address = "Dili, Timor-Leste", createdAt = now - 1000 * 60 * 60 * 24 * 2), // 2 days ago
+        ClientEntity(name = "Michael Scott", phone = "+670 77100004", address = "Dili, Timor-Leste", createdAt = now) // now
     ).map { clientDao.insertClient(it) }
 
     // 4. Seed Orders
