@@ -27,6 +27,8 @@ data class DrawerItem(
 @Composable
 fun AppDrawer(
     selectedItem: Int = 0,
+    onSettingsClick: () -> Unit = {},
+    onAboutClick: () -> Unit = {},
     onClose: () -> Unit
 ) {
     val extendedColors = MaterialTheme.extendedColors
@@ -38,8 +40,8 @@ fun AppDrawer(
     )
 
     val bottomItems = listOf(
-        DrawerItem("Settings",   Icons.Default.Settings)         { onClose() },
-        DrawerItem("About",      Icons.Default.Info)             { onClose() },
+        DrawerItem("Settings",   Icons.Default.Settings)         { onSettingsClick(); onClose() },
+        DrawerItem("About",      Icons.Default.Info)             { onAboutClick(); onClose() },
     )
 
     ModalDrawerSheet(
