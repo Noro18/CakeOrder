@@ -209,6 +209,27 @@ fun NewTierForm(
                         tierNumber = level,
                         isSelected = activeTierLevel == level,
                         onClick = { activeTierLevel = level },
+                        onDelete = {
+                            if (tiersState.size > 1) {
+                                // 1. Calculate the new level to focus on BEFORE removing
+                                if (activeTierLevel == level) {
+                                    val sortedKeys = tiersState.keys.toList().sorted()
+                                    val currentIndex = sortedKeys.indexOf(level)
+                                    
+                                    activeTierLevel = if (currentIndex > 0) {
+                                        // Focus on the one "below" it (the previous level)
+                                        sortedKeys[currentIndex - 1]
+                                    } else {
+                                        // If it was the first level, focus on the new first one
+                                        sortedKeys[1] 
+                                    }
+                                }
+                                
+                                // 2. Now safe to remove
+                                tiersState.remove(level)
+                            }
+                        },
+                        showDelete = tiersState.size > 1,
                         modifier = Modifier.width(65.dp)
                     )
                 }
@@ -795,26 +816,51 @@ fun TierSelectionButton(
     tierNumber: Int,
     isSelected: Boolean,
     onClick: () -> Unit,
+    onDelete: () -> Unit,
+    showDelete: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        modifier = modifier
-            .height(56.dp)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
-        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
-        border = androidx.compose.foundation.BorderStroke(
-            width = if (isSelected) 2.dp else 1.dp,
-            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
-        )
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Text(
-                text = tierNumber.toString(),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+    Box(modifier = modifier.padding(top = 4.dp, end = 4.dp)) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .clickable { onClick() },
+            shape = RoundedCornerShape(16.dp),
+            color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+            border = androidx.compose.foundation.BorderStroke(
+                width = if (isSelected) 2.dp else 1.dp,
+                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
             )
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Text(
+                    text = tierNumber.toString(),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        if (showDelete) {
+            Surface(
+                onClick = onDelete,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = 6.dp, y = (-6).dp)
+                    .size(20.dp),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.error,
+                tonalElevation = 4.dp
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Hamoos Nívél",
+                    modifier = Modifier.padding(4.dp),
+                    tint = MaterialTheme.colorScheme.onError
+                )
+            }
         }
     }
 }
