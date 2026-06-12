@@ -1,5 +1,8 @@
 package com.example.ordermanagementcake.ui.forms.cakes
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,18 +28,24 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +61,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,6 +73,7 @@ import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 import com.example.ordermanagementcake.ui.theme.extendedColors
 
 // Main composable function for the Customize Cake screen
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewCakeForm(
     onSaveCake: (CakeDraft) -> Unit = {},
@@ -75,6 +86,73 @@ fun NewCakeForm(
     var imageUri by remember { mutableStateOf<String?>(null) }
     var tiers by remember { mutableStateOf(emptyList<TierDraft>()) }
     var showTierForm by remember { mutableStateOf(false) }
+    var showImageSourceDialog by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
+
+    // Launcher ba Galeria
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        if (uri != null) {
+            imageUri = uri.toString()
+            println("Image selected from gallery: $uri")
+        }
+    }
+
+    // Launcher ba camera nian
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap ->
+
+        // IF the camera taksea picture which make it not null
+        if (bitmap != null) {
+            println("Camera Opened and photo taken")
+        }
+    }
+
+    if (showImageSourceDialog) {
+        ModalBottomSheet(
+            onDismissRequest = { showImageSourceDialog = false },
+            sheetState = sheetState,
+            containerColor = MaterialTheme.colorScheme.surface,
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp, start = 24.dp, end = 24.dp, top = 8.dp)
+            ) {
+                Text(
+                    text = "Hili Fonte Imajen",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    ImageSourceOption(
+                        icon = Icons.Default.PhotoCamera,
+                        label = "Kamera",
+                        onClick = {
+                            showImageSourceDialog = false
+                            cameraLauncher.launch()
+                        }
+                    )
+                    ImageSourceOption(
+                        icon = Icons.Default.PhotoLibrary,
+                        label = "Galeria",
+                        onClick = {
+                            showImageSourceDialog = false
+                            galleryLauncher.launch("image/*")
+                        }
+                    )
+                }
+            }
+        }
+    }
 
     val extendedColors = MaterialTheme.extendedColors
     
@@ -178,11 +256,10 @@ fun NewCakeForm(
 
             // Section for adding a Reference Image
             SectionCard(title = "IMAJEN REFERÉNSIA") {
-                DashedAddBox(
-                    icon = Icons.Default.AddPhotoAlternate,
-                    title = "AUMENTA IMAJEN REFERÉNSIA",
-                    description = "Muda foto husi dezeñu bolo ne'ebé Ita gosta",
-                    onClick = { /* Handle image selection */ }
+                ImageReferencePlaceholder(
+                    onClick = {
+                        showImageSourceDialog = true
+                    }
                 )
             }
 
@@ -257,6 +334,57 @@ fun NewCakeForm(
                 onSaveCake(CakeDraft(cakeTitle = cakeTitle, cakeNotes = cakeNotes, imageUri = imageUri, tiers = tiers))
             }
         )
+    }
+}
+
+@Composable
+fun ImageReferencePlaceholder(
+    onClick: () -> Unit
+) {
+    Surface(
+        onClick = onClick,
+        color = MaterialTheme.extendedColors.surfaceContainerLow,
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AddPhotoAlternate,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+            
+            Spacer(modifier = Modifier.width(16.dp))
+            
+            Column {
+                Text(
+                    text = "Adisiona Imajen Referénsia",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = "Hili husi galeria ka foti foto foun",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
     }
 }
 
@@ -485,6 +613,43 @@ fun BottomSummaryBar(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ImageSourceOption(
+    icon: ImageVector,
+    label: String,
+    onClick: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .clip(RoundedCornerShape(16.dp))
+            .clickable { onClick() }
+            .padding(16.dp)
+    ) {
+        Surface(
+            modifier = Modifier.size(64.dp),
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primaryContainer
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
 
