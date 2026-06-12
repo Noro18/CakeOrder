@@ -60,6 +60,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
@@ -67,6 +68,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ordermanagementcake.data.draft.CakeDraft
 import com.example.ordermanagementcake.data.draft.TierDraft
+import com.example.ordermanagementcake.data.util.ImageHelper
 import com.example.ordermanagementcake.ui.forms.tier.NewTierForm
 import com.example.ordermanagementcake.ui.orders.NewOrderViewModel
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
@@ -88,25 +90,31 @@ fun NewCakeForm(
     var showTierForm by remember { mutableStateOf(false) }
     var showImageSourceDialog by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
+    val context = LocalContext.current
 
     // Launcher ba Galeria
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
         if (uri != null) {
-            imageUri = uri.toString()
-            println("Image selected from gallery: $uri")
+            val internalPath = ImageHelper.saveImageToInternalStorage(context, uri)
+            if (internalPath != null) {
+                imageUri = internalPath
+                println("Image saved to internal storage: $internalPath")
+            }
         }
-    }
+    }3
 
     // Launcher ba camera nian
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
     ) { bitmap ->
-
-        // IF the camera taksea picture which make it not null
         if (bitmap != null) {
-            println("Camera Opened and photo taken")
+            val internalPath = ImageHelper.saveBitmapToInternalStorage(context, bitmap)
+            if (internalPath != null) {
+                imageUri = internalPath
+                println("Camera photo saved to internal storage: $internalPath")
+            }
         }
     }
 
