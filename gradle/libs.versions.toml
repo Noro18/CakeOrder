@@ -15,8 +15,10 @@ uiText = "1.10.6"
 animation = "1.11.0"
 adapters = "3.2.0-alpha11"
 uiGraphics = "1.11.2"
+coil = "2.7.0"
 
 [libraries]
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 androidx-compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
