@@ -36,6 +36,7 @@ fun PriceTableScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Pushed
             items(uiState.shapeGroups) { group ->
                 ShapePriceCard(
                     group = group,
