@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -72,7 +73,9 @@ fun OrderListScreen(viewModel: OrderViewModel) {
     var searchText by remember { mutableStateOf("") }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding(),
         contentPadding = PaddingValues(bottom = 88.dp)
     ) {
         // Header
@@ -231,13 +234,13 @@ fun OrderCard(
             onDismissRequest = { showDialog = false },
             title = {
                 Text(
-                    text = "Confirm Status Update",
+                    text = "Konfirma mudansa estadu",
                     fontWeight = FontWeight.Bold
                 )
             },
             text = {
                 Text(
-                    text = confirmMessage(order.status, mainCake?.cakeTitle ?: "this order")
+                    text = confirmMessage(order.status, mainCake?.cakeTitle ?: "orderan ida ne'e")
                 )
             },
             confirmButton = {
@@ -251,7 +254,7 @@ fun OrderCard(
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text("Yes, confirm", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("Sim, Konfirma", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -259,7 +262,7 @@ fun OrderCard(
                     onClick = { showDialog = false },
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text("Cancel")
+                    Text("Kansela")
                 }
             },
             shape = RoundedCornerShape(16.dp)
@@ -369,7 +372,7 @@ fun OrderCard(
                 } else {
                     // Terminal state — no button, just a subtle label
                     Text(
-                        text = if (order.status == OrderStatus.COMPLETED) "Done ✓" else "Cancelled",
+                        text = if (order.status == OrderStatus.COMPLETED) "Hotu ✓" else "Kanseladu",
                         style = MaterialTheme.typography.labelSmall,
                         color = statusColor(order.status),
                         fontWeight = FontWeight.Bold
