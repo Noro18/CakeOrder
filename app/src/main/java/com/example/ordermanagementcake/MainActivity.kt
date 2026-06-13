@@ -34,6 +34,8 @@ import com.example.ordermanagementcake.ui.orders.OrderViewModelFactory
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewModel
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewModelFactory
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewScreen
+import com.example.ordermanagementcake.ui.settings.PriceTableViewModel
+import com.example.ordermanagementcake.ui.settings.PriceTableViewModelFactory
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 import kotlin.getValue
 
@@ -49,6 +51,14 @@ class MainActivity : ComponentActivity() {
         }
         val clientViewModel: ClientViewModel by viewModels {
             ClientViewModelFactory(ClientRepository(db.clientDao()))
+        }
+
+        val priceTableViewModel: PriceTableViewModel by viewModels {
+            PriceTableViewModelFactory(
+                PriceTableRepository(db.priceTableDao()),
+                ShapeRepository(db.shapeDao()),
+                SizeRepository(db.sizeDao())
+            )
         }
 
         val scheduleViewModel: ScheduleViewModel by viewModels {
@@ -67,6 +77,8 @@ class MainActivity : ComponentActivity() {
             )
         }
 
+
+
         setContent {
             OrderManagementCakeTheme {
                 val navController = rememberNavController()
@@ -75,7 +87,8 @@ class MainActivity : ComponentActivity() {
                     orderViewModel = orderViewModel,
                     clientViewModel = clientViewModel,
                     scheduleViewModel = scheduleViewModel,
-                    newOrderViewModel = newOrderViewModel
+                    newOrderViewModel = newOrderViewModel,
+                    priceTableViewModel = priceTableViewModel
                 )
             }
         }
