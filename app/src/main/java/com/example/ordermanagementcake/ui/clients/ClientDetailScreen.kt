@@ -52,7 +52,7 @@ fun ClientDetail(
         // Consolidated Client Information Card
         ClientInfoCard(
             name = client.name,
-            id = "#CL-${client.id}",
+            id = "#KL-${client.id}",
             phone = client.phone,
             address = client.address,
             notes = client.notes,
@@ -104,9 +104,9 @@ fun ClientDetail(
                     price = "$${String.format("%.2f", order.totalPrice)}",
                     status = order.status.name,
                     statusColor = when (order.status.name) {
-                        "COMPLETED" -> Color(0xFF4CAF50)
-                        "PENDING" -> Color(0xFFFF9800)
-                        "CANCELLED" -> Color(0xFFF44336)
+                        "KOMPLETU" -> Color(0xFF4CAF50)
+                        "HEIN" -> Color(0xFFFF9800)
+                        "KANSELA" -> Color(0xFFF44336)
                         else -> MaterialTheme.colorScheme.outline
                     }
                 )
@@ -124,7 +124,7 @@ fun ClientDetail(
         ) {
             ActionButton(
                 icon = Icons.Default.Add,
-                label = "Enkomenda Foun",
+                label = "Enkomenda",
                 modifier = Modifier.weight(1f),
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary

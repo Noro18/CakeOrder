@@ -33,9 +33,7 @@ import com.example.ordermanagementcake.data.repository.ClientRepository
 import com.example.ordermanagementcake.data.local.entities.ClientEntity
 import com.example.ordermanagementcake.ui.theme.extendedColors
 import kotlin.math.absoluteValue
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+
 
 @Composable
 fun ClientsListScreen(
@@ -77,7 +75,7 @@ fun ClientsListScreen(
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = "Kliente fiel sira",
+                    text = "Fiel kliente sira",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -242,8 +240,10 @@ fun ClientCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                val dateString = dateFormat.format(Date(client.createdAt))
+                val dateString = remember(client.createdAt) {
+                    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                    dateFormat.format(Date(client.createdAt))
+                }
                 Text(
                     text = "Rejistu: $dateString",
                     style = MaterialTheme.typography.labelSmall,
@@ -265,7 +265,7 @@ fun ClientCard(
                     onDismissRequest = { expanded = false }
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Edit") },
+                        text = { Text("Hadi'a") },
                         leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) },
                         onClick = {
                             onEdit()
@@ -273,7 +273,7 @@ fun ClientCard(
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Delete") },
+                        text = { Text("Hamoos") },
                         leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null) },
                         onClick = {
                             showDeleteConfirm = true
@@ -288,8 +288,8 @@ fun ClientCard(
     if (showDeleteConfirm) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirm = false },
-            title = { Text("Konfirma Delete") },
-            text = { Text("Ita boot hakarak delete kliente \"${client.name}\"?") },
+            title = { Text("Konfirma hamoos") },
+            text = { Text("Ita boot hakarak apaga kliente \"${client.name}\"?") },
             confirmButton = {
                 TextButton(onClick = {
                     onDelete()              // ← parent's callback, fires only after confirm
