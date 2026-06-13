@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,8 +24,10 @@ fun PriceTableScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
     var selectedShapeId by remember { mutableStateOf<Int?>(null) }
     var selectedShapeName by remember { mutableStateOf("") }
+    var selectedPriceEntry by remember { mutableStateOf<ShapePriceEntry?>(null) }
 
     if (uiState.isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -45,6 +48,12 @@ fun PriceTableScreen(
                         selectedShapeId = shapeId
                         selectedShapeName = group.shapeName
                         showAddDialog = true
+                    },
+                    onEditPrice = { entry ->
+                        selectedShapeId = group.shapeId
+                        selectedShapeName = group.shapeName
+                        selectedPriceEntry = entry
+                        showEditDialog = true
                     }
                 )
             }
@@ -52,8 +61,8 @@ fun PriceTableScreen(
     }
 
     if (showAddDialog && selectedShapeId != null) {
-        AddPriceDialog(
-            shapeName = selectedShapeName,
+        PriceEntryDialog(
+            title = "Add Price for $selectedShapeName",
             onDismiss = { showAddDialog = false },
             onConfirm = { size, price ->
                 viewModel.addPrice(selectedShapeId!!, size, price)
@@ -61,20 +70,67 @@ fun PriceTableScreen(
             }
         )
     }
+
+    if (showEditDialog && selectedShapeId != null && selectedPriceEntry != null) {
+        PriceEntryDialog(
+            title = "Edit Price for $selectedShapeName",
+            initialSize = selectedPriceEntry!!.sizeInches.toString(),
+            initialPrice = selectedPriceEntry!!.price.toString(),
+            onDismiss = { 
+                showEditDialog = false
+                selectedPriceEntry = null
+            },
+            onConfirm = { size, price ->
+                viewModel.updatePrice(
+                    priceId = selectedPriceEntry!!.priceId,
+                    shapeId = selectedShapeId!!,
+                    sizeInches = size,
+                    price = price
+                )
+                showEditDialog = false
+                selectedPriceEntry = null
+            },
+            onDelete = {
+                viewModel.deletePrice(selectedPriceEntry!!.priceId)
+                showEditDialog = false
+                selectedPriceEntry = null
+            }
+        )
+    }
 }
 
 @Composable
-fun AddPriceDialog(
-    shapeName: String,
+fun PriceEntryDialog(
+    title: String,
+    initialSize: String = "",
+    initialPrice: String = "",
     onDismiss: () -> Unit,
-    onConfirm: (Double, Double) -> Unit
+    onConfirm: (Double, Double) -> Unit,
+    onDelete: (() -> Unit)? = null
 ) {
-    var sizeText by remember { mutableStateOf("") }
-    var priceText by remember { mutableStateOf("") }
+    var sizeText by remember { mutableStateOf(initialSize) }
+    var priceText by remember { mutableStateOf(initialPrice) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Price for $shapeName") },
+        title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(title)
+                if (onDelete != null) {
+                    IconButton(onClick = onDelete) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete Price Entry",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            }
+        },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
@@ -104,7 +160,7 @@ fun AddPriceDialog(
                 },
                 enabled = sizeText.toDoubleOrNull() != null && priceText.toDoubleOrNull() != null
             ) {
-                Text("Add")
+                Text("Save")
             }
         },
         dismissButton = {
@@ -118,7 +174,8 @@ fun AddPriceDialog(
 @Composable
 fun ShapePriceCard(
     group: ShapeGroup,
-    onAddPrice: (Int) -> Unit
+    onAddPrice: (Int) -> Unit,
+    onEditPrice: (ShapePriceEntry) -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -172,7 +229,7 @@ fun ShapePriceCard(
             } else {
                 group.prices.forEach { entry ->
                     ListItem(
-                        modifier = Modifier.clickable { /* TODO: Future use - edit price */ },
+                        modifier = Modifier.clickable { onEditPrice(entry) },
                         headlineContent = {
                             Text(
                                 text = "${entry.sizeInches}\" Size",
