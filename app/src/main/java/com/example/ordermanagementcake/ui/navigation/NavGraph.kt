@@ -45,6 +45,7 @@ import com.example.ordermanagementcake.ui.clients.ClientsListScreen
 import com.example.ordermanagementcake.ui.components.AppDrawer
 import com.example.ordermanagementcake.ui.components.AppTopBar
 import com.example.ordermanagementcake.ui.components.AppTopBarDelete
+import com.example.ordermanagementcake.ui.components.AppTopBarMuted
 import com.example.ordermanagementcake.ui.components.AppTopBarNewOrder
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
@@ -58,6 +59,7 @@ import com.example.ordermanagementcake.ui.orders.NewOrderViewModel
 import com.example.ordermanagementcake.ui.orders.OrderViewModel
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewModel
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewScreen
+import com.example.ordermanagementcake.ui.settings.SettingsScreen
 import kotlinx.coroutines.launch
 
 object Routes {
@@ -70,6 +72,9 @@ object Routes {
     const val NEW_CLIENT = "new_client"
     const val DETAIL_CLIENT = "client_detail/{clientID}" // route based on
     const val NEW_CAKE = "new_cake"
+    const val SETTINGS = "settings"
+    const val PRICE_LIST = "price_list"
+
 
     fun clientDetail(clientId: Int) = "client_detail/$clientId"
 
@@ -124,7 +129,10 @@ fun AppNavHost(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            AppDrawer(onClose = { scope.launch { drawerState.close() } })
+            AppDrawer(
+                onSettingsClick = { navController.navigate(Routes.SETTINGS) },
+                onClose = { scope.launch { drawerState.close() } }
+            )
         }
     ) {
         Scaffold(
@@ -179,28 +187,32 @@ fun AppNavHost(
                     }
                 } else if (currentRoute == Routes.NEW_ORDER) {
                     AppTopBarNewOrder(onBackClick = { navController.popBackStack()}, title = "New Order")
+                } else if (currentRoute == Routes.SETTINGS) {
+                    AppTopBarMuted(onBackClick = { navController.popBackStack()}, title = "Settings")
                 }
             },
             bottomBar = {
-                BottomNavigationBar(
-                    selectedItem = selectedItem,
-                    onItemSelected = { index ->
-                        val route = when (index) {
-                            0 -> Routes.DASHBOARD
-                            1 -> Routes.ORDERS
-                            2 -> Routes.CLIENTS
-                            3 -> Routes.SCHEDULES
-                            else -> Routes.DASHBOARD
-                        }
-                        navController.navigate(route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
+                if (currentRoute in listOf(Routes.DASHBOARD, Routes.ORDERS, Routes.CLIENTS, Routes.SCHEDULES)) {
+                    BottomNavigationBar(
+                        selectedItem = selectedItem,
+                        onItemSelected = { index ->
+                            val route = when (index) {
+                                0 -> Routes.DASHBOARD
+                                1 -> Routes.ORDERS
+                                2 -> Routes.CLIENTS
+                                3 -> Routes.SCHEDULES
+                                else -> Routes.DASHBOARD
                             }
-                            launchSingleTop = true
-                            restoreState = true
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }
-                    }
-                )
+                    )
+                }
             },
             floatingActionButton = {
                 data class FabConfig(
@@ -345,6 +357,9 @@ fun AppNavHost(
                         clientName = newOrderViewModel.orderDraft.clientName ?: "Kliente foun",
                         viewModel = newOrderViewModel
                     )
+                }
+                composable(route = Routes.SETTINGS) {
+                    SettingsScreen()
                 }
             }
         }
