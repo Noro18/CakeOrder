@@ -240,10 +240,9 @@ fun ClientCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                val dateString = remember(client.createdAt) {
-                    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                    dateFormat.format(Date(client.createdAt))
-                }
+
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                val dateString = dateFormat.format(Date(client.createdAt))
                 Text(
                     text = "Rejistu: $dateString",
                     style = MaterialTheme.typography.labelSmall,
