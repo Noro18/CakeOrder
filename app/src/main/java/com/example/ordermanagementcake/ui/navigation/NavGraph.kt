@@ -59,6 +59,8 @@ import com.example.ordermanagementcake.ui.orders.NewOrderViewModel
 import com.example.ordermanagementcake.ui.orders.OrderViewModel
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewModel
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewScreen
+import com.example.ordermanagementcake.ui.settings.PriceTableScreen
+import com.example.ordermanagementcake.ui.settings.PriceTableViewModel
 import com.example.ordermanagementcake.ui.settings.SettingsScreen
 import kotlinx.coroutines.launch
 
@@ -91,7 +93,8 @@ fun AppNavHost(
     orderViewModel: OrderViewModel,
     clientViewModel: ClientViewModel,
     scheduleViewModel: ScheduleViewModel,
-    newOrderViewModel: NewOrderViewModel
+    newOrderViewModel: NewOrderViewModel,
+    priceTableViewModel: PriceTableViewModel
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -189,6 +192,8 @@ fun AppNavHost(
                     AppTopBarNewOrder(onBackClick = { navController.popBackStack()}, title = "New Order")
                 } else if (currentRoute == Routes.SETTINGS) {
                     AppTopBarMuted(onBackClick = { navController.popBackStack()}, title = "Settings")
+                } else if (currentRoute == Routes.PRICE_LIST) {
+                    AppTopBarMuted(onBackClick = { navController.popBackStack()}, title = "Price Table")
                 }
             },
             bottomBar = {
@@ -359,7 +364,10 @@ fun AppNavHost(
                     )
                 }
                 composable(route = Routes.SETTINGS) {
-                    SettingsScreen()
+                    SettingsScreen(onPriceTableClick = { navController.navigate(Routes.PRICE_LIST) })
+                }
+                composable(route = Routes.PRICE_LIST) {
+                    PriceTableScreen(viewModel = priceTableViewModel)
                 }
             }
         }

@@ -27,7 +27,7 @@ data class SettingsItem(
 )
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(onPriceTableClick: () -> Unit = {}) {
     val context = LocalContext.current
     var notificationsEnabled by remember { mutableStateOf(false) }
 
@@ -37,6 +37,9 @@ fun SettingsScreen() {
         },
         SettingsItem("Language", Icons.Default.Language) { 
             Toast.makeText(context, "Language clicked", Toast.LENGTH_SHORT).show() 
+        },
+        SettingsItem("Price Table", Icons.Default.AttachMoney) {
+            onPriceTableClick()
         }
     )
 
