@@ -46,15 +46,17 @@ Represents one customer agreement — one pickup/delivery event.
 
 ### CAKE
 
-One order can have multiple cakes (e.g. a customer orders 2 cakes for twins).
+One order can have multiple cakes (e.g. a customer orders 2 cakes for twins). Each cake tracks its own baking schedule independently.
 
 
-| Column     | Type   | Key        |
-| ---------- | ------ | ---------- |
-| cake_id    | uuid   | PK         |
-| order_id   | uuid   | FK → ORDER |
-| cake_title | string |            |
-| cake_notes | string |            |
+| Column      | Type    | Key        | Notes                              |
+| ----------- | ------- | ---------- | ---------------------------------- |
+| cake_id     | uuid    | PK         |                                    |
+| order_id    | uuid    | FK → ORDER |                                    |
+| cake_title  | string  |            |                                    |
+| cake_notes  | string  |            |                                    |
+| image_uri   | string? |            | nullable, URI to cake image        |
+| baking_date | string? |            | nullable, when to start baking     |
 
 
 ---
@@ -141,4 +143,62 @@ Maps every Shape + Size combination to a price. Looked up at order time to snaps
 - **CAKE is its own entity** — because one order can contain multiple cakes.
 - **Shape lives on TIER not CAKE** — because mixed-shape cakes exist (e.g. square bottom tier, circle top tier).
 - **Notifications are not an entity** — delivery reminders are a behavior triggered by `ORDER.delivery_date`, not stored data.
+
+---
+
+## Date & Status Placement Rules
+
+| Field           | Lives on      | Reason                                                                 |
+| --------------- | ------------- | ---------------------------------------------------------------------- |
+| `delivery_date` | **ORDER**     | 1 order = 1 delivery event. Different delivery dates → separate orders |
+| `baking_date`   | **CAKE**      | Different cakes may need different baking lead times                    |
+| `status`        | **ORDER**     | Tracks the business lifecycle of the whole order, not individual cakes  |
+| `order_date`    | **ORDER**     | When the order was placed                                              |
+
+### Why `baking_date` is on CAKE, not ORDER
+
+Even within the same order (same delivery date), different cakes may need to be baked on different days. A fondant wedding cake needs 2–3 days to set; a simple sponge cake needs 1 day. The baker needs to know **per cake** when to start baking.
+
+### Why `status` stays on ORDER, not CAKE
+
+The order list screen shows **orders** — each card has one status, one delivery date, and lists its cakes underneath. Moving status to individual cakes would create complex UI ("what status do you show for the order card?") and messy filter logic. The status flow `PENDING → IN_PROGRESS → READY → COMPLETED` maps to the **order lifecycle**:
+
+- `PENDING` — order placed, not started yet
+- `IN_PROGRESS` — baker is working on cakes in this order
+- `READY` — all cakes done, ready for pickup/delivery
+- `COMPLETED` — delivered
+- `CANCELLED` — order was cancelled
+
+### The "1 Order = 1 Delivery" Rule
+
+If a client wants 2 cakes with **different delivery dates**, the app owner creates **2 separate orders**. This keeps the model simple:
+
+- 1 Order = 1 Client + 1 Delivery Date + N Cakes
+- Each order has exactly one status and one delivery notification
+- The client record is shared between both orders
+
+---
+
+## Schedule / Calendar Design
+
+The `ScheduleScreen` calendar displays **two types of events** from different entities:
+
+| Event Type        | Source Entity | Source Field       | Calendar Display               |
+| ----------------- | ------------- | ------------------ | ------------------------------ |
+| 🔥 Baking Start  | **CAKE**      | `cake.baking_date` | "Start baking [cake title]"    |
+| 📦 Delivery      | **ORDER**     | `order.delivery_date` | "Deliver Order #X for [client]" |
+
+Both event types are queried separately and merged onto the same calendar view with different colors/icons.
+
+---
+
+## Notification System Design
+
+Notifications are **behaviors triggered by dates**, not stored entities:
+
+| Notification        | Triggered By              | Entity   | Example                                            |
+| ------------------- | ------------------------- | -------- | -------------------------------------------------- |
+| Baking reminder     | `cake.baking_date`        | CAKE     | "Time to start baking Double Chocolate Fudge"      |
+| Delivery reminder   | `order.delivery_date`     | ORDER    | "Order #42 delivery tomorrow at 2:00 PM"           |
+| Status change       | `order.status` update     | ORDER    | "Order #42 is now READY"                           |
 

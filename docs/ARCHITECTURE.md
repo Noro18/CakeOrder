@@ -19,20 +19,23 @@ The folder structure directly reflects this separation:
 OrderManagementCake/app/src/main/java/com/example/ordermanagementcake/
 ├── data/                              # Model layer (data + business logic)
 │   ├── local/
-│   │   ├── OrderDatabase.kt          # Room Database — singleton with seed data on first create
-│   │   ├── SeedData.kt               # Pre-populates DB with sample clients, orders, and items
+│   │   ├── OrderDatabase.kt          # Room Database — singleton with version 4 schema
+│   │   ├── SeedData.kt               # Pre-populates DB with sample clients, orders, cakes, and tiers
 │   │   ├── dao/
 │   │   │   ├── ClientDao.kt          # CRUD + search operations for clients
 │   │   │   ├── OrderDao.kt           # CRUD + filter by status for orders
-│   │   │   └── OrderItemDao.kt       # CRUD operations for order items
+│   │   │   ├── CakeDao.kt            # CRUD operations for cakes
+│   │   │   └── TierDao.kt            # CRUD operations for tiers
 │   │   └── entities/
-│   │       ├── ClientEntity.kt       # Clients table (id, name, phoneNumber, address, createdAt)
-│   │       ├── OrderEntity.kt        # Orders table (id, clientId, dates, status, notes)
-│   │       └── OrderItemEntity.kt    # Order items table (id, orderId, title, qty, notes, etc.)
+│   │       ├── ClientEntity.kt       # Clients table
+│   │       ├── OrderEntity.kt        # Orders table (delivery date, status, notes)
+│   │       ├── CakeEntity.kt         # Cakes table (tracks title, image_uri, baking_date)
+│   │       └── TierEntity.kt         # Tiers table (shape, size, level, color, price)
 │   │
 │   ├── local/relations/
-│   │   ├── ClientWithOrder.kt        # @Relation joining ClientEntity → List<OrderEntity>
-│   │   └── OrderWithItems.kt         # @Relation joining OrderEntity → List<OrderItemEntity>
+│   │   ├── ClientWithOrders.kt       # Relation joining ClientEntity → List<OrderEntity>
+│   │   ├── OrderWithCakes.kt         # Relation joining OrderEntity → List<CakeEntity>
+│   │   └── OrderWithCakeAndTiers.kt  # Nested relation (Order -> Cakes -> Tiers)
 │   │
 │   └── repository/
 │       ├── ClientRepository.kt       # Wraps ClientDao — used by ClientViewModel
@@ -163,72 +166,43 @@ val viewModel: ClientViewModel = viewModel(
 
 ### Database
 
-This project uses **Room** as the local database. The schema follows a simple relational structure with 3 tables.
+This project uses **Room** as the local database. The schema follows a relational structure with 7 core entities: Client, Order, Cake, Tier, Shape, Size, and Price Table.
 
-#### Tables
+#### Core Tables
 
-**`CLIENT`**
-
-| Column | Type | Description |
-| :--- | :--- | :--- |
-| `id` | `INTEGER` PK | Auto-generated unique identifier |
-| `name` | `TEXT` | Full name of the client |
-| `phoneNumber` | `TEXT` | WhatsApp number, used as a unique identifier to avoid duplicates |
-| `address` | `TEXT` | Delivery or contact address |
-| `createdAt` | `TEXT` | Date the client record was created |
-
----
-
-**`ORDER`**
-
-| Column | Type | Description |
-| :--- | :--- | :--- |
-| `id` | `INTEGER` PK | Auto-generated unique identifier |
-| `clientId` | `INTEGER` FK | References `CLIENT.id` |
-| `orderDate` | `TEXT` | The date the order was placed |
-| `pickupDate` | `TEXT` | The date the client will collect the order |
-| `status` | `TEXT` | Current status: `PENDING`, `IN_PROGRESS`, `READY`, `COMPLETED` |
-| `notes` | `TEXT` | Special instructions for the entire order |
-| `createdAt` | `TEXT` | Date the order record was created |
-
----
-
-**`ORDER_ITEM`**
-
-| Column | Type | Description |
-| :--- | :--- | :--- |
-| `id` | `INTEGER` PK | Auto-generated unique identifier |
-| `orderId` | `INTEGER` FK | References `ORDER.id` |
-| `title` | `TEXT` | Name of the cake (e.g. "Double Chocolate Fudge") |
-| `description` | `TEXT` | Custom details: flavor, size, decoration, messages |
-| `imageRef` | `TEXT` | Filename reference to the cake image drawable |
-| `quantity` | `INTEGER` | Number of units ordered for this item |
-| `notes` | `TEXT` | Item-specific instructions |
-
----
+- **`ClientEntity`**: Stores customer details (name, phone, address).
+- **`OrderEntity`**: Represents a single customer agreement / delivery event. Tracks `delivery_date`, `status` (PENDING, IN_PROGRESS, READY, COMPLETED, CANCELLED), and `total_price`.
+- **`CakeEntity`**: Represents a cake within an order. Tracks its own independent `baking_date` and `image_uri`.
+- **`TierEntity`**: Represents a tier of a cake. Holds references to shape and size, level, color hex, and snapshot price.
+- **`ShapeEntity`** & **`SizeEntity`**: Configuration tables for available shapes and sizes.
+- **`PriceTableEntity`**: Maps Shape + Size combinations to base prices.
 
 #### Relationships
 
-| Relationship | Type | Description |
-| :--- | :--- | :--- |
-| `CLIENT` → `ORDER` | One to many (optional) | A client can have zero or many orders. Each order belongs to exactly one client. |
-| `ORDER` → `ORDER_ITEM` | One to many (mandatory) | An order must have at least one item. Each item belongs to exactly one order. |
+- `ClientEntity` → `OrderEntity`: One-to-Many
+- `OrderEntity` → `CakeEntity`: One-to-Many
+- `CakeEntity` → `TierEntity`: One-to-Many
+- `TierEntity` → `ShapeEntity` & `SizeEntity`: Many-to-One
 
-These are expressed in code via `@Relation` data classes (`ClientWithOrder`, `OrderWithItems`) and fetched with `@Transaction` queries in the DAOs.
+#### Date, Status & Notification Placement Design
 
----
+- **Delivery Date (`delivery_date` on `OrderEntity`)**: Represents the delivery target. If a customer needs cakes delivered on different dates, they must place separate orders (**"1 Order = 1 Delivery" rule**).
+- **Baking Date (`baking_date` on `CakeEntity`)**: Stored per-cake so that multiple cakes in a single order can have different baking schedules and lead times.
+- **Order Status (`status` on `OrderEntity`)**: Managed at the order level to simplify state updates, listing, and filtering. The entire order moves together through `PENDING → IN_PROGRESS → READY → COMPLETED`.
+- **Notifications**: Reminders are dynamically calculated behaviors. Baking reminders are scheduled based on `cake.baking_date`, and delivery reminders are scheduled based on `order.delivery_date`.
 
 #### Seed Data
 
-On first database creation, `SeedData.kt` is called automatically via `OrderDatabase.PrepopulateCallback`. It inserts 6 sample clients, 6 orders across different statuses, and 7 order items so the app is immediately usable without manual data entry. This runs on `Dispatchers.IO` to avoid blocking the main thread.
-
----
+On first database creation, `SeedData.kt` is called automatically via `OrderDatabase.PrepopulateCallback`. It inserts shapes, sizes, pricing rules, clients, orders, cakes, and tiers so the app is immediately usable without manual data entry. This runs on `Dispatchers.IO` to avoid blocking the main thread.
 
 #### Design Decisions
 
-- **No separate CAKE catalog table** — since this is a custom cake business, cake details are stored directly inside `ORDER_ITEM`. This avoids the overhead of maintaining a catalog for items that are rarely repeated identically.
-- **WhatsApp number as unique identifier** — when registering a new order, the app checks if a client with that WhatsApp number already exists. If yes, it reuses the existing client record. If no, it creates a new one automatically. This enables a one-step order registration flow.
-- **Multiple orders per client for different dates** — if a client orders cakes for two different events, two separate `ORDER` rows are created, each with its own `pickupDate`. The client record is shared between both orders.
+- **No separate COLOR table** — color is stored directly on TIER as a hex string (`color_hex`). A color picker in the UI enforces valid hex format.
+- **Price is snapshotted** — `TIER.price` is copied from `PRICE_TABLE` at order time so future price changes don't affect old orders.
+- **CAKE is its own entity** — because one order can contain multiple cakes.
+- **Shape lives on TIER not CAKE** — because mixed-shape cakes exist (e.g. square bottom tier, circle top tier).
+- **Notifications are not an entity** — delivery and baking reminders are behaviors triggered by target dates, not stored rows in the database.
+- **Multiple orders per client for different dates** — if a client orders cakes for two different events, two separate `ORDER` rows are created, each with its own `deliveryDate`. The client record is shared between both orders.
 
 ---
 
