@@ -42,7 +42,7 @@ fun DashboardScreen(
             
             // ── 2. STATS GRID (COMPACT) ───────────────────────
             Text(
-                text = "Overview",
+                text = "Dadus Jerál",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
@@ -57,7 +57,7 @@ fun DashboardScreen(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 CompactStatCard(
-                    label = "Pending",
+                    label = "Hein-hela",
                     value = "4",
                     icon = Icons.Default.PendingActions,
                     modifier = Modifier.weight(1f)
@@ -84,7 +84,7 @@ fun DashboardScreen(
 
             // ── 3. QUICK ACTIONS ──────────────────────────────
             Text(
-                text = "Quick Actions",
+                text = "Asaun Lais",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
@@ -94,13 +94,13 @@ fun DashboardScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 QuickActionItem(
-                    label = "New Order",
+                    label = "Order Foun",
                     icon = Icons.Default.AddShoppingCart,
                     modifier = Modifier.weight(1f),
                     onClick = onAddOrder
                 )
                 QuickActionItem(
-                    label = "New Client",
+                    label = "Kliente Foun",
                     icon = Icons.Default.PersonAdd,
                     modifier = Modifier.weight(1f),
                     onClick = onAddClient
@@ -126,19 +126,19 @@ fun DashboardScreen(
                 UpcomingPickupCard(
                     client = "Abinda Carmo",
                     cake = "Wedding 3-Tier",
-                    daysLeft = "Tomorrow",
+                    daysLeft = "Aban",
                     isUrgent = true
                 )
                 UpcomingPickupCard(
                     client = "Chrismerry",
                     cake = "Birthday Custom",
-                    daysLeft = "In 2 days",
+                    daysLeft = " Loron 2 tan",
                     isUrgent = false
                 )
                 UpcomingPickupCard(
                     client = "Joana Rosa",
                     cake = "Anniversary Set",
-                    daysLeft = "In 5 days",
+                    daysLeft = " Loron 5 tan",
                     isUrgent = false
                 )
             }
@@ -146,7 +146,7 @@ fun DashboardScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             // ── 6. TODAY'S TIMELINE ───────────────────────────
-            SectionHeader(title = "Schedule Ohin", actionText = "Calendar")
+            SectionHeader(title = "Orario Ohin", actionText = "Kalendario")
             Spacer(modifier = Modifier.height(16.dp))
             
             TimelineItem(
@@ -160,7 +160,7 @@ fun DashboardScreen(
                 time = "02:30 PM",
                 client = "Jason Mendoza",
                 cake = "6x Jalapeno Cornbread",
-                status = "Pending",
+                status = "Hein-hela",
                 isLast = true
             )
         }
@@ -232,7 +232,7 @@ fun RevenueCard() {
             
             Column(modifier = Modifier.padding(24.dp)) {
                 Text(
-                    text = "Total Revenue",
+                    text = "Total Rendimentu",
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
