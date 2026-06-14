@@ -102,6 +102,44 @@ class PriceTableViewModel(
             }
         }
     }
+
+    fun updatePrice(priceId: Int, shapeId: Int, sizeInches: Double, price: Double) {
+        viewModelScope.launch {
+            // 1. Find or create size
+            val sizes = sizeRepository.getAllSizes().first()
+            val size = sizes.find { it.inches == sizeInches }
+            
+            val sizeId = if (size == null) {
+                sizeRepository.insertSize(SizeEntity(inches = sizeInches)).toInt()
+            } else {
+                size.id
+            }
+
+            // 2. Update specific entry by ID
+            priceTableRepository.updatePrice(
+                PriceTableEntity(
+                    id = priceId,
+                    shapeId = shapeId,
+                    sizeId = sizeId,
+                    price = price
+                )
+            )
+        }
+    }
+
+    fun deletePrice(priceId: Int) {
+        viewModelScope.launch {
+            // We can delete by passing an entity with just the ID
+            priceTableRepository.deletePrice(
+                PriceTableEntity(
+                    id = priceId,
+                    shapeId = 0,
+                    sizeId = 0,
+                    price = 0.0
+                )
+            )
+        }
+    }
 }
 
 class PriceTableViewModelFactory(

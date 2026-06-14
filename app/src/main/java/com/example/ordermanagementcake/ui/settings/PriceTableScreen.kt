@@ -1,5 +1,6 @@
 package com.example.ordermanagementcake.ui.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -7,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,8 +24,10 @@ fun PriceTableScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
     var selectedShapeId by remember { mutableStateOf<Int?>(null) }
     var selectedShapeName by remember { mutableStateOf("") }
+    var selectedPriceEntry by remember { mutableStateOf<ShapePriceEntry?>(null) }
 
     if (uiState.isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -44,6 +48,12 @@ fun PriceTableScreen(
                         selectedShapeId = shapeId
                         selectedShapeName = group.shapeName
                         showAddDialog = true
+                    },
+                    onEditPrice = { entry ->
+                        selectedShapeId = group.shapeId
+                        selectedShapeName = group.shapeName
+                        selectedPriceEntry = entry
+                        showEditDialog = true
                     }
                 )
             }
@@ -51,8 +61,8 @@ fun PriceTableScreen(
     }
 
     if (showAddDialog && selectedShapeId != null) {
-        AddPriceDialog(
-            shapeName = selectedShapeName,
+        PriceEntryDialog(
+            title = "Add Price for $selectedShapeName",
             onDismiss = { showAddDialog = false },
             onConfirm = { size, price ->
                 viewModel.addPrice(selectedShapeId!!, size, price)
@@ -60,20 +70,67 @@ fun PriceTableScreen(
             }
         )
     }
+
+    if (showEditDialog && selectedShapeId != null && selectedPriceEntry != null) {
+        PriceEntryDialog(
+            title = "Edit Price for $selectedShapeName",
+            initialSize = selectedPriceEntry!!.sizeInches.toString(),
+            initialPrice = selectedPriceEntry!!.price.toString(),
+            onDismiss = { 
+                showEditDialog = false
+                selectedPriceEntry = null
+            },
+            onConfirm = { size, price ->
+                viewModel.updatePrice(
+                    priceId = selectedPriceEntry!!.priceId,
+                    shapeId = selectedShapeId!!,
+                    sizeInches = size,
+                    price = price
+                )
+                showEditDialog = false
+                selectedPriceEntry = null
+            },
+            onDelete = {
+                viewModel.deletePrice(selectedPriceEntry!!.priceId)
+                showEditDialog = false
+                selectedPriceEntry = null
+            }
+        )
+    }
 }
 
 @Composable
-fun AddPriceDialog(
-    shapeName: String,
+fun PriceEntryDialog(
+    title: String,
+    initialSize: String = "",
+    initialPrice: String = "",
     onDismiss: () -> Unit,
-    onConfirm: (Double, Double) -> Unit
+    onConfirm: (Double, Double) -> Unit,
+    onDelete: (() -> Unit)? = null
 ) {
-    var sizeText by remember { mutableStateOf("") }
-    var priceText by remember { mutableStateOf("") }
+    var sizeText by remember { mutableStateOf(initialSize) }
+    var priceText by remember { mutableStateOf(initialPrice) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Price for $shapeName") },
+        title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(title)
+                if (onDelete != null) {
+                    IconButton(onClick = onDelete) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete Price Entry",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            }
+        },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
@@ -103,7 +160,7 @@ fun AddPriceDialog(
                 },
                 enabled = sizeText.toDoubleOrNull() != null && priceText.toDoubleOrNull() != null
             ) {
-                Text("Add")
+                Text("Save")
             }
         },
         dismissButton = {
@@ -117,7 +174,8 @@ fun AddPriceDialog(
 @Composable
 fun ShapePriceCard(
     group: ShapeGroup,
-    onAddPrice: (Int) -> Unit
+    onAddPrice: (Int) -> Unit,
+    onEditPrice: (ShapePriceEntry) -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -126,9 +184,11 @@ fun ShapePriceCard(
         ),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(vertical = 8.dp)) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -146,29 +206,47 @@ fun ShapePriceCard(
                     )
                 }
             }
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("Size", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                Text("Price", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.End)
-            }
-            HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
 
-            group.prices.forEach { entry ->
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+            HorizontalDivider(
+                modifier = Modifier.padding(top = 4.dp),
+                thickness = 0.5.dp,
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+            )
+
+            if (group.prices.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text("${entry.sizeInches}\"", modifier = Modifier.weight(1f))
                     Text(
-                        "$${String.format("%.2f", entry.price)}",
-                        modifier = Modifier.weight(1f),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.End
+                        text = "No prices set for this shape",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                }
+            } else {
+                group.prices.forEach { entry ->
+                    ListItem(
+                        modifier = Modifier.clickable { onEditPrice(entry) },
+                        headlineContent = {
+                            Text(
+                                text = "${entry.sizeInches}\" Size",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        },
+                        trailingContent = {
+                            Text(
+                                text = "$${String.format("%.2f", entry.price)}",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = androidx.compose.ui.graphics.Color.Transparent
+                        )
                     )
                 }
             }
