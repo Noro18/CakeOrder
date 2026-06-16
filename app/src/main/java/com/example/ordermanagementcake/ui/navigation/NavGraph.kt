@@ -55,6 +55,7 @@ import com.example.ordermanagementcake.ui.forms.orders.NewOrderForm
 import com.example.ordermanagementcake.ui.orders.OrderListScreen
 import com.example.ordermanagementcake.ui.forms.orders.NewOrderScreen
 import com.example.ordermanagementcake.ui.forms.tier.NewTierForm
+import com.example.ordermanagementcake.ui.orderdetail.OrderDetailScreen
 import com.example.ordermanagementcake.ui.orders.NewOrderViewModel
 import com.example.ordermanagementcake.ui.orders.OrderViewModel
 import com.example.ordermanagementcake.ui.schedule.ScheduleViewModel
@@ -73,12 +74,14 @@ object Routes {
     const val NEW_ORDER = "new_order"
     const val NEW_CLIENT = "new_client"
     const val DETAIL_CLIENT = "client_detail/{clientID}" // route based on
+    const val DETAIL_ORDER = "order_detail/{orderID}"
     const val NEW_CAKE = "new_cake"
     const val SETTINGS = "settings"
     const val PRICE_LIST = "price_list"
 
 
     fun clientDetail(clientId: Int) = "client_detail/$clientId"
+    fun orderDetail(orderId: Int) = "order_detail/$orderId"
 
 }
 
@@ -101,6 +104,7 @@ fun AppNavHost(
 
     val ScreensWithOwnTopBar = listOf(
         Routes.DETAIL_CLIENT,
+        Routes.DETAIL_ORDER,
         //Auenta routes seluk ne'ebe nia top bar iha hotu
     )
     // ROutes that uses the global topbar
@@ -250,7 +254,14 @@ fun AppNavHost(
                 startDestination = startDestination,
                 modifier = Modifier.padding(paddingValues)
             ) {
-                composable(Routes.ORDERS)    { OrderListScreen(orderViewModel) }
+                composable(Routes.ORDERS)    { 
+                    OrderListScreen(
+                        viewModel = orderViewModel,
+                        onOrderClick = { orderId ->
+                            navController.navigate(Routes.orderDetail(orderId))
+                        }
+                    )
+                }
                 composable(Routes.CLIENTS)   {
                     var clientToEdit by remember { mutableStateOf<ClientEntity?>(null) }
 
@@ -349,6 +360,24 @@ fun AppNavHost(
                         onBackClick = { navController.popBackStack() },
                         onUpdateClient = { updatedClient ->
                             clientViewModel.updateClient(updatedClient)
+                        }
+                    )
+                }
+                composable(route = Routes.DETAIL_ORDER) { navBackStackEntry ->
+                    val orderId = navBackStackEntry.arguments?.getString("orderID")?.toIntOrNull()
+
+                    LaunchedEffect(orderId) {
+                        orderId?.let { orderViewModel.loadOrderDetail(it) }
+                    }
+
+                    val uiState by orderViewModel.uiState.collectAsStateWithLifecycle()
+
+                    OrderDetailScreen(
+                        orderDetail = uiState.selectedOrderDetail,
+                        onBackClick = { navController.popBackStack() },
+                        onEditOrder = { /* TODO: Implement Edit Order */ },
+                        onStatusChange = { newStatus ->
+                            orderId?.let { orderViewModel.updateStatus(it, newStatus) }
                         }
                     )
                 }
