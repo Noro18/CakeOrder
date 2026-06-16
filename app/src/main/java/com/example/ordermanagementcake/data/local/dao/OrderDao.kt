@@ -3,6 +3,7 @@ package com.example.ordermanagementcake.data.local.dao
 import androidx.room.*
 import com.example.ordermanagementcake.data.local.entities.OrderEntity
 import com.example.ordermanagementcake.data.local.entities.OrderStatus
+import com.example.ordermanagementcake.data.local.relations.OrderFullDetail
 import com.example.ordermanagementcake.data.local.relations.OrderWithCakeAndTiers
 import com.example.ordermanagementcake.data.local.relations.OrderWithCakes
 import kotlinx.coroutines.flow.Flow
@@ -30,6 +31,10 @@ interface OrderDao {
     @Transaction
     @Query("SELECT * FROM orders WHERE order_id = :id")
     fun getOrderWithCakesAndTiers(id: Int): Flow<OrderWithCakeAndTiers?>
+
+    @Transaction
+    @Query("SELECT * FROM orders WHERE order_id = :id")
+    fun getOrderFullDetail(id: Int): Flow<OrderFullDetail?>
 
     @Insert
     suspend fun insertOrder(order: OrderEntity): Long
