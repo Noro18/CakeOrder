@@ -1,6 +1,7 @@
 package com.example.ordermanagementcake.ui.orders
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -59,7 +60,10 @@ fun statusColor(status: OrderStatus): Color = when (status) {
 // ── screen ───────────────────────────────────────────────────────────────────
 
 @Composable
-fun OrderListScreen(viewModel: OrderViewModel) {
+fun OrderListScreen(
+    viewModel: OrderViewModel,
+    onOrderClick: (Int) -> Unit
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val statusFilters = listOf(
@@ -205,7 +209,8 @@ fun OrderListScreen(viewModel: OrderViewModel) {
                             orderWithCakes = orderWithCakes,
                             onConfirmStatusUpdate = { newStatus ->
                                 viewModel.updateStatus(orderWithCakes.orders.id, newStatus)
-                            }
+                            },
+                            onCardClick = { onOrderClick(orderWithCakes.orders.id) }
                         )
                     }
                 }
@@ -219,7 +224,8 @@ fun OrderListScreen(viewModel: OrderViewModel) {
 @Composable
 fun OrderCard(
     orderWithCakes: OrderWithCakes,
-    onConfirmStatusUpdate: (OrderStatus) -> Unit
+    onConfirmStatusUpdate: (OrderStatus) -> Unit,
+    onCardClick: () -> Unit
 ) {
     val order     = orderWithCakes.orders
     val mainCake  = orderWithCakes.cakes.firstOrNull()
@@ -271,7 +277,9 @@ fun OrderCard(
 
     // Card UI
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onCardClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
