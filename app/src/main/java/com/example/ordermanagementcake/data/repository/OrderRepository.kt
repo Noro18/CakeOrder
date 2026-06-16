@@ -3,6 +3,7 @@ package com.example.ordermanagementcake.data.repository
 import com.example.ordermanagementcake.data.local.dao.OrderDao
 import com.example.ordermanagementcake.data.local.entities.OrderEntity
 import com.example.ordermanagementcake.data.local.entities.OrderStatus
+import com.example.ordermanagementcake.data.local.relations.OrderFullDetail
 import com.example.ordermanagementcake.data.local.relations.OrderWithCakeAndTiers
 import com.example.ordermanagementcake.data.local.relations.OrderWithCakes
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +19,9 @@ class OrderRepository(private val orderDao: OrderDao) {
 
     fun getOrderWithCakesAndTiers(id: Int): Flow<OrderWithCakeAndTiers?> =
         orderDao.getOrderWithCakesAndTiers(id)
+
+    fun getOrderFullDetail(id: Int): Flow<OrderFullDetail?> =
+        orderDao.getOrderFullDetail(id)
 
     suspend fun insertOrder(order: OrderEntity): Long =
         orderDao.insertOrder(order)
