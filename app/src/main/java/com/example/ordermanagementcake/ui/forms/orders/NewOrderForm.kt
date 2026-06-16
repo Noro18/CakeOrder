@@ -130,6 +130,7 @@ fun NewOrderForm(
     // Explicit control for the dropdown
     var expanded by remember { mutableStateOf(false) }
     var showNoClientWarning by remember { mutableStateOf(false) }
+    var showClientNotExistWarning by remember { mutableStateOf(false) }
 
     // Date Picker Dialog
     if (showDatePicker) {
@@ -216,6 +217,23 @@ fun NewOrderForm(
             },
             text = {
                 Text(text = "Favor hili kliente ida antes rai pedidu.")
+            }
+        )
+    }
+
+    if (showClientNotExistWarning) {
+        AlertDialog(
+            onDismissRequest = { showClientNotExistWarning = false },
+            confirmButton = {
+                TextButton(onClick = { showClientNotExistWarning = false }) {
+                    Text("OK", color = MaterialTheme.colorScheme.primary)
+                }
+            },
+            title = {
+                Text(text = "Kliente La Eziste", fontWeight = FontWeight.Bold)
+            },
+            text = {
+                Text(text = "Kliente \"$searchQuery\" seidauk rejistu iha sistema. Favor hili husi lista ka adisiona kliente foun.")
             }
         )
     }
@@ -624,7 +642,11 @@ fun NewOrderForm(
                 Button(
                     onClick = {
                         if (draft.clientId == null) {
-                            showNoClientWarning = true
+                            if (searchQuery.trim().isEmpty()) {
+                                showNoClientWarning = true
+                            } else {
+                                showClientNotExistWarning = true
+                            }
                         } else {
                             viewModel.saveOrder(onSuccess = onSaveOrder)
                         }
