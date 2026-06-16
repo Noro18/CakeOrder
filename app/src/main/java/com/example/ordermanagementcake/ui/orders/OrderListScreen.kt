@@ -1,25 +1,26 @@
 package com.example.ordermanagementcake.ui.orders
 
-import androidx.compose.foundation.Image
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -288,23 +289,41 @@ fun OrderCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
-            // Top row — cake image + info + delivery date
+            // Header row — order info + delivery date
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                verticalAlignment = Alignment.Top,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.double_chodolate_fudge),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .clip(CircleShape)
-                )
-
-                Spacer(modifier = Modifier.width(12.dp))
-
                 Column(modifier = Modifier.weight(1f)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Order #${order.id}",
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        
+                        // Status badge
+                        Surface(
+                            color = statusColor(order.status).copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(6.dp)
+                        ) {
+                            Text(
+                                text = order.status.name.replace("_", " "),
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                                color = statusColor(order.status),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
                     Text(
                         text = mainCake?.cakeTitle ?: "Keku Deskonhesidu",
                         style = MaterialTheme.typography.titleMedium,
@@ -312,16 +331,22 @@ fun OrderCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
+                    
+                    Spacer(modifier = Modifier.height(4.dp))
+                    
                     Text(
-                        text = "Order #${order.id} • ${order.orderNotes.ifBlank { "La iha nota" }}",
+                        text = order.orderNotes.ifBlank { "La iha nota" },
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-
-                Column(horizontalAlignment = Alignment.End) {
+                
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     Text(
                         text = "Entrega",
                         style = MaterialTheme.typography.labelSmall,
@@ -329,62 +354,70 @@ fun OrderCard(
                     )
                     Text(
                         text = order.deliveryDate,
-                        style = MaterialTheme.typography.bodySmall,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+            Spacer(modifier = Modifier.height(16.dp))
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Bottom row — current status badge + action button
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Current status badge (read-only, just shows where it is now)
-                Surface(
-                    color = statusColor(order.status).copy(alpha = 0.15f),
-                    shape = RoundedCornerShape(6.dp)
-                ) {
-                    Text(
-                        text = order.status.name.replace("_", " "),
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                        color = statusColor(order.status),
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                // Action button — only shown if there is a next status to move to
+            // Footer row — action button or terminal state
+            Box(modifier = Modifier.fillMaxWidth()) {
                 if (next != null) {
                     Button(
                         onClick = { showDialog = true },
-                        modifier = Modifier.height(34.dp),
-                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 0.dp),
+                        modifier = Modifier
+                            .height(40.dp)
+                            .fillMaxWidth(),
+                        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 0.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = statusColor(next)
                         ),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(10.dp)
                     ) {
                         Text(
                             text = actionLabel(order.status),
-                            style = MaterialTheme.typography.labelMedium,
+                            style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
                     }
                 } else {
-                    // Terminal state — no button, just a subtle label
-                    Text(
-                        text = if (order.status == OrderStatus.COMPLETED) "Hotu ✓" else "Kanseladu",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = statusColor(order.status),
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text(
+                                text = if (order.status == OrderStatus.COMPLETED) "Order hotu ✓" else "Order kanseladu",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = statusColor(order.status),
+                                fontWeight = FontWeight.Bold
+                            )
+                            if (order.status == OrderStatus.COMPLETED) {
+                                Text(
+                                    text = "Klients reseve ona",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            }
+                        }
+                        
+                        Icon(
+                            imageVector = if (order.status == OrderStatus.COMPLETED) 
+                                Icons.Filled.CheckCircle
+                            else 
+                                Icons.Filled.Cancel,
+                            contentDescription = null,
+                            tint = statusColor(order.status),
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
             }
         }
