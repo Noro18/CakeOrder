@@ -29,6 +29,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ordermanagementcake.R
 import com.example.ordermanagementcake.data.local.entities.OrderStatus
 import com.example.ordermanagementcake.data.local.relations.OrderWithCakes
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -57,6 +60,12 @@ fun statusColor(status: OrderStatus): Color = when (status) {
     OrderStatus.COMPLETED   -> Color(0xFF3B82F6)
     OrderStatus.CANCELLED   -> Color(0xFF9E9E9E)
 }
+
+fun formatDeliveryDate(raw: String): String = try {
+    val input  = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
+    val output = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
+    output.format(input.parse(raw) ?: Date())
+} catch (_: Exception) { raw }
 
 // ── screen ───────────────────────────────────────────────────────────────────
 
@@ -353,7 +362,7 @@ fun OrderCard(
                         color = MaterialTheme.colorScheme.secondary
                     )
                     Text(
-                        text = order.deliveryDate,
+                        text = formatDeliveryDate(order.deliveryDate),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
