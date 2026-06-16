@@ -33,6 +33,18 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
         }
     }
 
+    fun loadOrderDetail(orderId: Int) {
+        viewModelScope.launch {
+            repository.getOrderFullDetail(orderId)
+                .catch { e ->
+                    _uiState.update { it.copy(errorMessage = e.message) }
+                }
+                .collect { detail ->
+                    _uiState.update { it.copy(selectedOrderDetail = detail) }
+                }
+        }
+    }
+
     fun updateStatus(orderId: Int, status: OrderStatus) {
         viewModelScope.launch {
             repository.updateStatus(orderId, status)
