@@ -176,6 +176,7 @@ fun NewCakeForm(
                 tiers = newTiers
                 showTierForm = false
             },
+            initialTiers = tiers,
             viewModel = viewModel
         )
     }
