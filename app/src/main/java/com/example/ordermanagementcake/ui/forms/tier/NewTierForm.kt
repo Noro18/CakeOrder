@@ -57,21 +57,29 @@ data class TierData(
 fun NewTierForm(
     onDismiss: () -> Unit = {},
     onSave: (List<TierDraft>) -> Unit = { _ -> },
+    initialTiers: List<TierDraft> = emptyList(),
     viewModel: NewOrderViewModel? = null
 ) {
     val extendedColors = MaterialTheme.extendedColors
     val surfaceColor = extendedColors.surfaceContainerLowest
 
     // Estadu ba nívél ne'ebé sedang hili (Active tier level selection)
-    var activeTierLevel by remember { mutableIntStateOf(1) }
+    var activeTierLevel by remember { mutableIntStateOf(initialTiers.firstOrNull()?.level ?: 1) }
     
     // Inisializa nívél 1 to'o 12 (1..12)
     val tiersState = remember { 
         val initialMap = mutableStateMapOf<Int, TierData>()
-        // Only initialize level 1 by default, or maybe let user add levels?
-        // The original code initialized 1..12. I'll stick to that but maybe it's too many.
-        for (i in 1..1) {
-            initialMap[i] = TierData()
+        if (initialTiers.isNotEmpty()) {
+            initialTiers.forEach { draft ->
+                initialMap[draft.level] = TierData(
+                    shape = draft.shape,
+                    size = draft.size,
+                    color = draft.color,
+                    price = draft.price
+                )
+            }
+        } else {
+            initialMap[1] = TierData()
         }
         initialMap
     }
