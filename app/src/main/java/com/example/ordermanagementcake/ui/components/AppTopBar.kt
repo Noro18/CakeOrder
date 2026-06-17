@@ -49,18 +49,7 @@ fun AppTopBar(
                 )
             }
         },
-        actions = {
-            IconButton(onClick = {}) {
-                Image(
-                    painter = painterResource(id = R.drawable.foto_profile),
-                    contentDescription = "Foto Profile",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                )
-            }
-        },
+        actions = {},
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor             = extendedColors.sourceColor,
             navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
