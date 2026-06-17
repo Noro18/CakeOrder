@@ -34,14 +34,14 @@ fun AppDrawer(
     val extendedColors = MaterialTheme.extendedColors
     val items = listOf(
         DrawerItem("Dashboard",  Icons.Default.Dashboard)        { onClose() },
-        DrawerItem("Orders",     Icons.Default.AddShoppingCart)  { onClose() },
-        DrawerItem("Clients",    Icons.Default.People)           { onClose() },
-        DrawerItem("Schedules",  Icons.Default.CalendarMonth)    { onClose() },
+        DrawerItem("Pedidu",     Icons.Default.AddShoppingCart)  { onClose() },
+        DrawerItem("Kliente",    Icons.Default.People)           { onClose() },
+        DrawerItem("Orario",  Icons.Default.CalendarMonth)    { onClose() },
     )
 
     val bottomItems = listOf(
-        DrawerItem("Settings",   Icons.Default.Settings)         { onSettingsClick(); onClose() },
-        DrawerItem("About",      Icons.Default.Info)             { onAboutClick(); onClose() },
+        DrawerItem("Konfigurasaun",   Icons.Default.Settings)         { onSettingsClick(); onClose() },
+        DrawerItem("Kona-ba",      Icons.Default.Info)             { onAboutClick(); onClose() },
     )
 
     ModalDrawerSheet(
@@ -78,7 +78,7 @@ fun AppDrawer(
                 Spacer(Modifier.height(14.dp))
 
                 Text(
-                    text = "The Artisanal Bakery",
+                    text = "Key's Cake Bakery",
                     color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
@@ -88,7 +88,7 @@ fun AppDrawer(
                 Spacer(Modifier.height(2.dp))
 
                 Text(
-                    text = "Order Management",
+                    text = "Jestaun Pedidu",
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Normal
@@ -150,7 +150,7 @@ fun AppDrawer(
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "GENERAL",
+            text = "JERAL",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.outline,
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 4.dp),

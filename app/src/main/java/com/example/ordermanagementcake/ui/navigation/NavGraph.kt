@@ -147,10 +147,10 @@ fun AppNavHost(
                 if (showGlobalTopBar) {
                     AppTopBar(
                         title = when (currentRoute) {
-                            Routes.DASHBOARD -> "The Artisanal Bakery"
-                            Routes.ORDERS    -> "Orders"
-                            Routes.CLIENTS   -> "Clients"
-                            Routes.SCHEDULES -> "Schedules"
+                            Routes.DASHBOARD -> "Key's Cake Bakery"
+                            Routes.ORDERS    -> "Pedidu"
+                            Routes.CLIENTS   -> "Kliente"
+                            Routes.SCHEDULES -> "Orario"
                             else             -> ""
                         },
                         onMenuClick = { scope.launch { drawerState.open() } }
@@ -168,7 +168,7 @@ fun AppNavHost(
                     if (showDeleteDialog) {
                         AlertDialog(
                             onDismissRequest = { showDeleteDialog = false },
-                            title = { Text("Konfirma Delete") },
+                            title = { Text("Konfirma Apaga") },
                             text = {
                                 Text(
                                     "Ita boot hakarak delete kliente \"${clientUiState.selectedClient?.client?.name}\"?"
@@ -182,7 +182,7 @@ fun AppNavHost(
                                     }
                                     showDeleteDialog = false
                                 }) {
-                                    Text("Delete", color = Color.Red)
+                                    Text("Apaga", color = Color.Red)
                                 }
                             },
                             dismissButton = {
@@ -193,11 +193,11 @@ fun AppNavHost(
                         )
                     }
                 } else if (currentRoute == Routes.NEW_ORDER) {
-                    AppTopBarNewOrder(onBackClick = { navController.popBackStack()}, title = "New Order")
+                    AppTopBarNewOrder(onBackClick = { navController.popBackStack()}, title = "Pedidu Foun")
                 } else if (currentRoute == Routes.SETTINGS) {
-                    AppTopBarMuted(onBackClick = { navController.popBackStack()}, title = "Settings")
+                    AppTopBarMuted(onBackClick = { navController.popBackStack()}, title = "Configurasaun")
                 } else if (currentRoute == Routes.PRICE_LIST) {
-                    AppTopBarMuted(onBackClick = { navController.popBackStack()}, title = "Price Table")
+                    AppTopBarMuted(onBackClick = { navController.popBackStack()}, title = "Tabela Folin")
                 }
             },
             bottomBar = {
