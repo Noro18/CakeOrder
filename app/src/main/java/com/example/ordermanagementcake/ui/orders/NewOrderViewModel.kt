@@ -33,6 +33,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class NewOrderViewModel(
     private val orderRepository: OrderRepository,
@@ -162,7 +165,7 @@ class NewOrderViewModel(
                 val orderId = orderRepository.insertOrder(
                     OrderEntity(
                         customerId = finalClientId!!,
-                        orderDate = orderDraft.orderDate.ifEmpty { "2026-06-02" },
+                        orderDate = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).format(Date()),
                         deliveryDate = orderDraft.deliveryDate,
                         totalPrice = orderDraft.totalPrice,
                         orderNotes = orderDraft.orderNotes,
