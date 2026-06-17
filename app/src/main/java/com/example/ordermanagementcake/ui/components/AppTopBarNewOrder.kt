@@ -20,7 +20,7 @@ import com.example.ordermanagementcake.ui.theme.extendedColors
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTopBarNewOrder(
-    title: String = "The Artisanal Bakery",
+    title: String = "Key's Cake Bakery",
     onBackClick: (() -> Unit)? = null,
     onMenuClick: (() -> Unit)? = null,
 ) {

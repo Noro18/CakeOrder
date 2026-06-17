@@ -27,7 +27,7 @@ import com.example.ordermanagementcake.ui.theme.extendedColors
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTopBar(
-    title: String = "The Artisanal Bakery",
+    title: String = "Key's Cake Bakery",
     onMenuClick: () -> Unit = {}
 ) {
     val extendedColors = MaterialTheme.extendedColors

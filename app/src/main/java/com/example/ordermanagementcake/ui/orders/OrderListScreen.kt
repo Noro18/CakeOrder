@@ -205,7 +205,7 @@ fun OrderListScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "La iha order ba status ne'e.",
+                            text = "La iha order ba estadu ne'e.",
                             style = MaterialTheme.typography.bodyLarge,
                             color = Color.Gray
                         )

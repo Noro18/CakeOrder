@@ -34,21 +34,21 @@ fun BottomNavigationBar(
             selected = selectedItem == 1,
             onClick  = { onItemSelected(1) },
             icon     = { Icon(Icons.Default.AddShoppingCart, contentDescription = "Orders") },
-            label    = { Text(text = "ORDERS", fontSize = 10.sp) },
+            label    = { Text(text = "PEDIDU", fontSize = 10.sp) },
             colors   = colors
         )
         NavigationBarItem(
             selected = selectedItem == 2,
             onClick  = { onItemSelected(2) },
             icon     = { Icon(Icons.Default.People, contentDescription = "Clients") },
-            label    = { Text(text = "CLIENTS", fontSize = 10.sp) },
+            label    = { Text(text = "KLIENTE", fontSize = 10.sp) },
             colors   = colors
         )
         NavigationBarItem(
             selected = selectedItem == 3,
             onClick  = { onItemSelected(3) },
             icon     = { Icon(Icons.Default.CalendarMonth, contentDescription = "Schedule") },
-            label    = { Text(text = "SCHEDULES", fontSize = 10.sp) },
+            label    = { Text(text = "ORARIU", fontSize = 10.sp) },
             colors   = colors
         )
     }
