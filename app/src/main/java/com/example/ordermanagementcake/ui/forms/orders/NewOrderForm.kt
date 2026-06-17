@@ -129,6 +129,8 @@ fun NewOrderForm(
     
     // Explicit control for the dropdown
     var expanded by remember { mutableStateOf(false) }
+    var showNoClientWarning by remember { mutableStateOf(false) }
+    var showClientNotExistWarning by remember { mutableStateOf(false) }
 
     // Date Picker Dialog
     if (showDatePicker) {
@@ -198,6 +200,40 @@ fun NewOrderForm(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     TimePicker(state = timePickerState)
                 }
+            }
+        )
+    }
+
+    if (showNoClientWarning) {
+        AlertDialog(
+            onDismissRequest = { showNoClientWarning = false },
+            confirmButton = {
+                TextButton(onClick = { showNoClientWarning = false }) {
+                    Text("OK", color = MaterialTheme.colorScheme.primary)
+                }
+            },
+            title = {
+                Text(text = "Atenasaun", fontWeight = FontWeight.Bold)
+            },
+            text = {
+                Text(text = "Favor hili kliente ida antes rai pedidu.")
+            }
+        )
+    }
+
+    if (showClientNotExistWarning) {
+        AlertDialog(
+            onDismissRequest = { showClientNotExistWarning = false },
+            confirmButton = {
+                TextButton(onClick = { showClientNotExistWarning = false }) {
+                    Text("OK", color = MaterialTheme.colorScheme.primary)
+                }
+            },
+            title = {
+                Text(text = "Kliente La Eziste", fontWeight = FontWeight.Bold)
+            },
+            text = {
+                Text(text = "Kliente \"$searchQuery\" seidauk rejistu iha sistema. Favor hili husi lista ka adisiona kliente foun.")
             }
         )
     }
@@ -605,7 +641,15 @@ fun NewOrderForm(
             ) {
                 Button(
                     onClick = {
-                        viewModel.saveOrder(onSuccess = onSaveOrder)
+                        if (draft.clientId == null) {
+                            if (searchQuery.trim().isEmpty()) {
+                                showNoClientWarning = true
+                            } else {
+                                showClientNotExistWarning = true
+                            }
+                        } else {
+                            viewModel.saveOrder(onSuccess = onSaveOrder)
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
