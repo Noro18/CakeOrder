@@ -27,6 +27,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.AutoFixHigh
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.PhotoLibrary
@@ -35,6 +36,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,6 +48,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -89,6 +93,8 @@ fun NewCakeForm(
     var cakeTitle by remember { mutableStateOf("") }
     var cakeNotes by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<String?>(null) }
+    var bakingDate by remember { mutableStateOf<String?>(null) }
+    var showDatePicker by remember { mutableStateOf(false) }
     var tiers by remember { mutableStateOf(emptyList<TierDraft>()) }
     var showTierForm by remember { mutableStateOf(false) }
     var showImageSourceDialog by remember { mutableStateOf(false) }
@@ -278,6 +284,72 @@ fun NewCakeForm(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Section for Baking Date
+            Text(
+                text = "DATA HANÉN",
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.8.sp,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            OutlinedTextField(
+                value = bakingDate ?: "",
+                onValueChange = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showDatePicker = true },
+                placeholder = {
+                    Text("Hili data hanén", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
+                },
+                enabled = false,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                    focusedContainerColor = extendedColors.surfaceContainerLow,
+                    unfocusedContainerColor = extendedColors.surfaceContainerLowest,
+                    disabledContainerColor = extendedColors.surfaceContainerLowest,
+                    disabledBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                ),
+                shape = RoundedCornerShape(16.dp),
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.CalendarToday,
+                        contentDescription = "Hili data",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            )
+
+            if (showDatePicker) {
+                val datePickerState = rememberDatePickerState()
+                DatePickerDialog(
+                    onDismissRequest = { showDatePicker = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            datePickerState.selectedDateMillis?.let { millis ->
+                                val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+                                bakingDate = sdf.format(java.util.Date(millis))
+                            }
+                            showDatePicker = false
+                        }) {
+                            Text("OK")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showDatePicker = false }) {
+                            Text("Kansela")
+                        }
+                    }
+                ) {
+                    DatePicker(state = datePickerState)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             // Section for adding Tier Specifications
             SectionCard(title = "ESPESIFIKASAUN NIVÉL") {
                 if (tiers.isEmpty()) {
@@ -344,7 +416,7 @@ fun NewCakeForm(
                 // Total is now calculated from tiers
             },
             onSaveCake = {
-                onSaveCake(CakeDraft(cakeTitle = cakeTitle, cakeNotes = cakeNotes, imageUri = imageUri, tiers = tiers))
+                onSaveCake(CakeDraft(cakeTitle = cakeTitle, cakeNotes = cakeNotes, imageUri = imageUri, bakingDate = bakingDate, tiers = tiers))
             }
         )
     }

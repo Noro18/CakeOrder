@@ -14,6 +14,7 @@ data class CakeDraft(
     val cakeTitle: String,
     val cakeNotes: String = "",
     val imageUri: String? = null,
+    val bakingDate: String? = null,
     val tiers: List<TierDraft> = emptyList()
 )
 

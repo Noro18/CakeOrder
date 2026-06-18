@@ -95,7 +95,8 @@ suspend fun seedDatabase(database: OrderDatabase) {
             orderId = orderIds[0].toInt(),
             cakeTitle = "Double Chocolate Fudge",
             cakeNotes = "8 inch, dark chocolate ganache",
-            imageUri = "double_chodolate_fudge"
+            imageUri = "double_chodolate_fudge",
+            bakingDate = "2026-05-23"
         )
     )
     tierDao.insertTier(
@@ -115,7 +116,8 @@ suspend fun seedDatabase(database: OrderDatabase) {
             orderId = orderIds[1].toInt(),
             cakeTitle = "Wild Berry Medley",
             cakeNotes = "6 inch, mixed berry compote",
-            imageUri = null
+            imageUri = null,
+            bakingDate = "2026-05-21"
         )
     )
     tierDao.insertTier(
@@ -135,7 +137,8 @@ suspend fun seedDatabase(database: OrderDatabase) {
             orderId = orderIds[2].toInt(),
             cakeTitle = "Zesty Lemon Celebration",
             cakeNotes = "Two tier lemon cake",
-            imageUri = null
+            imageUri = null,
+            bakingDate = "2026-05-26"
         )
     )
     tierDao.insertTiers(
@@ -165,7 +168,8 @@ suspend fun seedDatabase(database: OrderDatabase) {
             orderId = orderIds[3].toInt(),
             cakeTitle = "Grand Wedding Tiered Cake",
             cakeNotes = "White fondant with lace details",
-            imageUri = null
+            imageUri = null,
+            bakingDate = "2026-05-18"
         )
     )
     tierDao.insertTiers(

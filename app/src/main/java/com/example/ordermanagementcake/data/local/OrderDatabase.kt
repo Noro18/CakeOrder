@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
         SizeEntity::class,
         PriceTableEntity::class
     ],
-    version = 4
+    version = 5
 )
 abstract class OrderDatabase : RoomDatabase() {
 
