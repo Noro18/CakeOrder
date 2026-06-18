@@ -127,6 +127,12 @@ class PriceTableViewModel(
         }
     }
 
+    fun addShape(name: String) {
+        viewModelScope.launch {
+            shapeRepository.insertShape(ShapeEntity(shapeName = name))
+        }
+    }
+
     fun deletePrice(priceId: Int) {
         viewModelScope.launch {
             // We can delete by passing an entity with just the ID
