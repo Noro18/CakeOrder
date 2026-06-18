@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +23,7 @@ fun AppTopBarMuted(
     title: String,
     onBackClick: (() -> Unit)? = null,
     onMenuClick: (() -> Unit)? = null,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     // Using the app's standard background color as requested
     val backgroundColor = MaterialTheme.colorScheme.background
@@ -57,6 +59,7 @@ fun AppTopBarMuted(
                 }
             }
         },
+        actions = actions,
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = backgroundColor,
             navigationIconContentColor = contrastContentColor,

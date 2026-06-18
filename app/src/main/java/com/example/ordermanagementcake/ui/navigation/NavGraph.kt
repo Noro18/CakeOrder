@@ -198,8 +198,6 @@ fun AppNavHost(
                     AppTopBarNewOrder(onBackClick = { navController.popBackStack()}, title = "Pedidu Foun")
                 } else if (currentRoute == Routes.SETTINGS) {
                     AppTopBarMuted(onBackClick = { navController.popBackStack()}, title = "Configurasaun")
-                } else if (currentRoute == Routes.PRICE_LIST) {
-                    AppTopBarMuted(onBackClick = { navController.popBackStack()}, title = "Tabela Folin")
                 }
             },
             bottomBar = {
@@ -252,7 +250,8 @@ fun AppNavHost(
             // only this part changes when you navigate
             // AFTER — quick 150ms fade
             val screensWithOwnScaffold = listOf(
-                Routes.DETAIL_ORDER
+                Routes.DETAIL_ORDER,
+                Routes.PRICE_LIST
             )
             val navPadding = if (currentRoute in screensWithOwnScaffold) PaddingValues(0.dp) else paddingValues
 
@@ -403,7 +402,10 @@ fun AppNavHost(
                     SettingsScreen(onPriceTableClick = { navController.navigate(Routes.PRICE_LIST) })
                 }
                 composable(route = Routes.PRICE_LIST) {
-                    PriceTableScreen(viewModel = priceTableViewModel)
+                    PriceTableScreen(
+                        viewModel = priceTableViewModel,
+                        onBackClick = { navController.popBackStack() }
+                    )
                 }
             }
         }

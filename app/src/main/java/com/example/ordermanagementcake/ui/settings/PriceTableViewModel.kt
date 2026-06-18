@@ -51,13 +51,11 @@ class PriceTableViewModel(
             val shapeMap = shapes.associateBy { it.id }
             val sizeMap = sizes.associateBy { it.id }
 
-            val groups = prices.groupBy { it.shapeId }
-                .mapNotNull { (shapeId, priceEntities) ->
-                    val shape = shapeMap[shapeId] ?: return@mapNotNull null
+            val groups = shapes.map { shape ->
                     ShapeGroup(
-                        shapeId = shapeId,
+                        shapeId = shape.id,
                         shapeName = shape.shapeName,
-                        prices = priceEntities.map {
+                        prices = prices.filter { it.shapeId == shape.id }.map {
                             ShapePriceEntry(
                                 priceId = it.id,
                                 sizeInches = sizeMap[it.sizeId]?.inches ?: 0.0,
@@ -124,6 +122,12 @@ class PriceTableViewModel(
                     price = price
                 )
             )
+        }
+    }
+
+    fun addShape(name: String) {
+        viewModelScope.launch {
+            shapeRepository.insertShape(ShapeEntity(shapeName = name))
         }
     }
 
