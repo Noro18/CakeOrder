@@ -18,55 +18,76 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.ordermanagementcake.ui.components.AppTopBarMuted
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriceTableScreen(
-    viewModel: PriceTableViewModel
+    viewModel: PriceTableViewModel,
+    onBackClick: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showAddDialog by remember { mutableStateOf(false) }
+    var showPriceAddDialog by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
+    var showAddShapeDialog by remember { mutableStateOf(false) }
     var selectedShapeId by remember { mutableStateOf<Int?>(null) }
     var selectedShapeName by remember { mutableStateOf("") }
     var selectedPriceEntry by remember { mutableStateOf<ShapePriceEntry?>(null) }
 
-    if (uiState.isLoading) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
-    } else {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Pushed
-            items(uiState.shapeGroups) { group ->
-                ShapePriceCard(
-                    group = group,
-                    onAddPrice = { shapeId ->
-                        selectedShapeId = shapeId
-                        selectedShapeName = group.shapeName
-                        showAddDialog = true
-                    },
-                    onEditPrice = { entry ->
-                        selectedShapeId = group.shapeId
-                        selectedShapeName = group.shapeName
-                        selectedPriceEntry = entry
-                        showEditDialog = true
+    Scaffold(
+        topBar = {
+            AppTopBarMuted(
+                onBackClick = onBackClick,
+                title = "Tabela Folin",
+                actions = {
+                    IconButton(onClick = { showAddShapeDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add Shape",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
                     }
-                )
+                }
+            )
+        }
+    ) { innerPadding ->
+        if (uiState.isLoading) {
+            Box(modifier = Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(uiState.shapeGroups) { group ->
+                    ShapePriceCard(
+                        group = group,
+                        onAddPrice = { shapeId ->
+                            selectedShapeId = shapeId
+                            selectedShapeName = group.shapeName
+                            showPriceAddDialog = true
+                        },
+                        onEditPrice = { entry ->
+                            selectedShapeId = group.shapeId
+                            selectedShapeName = group.shapeName
+                            selectedPriceEntry = entry
+                            showEditDialog = true
+                        }
+                    )
+                }
             }
         }
     }
 
-    if (showAddDialog && selectedShapeId != null) {
+    if (showPriceAddDialog && selectedShapeId != null) {
         PriceEntryDialog(
             title = "Add Price for $selectedShapeName",
-            onDismiss = { showAddDialog = false },
+            onDismiss = { showPriceAddDialog = false },
             onConfirm = { size, price ->
                 viewModel.addPrice(selectedShapeId!!, size, price)
-                showAddDialog = false
+                showPriceAddDialog = false
             }
         )
     }
@@ -76,7 +97,7 @@ fun PriceTableScreen(
             title = "Edit Price for $selectedShapeName",
             initialSize = selectedPriceEntry!!.sizeInches.toString(),
             initialPrice = selectedPriceEntry!!.price.toString(),
-            onDismiss = { 
+            onDismiss = {
                 showEditDialog = false
                 selectedPriceEntry = null
             },
@@ -94,6 +115,40 @@ fun PriceTableScreen(
                 viewModel.deletePrice(selectedPriceEntry!!.priceId)
                 showEditDialog = false
                 selectedPriceEntry = null
+            }
+        )
+    }
+
+    if (showAddShapeDialog) {
+        var shapeName by remember { mutableStateOf("") }
+        AlertDialog(
+            onDismissRequest = { showAddShapeDialog = false },
+            title = { Text("Add New Shape") },
+            text = {
+                OutlinedTextField(
+                    value = shapeName,
+                    onValueChange = { shapeName = it },
+                    label = { Text("Shape Name") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        if (shapeName.isNotBlank()) {
+                            viewModel.addShape(shapeName.trim())
+                            showAddShapeDialog = false
+                        }
+                    },
+                    enabled = shapeName.isNotBlank()
+                ) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showAddShapeDialog = false }) {
+                    Text("Cancel")
+                }
             }
         )
     }
