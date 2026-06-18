@@ -182,7 +182,8 @@ class NewOrderViewModel(
                             orderId = orderId,
                             cakeTitle = cakeDraft.cakeTitle,
                             cakeNotes = cakeDraft.cakeNotes,
-                            imageUri = cakeDraft.imageUri
+                            imageUri = cakeDraft.imageUri,
+                            bakingDate = cakeDraft.bakingDate
                         )
                     ).toInt()
                     Log.d(TAG, "Cake inserted successfully. ID: $cakeId")
