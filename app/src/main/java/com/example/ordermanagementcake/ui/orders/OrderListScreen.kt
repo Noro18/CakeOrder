@@ -100,7 +100,7 @@ fun OrderListScreen(
                     .padding(horizontal = 20.dp, vertical = 24.dp)
             ) {
                 Text(
-                    text = "Order sira iha agora",
+                    text = "Pedidu sira iha agora",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.ExtraBold
                 )
