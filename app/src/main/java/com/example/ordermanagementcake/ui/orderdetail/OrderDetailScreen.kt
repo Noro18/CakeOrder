@@ -92,7 +92,7 @@ fun OrderDetailScreen(
 
     Scaffold(
         topBar = {
-            MediumTopAppBar(
+            TopAppBar(
                 title = { 
                     Text(
                         text = "Detalles Pedidu", 
@@ -131,7 +131,7 @@ fun OrderDetailScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp, vertical = 10.dp)
+                .padding(horizontal = 20.dp)
         ) {
             // Status and ID Header
             HeaderSection(orderId = order.id, status = order.status)
@@ -836,8 +836,7 @@ fun OrderDetailBottomBar(totalPrice: Double, onBackClick: () -> Unit) {
     ) {
         Row(
             modifier = Modifier
-                .navigationBarsPadding()
-                .padding(horizontal = 24.dp, vertical = 20.dp)
+                .padding(horizontal = 24.dp, vertical = 12.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
