@@ -633,7 +633,7 @@ fun DateItem(
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = date,
+                text = formatDisplayDate(date),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -741,7 +741,7 @@ fun CakeItem(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Data Hanén: ${cakeWithTiers.cake.bakingDate}",
+                        text = "Data Hanén: ${formatDisplayDate(cakeWithTiers.cake.bakingDate!!)}",
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.tertiary
@@ -856,7 +856,9 @@ fun TierSpecRow(
 @Composable
 fun OrderDetailBottomBar(totalPrice: Double, onBackClick: () -> Unit) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding(),
         tonalElevation = 8.dp,
         shadowElevation = 16.dp,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
@@ -900,6 +902,31 @@ fun OrderDetailBottomBar(totalPrice: Double, onBackClick: () -> Unit) {
             }
         }
     }
+}
+
+private fun formatDisplayDate(dateString: String): String {
+    val patterns = listOf("yyyy-MM-dd HH:mm", "yyyy-MM-dd", "MMM dd, yyyy")
+    for (pattern in patterns) {
+        try {
+            val sdf = java.text.SimpleDateFormat(pattern, Locale.US)
+            sdf.isLenient = false
+            val date = sdf.parse(dateString)
+            if (date != null) {
+                val month = java.text.SimpleDateFormat("MMMM", Locale.US).format(date)
+                val day = java.text.SimpleDateFormat("d", Locale.US).format(date).toInt()
+                val year = java.text.SimpleDateFormat("yyyy", Locale.US).format(date)
+                val suffix = when {
+                    day in 11..13 -> "th"
+                    day % 10 == 1 -> "st"
+                    day % 10 == 2 -> "nd"
+                    day % 10 == 3 -> "rd"
+                    else -> "th"
+                }
+                return "$month $day$suffix, $year"
+            }
+        } catch (_: Exception) { }
+    }
+    return dateString
 }
 
 @Preview(showBackground = true)
