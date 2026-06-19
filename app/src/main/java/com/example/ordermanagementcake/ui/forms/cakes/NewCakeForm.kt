@@ -286,7 +286,7 @@ fun NewCakeForm(
 
             // Section for Baking Date
             Text(
-                text = "DATA HANÉN",
+                text = "DATA HAHU HALO CAKE",
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
@@ -301,7 +301,7 @@ fun NewCakeForm(
                     .fillMaxWidth()
                     .clickable { showDatePicker = true },
                 placeholder = {
-                    Text("Hili data hanén", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
+                    Text("Hili data hahu halo cake", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
                 },
                 enabled = false,
                 colors = OutlinedTextFieldDefaults.colors(

@@ -90,7 +90,7 @@ fun NewTierForm(
     val dbShapes by (viewModel?.shapes?.collectAsStateWithLifecycle() ?: remember { mutableStateOf(emptyList()) })
     val dbSizes by (viewModel?.sizes?.collectAsStateWithLifecycle() ?: remember { mutableStateOf(emptyList()) })
 
-    val shapes = if (dbShapes.isNotEmpty()) dbShapes.map { it.shapeName } else listOf("Circle", "Square", "Heart")
+    val shapes = if (dbShapes.isNotEmpty()) dbShapes.map { it.shapeName } else listOf("Sirkulu", "Kuadradu", "Korasaun")
     val sizes = if (dbSizes.isNotEmpty()) dbSizes.map { "${it.inches.toInt()}inch" } else listOf("6inch", "8inch", "10inch", "12inch")
 
     // Auto-pricing logic
@@ -448,7 +448,7 @@ fun NewTierForm(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = "LEVEL $activeTierLevel",
+                        text = "NIVEL $activeTierLevel",
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,

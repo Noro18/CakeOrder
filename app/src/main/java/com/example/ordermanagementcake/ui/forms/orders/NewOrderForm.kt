@@ -391,115 +391,6 @@ fun NewOrderForm(
 
             Spacer(modifier = Modifier.height(25.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column {
-                    Text(
-                        text = "contem order sira",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = "Elemento Cake",
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(top = 2.dp),
-                        fontSize = 25.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = "draft order",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.clickable { }
-                    )
-                    Text(
-                        text = "$${"%.2f".format(draft.totalPrice)}",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 25.sp,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.clickable { }
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            if (draft.cakes.isEmpty()) {
-                val stroke = Stroke(
-                    width = 2f,
-                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
-                )
-                val dashBorderColor = MaterialTheme.colorScheme.outlineVariant
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(140.dp)
-                        .drawBehind {
-                            drawRoundRect(
-                                color = dashBorderColor,
-                                style = stroke,
-                                cornerRadius = CornerRadius(12.dp.toPx())
-                            )
-                        }
-                        .clickable { onNewCake() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(45.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.extendedColors.surfaceContainerHigh),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Add",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "Aumenta Cake Primeiro",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Select from your menu or create custom",
-                            fontSize = 13.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            } else {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    draft.cakes.forEachIndexed { index, cake ->
-                        CakeDraftItem(cake, onDelete = { viewModel.removeCakeFromDraft(index) })
-                    }
-                    Button(
-                        onClick = onNewCake,
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
-                        Text("Aumenta Cake Seluk", color = MaterialTheme.colorScheme.onSecondaryContainer)
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "DETALLES ENTREGA",
@@ -589,7 +480,118 @@ fun NewOrderForm(
                 }
             }
 
+            Spacer(modifier = Modifier.height(25.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = "contem order sira",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = "Elemento Cake",
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(top = 2.dp),
+                        fontSize = 25.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = "draft order",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.clickable { }
+                    )
+                    Text(
+                        text = "$${"%.2f".format(draft.totalPrice)}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 25.sp,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable { }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            if (draft.cakes.isEmpty()) {
+                val stroke = Stroke(
+                    width = 2f,
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+                )
+                val dashBorderColor = MaterialTheme.colorScheme.outlineVariant
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(140.dp)
+                        .drawBehind {
+                            drawRoundRect(
+                                color = dashBorderColor,
+                                style = stroke,
+                                cornerRadius = CornerRadius(12.dp.toPx())
+                            )
+                        }
+                        .clickable { onNewCake() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(45.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.extendedColors.surfaceContainerHigh),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Add",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = "Aumenta Cake Primeiro",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "kria no kostumiza ita nia cake",
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            } else {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    draft.cakes.forEachIndexed { index, cake ->
+                        CakeDraftItem(cake, onDelete = { viewModel.removeCakeFromDraft(index) })
+                    }
+                    Button(
+                        onClick = onNewCake,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
+                        Text("Aumenta Cake Seluk", color = MaterialTheme.colorScheme.onSecondaryContainer)
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.height(32.dp))
+
+
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
