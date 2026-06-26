@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import com.example.ordermanagementcake.notifications.AlarmScheduler
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -44,7 +45,8 @@ class NewOrderViewModel(
     private val shapeRepository: ShapeRepository,
     private val sizeRepository: SizeRepository,
     private val clientRepository: ClientRepository,
-    private val priceTableRepository: PriceTableRepository
+    private val priceTableRepository: PriceTableRepository,
+    private val alarmScheduler: AlarmScheduler
 ) : ViewModel() {
 
     companion object {
@@ -208,6 +210,7 @@ class NewOrderViewModel(
                 }
                 
                 Log.d(TAG, "Full recursive save complete. Resetting draft and calling onSuccess.")
+                scheduleOrderAlarms(orderId.toString(), orderDraft.deliveryDate)
                 resetDraft()
                 onSuccess()
             } catch (e: Exception) {
@@ -231,5 +234,27 @@ class NewOrderViewModel(
 
     private fun colorToHexString(color: Color): String {
         return String.format("#%06X", (0xFFFFFF and color.toArgb()))
+    }
+
+    private fun scheduleOrderAlarms(orderId: String, deliveryDateStr: String) {
+        if (deliveryDateStr.isBlank()) return
+        
+        try {
+            val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
+            val date = format.parse(deliveryDateStr) ?: return
+            
+            val timeInMillis = date.time
+            val thirtyMinsInMillis = 30 * 60 * 1000L
+            
+            val messageExact = "Order #$orderId is scheduled for delivery/pickup NOW!"
+            val message30 = "Order #$orderId is scheduled for delivery/pickup in 30 minutes."
+            
+            alarmScheduler.scheduleAlarm(orderId, timeInMillis, messageExact, true)
+            alarmScheduler.scheduleAlarm(orderId, timeInMillis - thirtyMinsInMillis, message30, false)
+            
+            Log.d(TAG, "Alarms scheduled for Order ID: $orderId at $deliveryDateStr")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error scheduling alarms: ${e.message}", e)
+        }
     }
 }

@@ -76,7 +76,8 @@ class MainActivity : ComponentActivity() {
                 ShapeRepository(db.shapeDao()),
                 SizeRepository(db.sizeDao()),
                 ClientRepository(db.clientDao()),
-                PriceTableRepository(db.priceTableDao())
+                PriceTableRepository(db.priceTableDao()),
+                com.example.ordermanagementcake.notifications.AlarmSchedulerImpl(this)
             )
         }
 
