@@ -257,4 +257,14 @@ class NewOrderViewModel(
             Log.e(TAG, "Error scheduling alarms: ${e.message}", e)
         }
     }
+
+    fun testNotification() {
+        // Schedules an alarm to fire 5 seconds from now for immediate UI testing
+        val timeInMillis = System.currentTimeMillis() + 5000L
+        val testOrderId = "TEST_999"
+        val message = "This is a 5-second test notification!"
+        
+        alarmScheduler.scheduleAlarm(testOrderId, timeInMillis, message, true)
+        Log.d(TAG, "Test notification scheduled for 5 seconds from now.")
+    }
 }
