@@ -44,6 +44,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val notificationHelper = com.example.ordermanagementcake.notifications.NotificationHelper(this)
+        notificationHelper.createNotificationChannel()
+
         val db = OrderDatabase.getInstance(this)
 
         val orderViewModel: OrderViewModel by viewModels {
