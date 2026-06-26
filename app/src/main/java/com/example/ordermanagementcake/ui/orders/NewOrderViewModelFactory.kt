@@ -9,6 +9,7 @@ import com.example.ordermanagementcake.data.repository.ShapeRepository
 import com.example.ordermanagementcake.data.repository.SizeRepository
 import com.example.ordermanagementcake.data.repository.ClientRepository
 import com.example.ordermanagementcake.data.repository.TierRepository
+import com.example.ordermanagementcake.notifications.AlarmScheduler
 
 class NewOrderViewModelFactory(
     private val orderRepository: OrderRepository,
@@ -17,7 +18,8 @@ class NewOrderViewModelFactory(
     private val shapeRepository: ShapeRepository,
     private val sizeRepository: SizeRepository,
     private val clientRepository: ClientRepository,
-    private val priceTableRepository: PriceTableRepository
+    private val priceTableRepository: PriceTableRepository,
+    private val alarmScheduler: AlarmScheduler
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NewOrderViewModel::class.java)) {
@@ -29,7 +31,8 @@ class NewOrderViewModelFactory(
                 shapeRepository,
                 sizeRepository,
                 clientRepository,
-                priceTableRepository
+                priceTableRepository,
+                alarmScheduler
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

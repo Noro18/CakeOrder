@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import com.example.ordermanagementcake.notifications.AlarmScheduler
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -44,7 +45,8 @@ class NewOrderViewModel(
     private val shapeRepository: ShapeRepository,
     private val sizeRepository: SizeRepository,
     private val clientRepository: ClientRepository,
-    private val priceTableRepository: PriceTableRepository
+    private val priceTableRepository: PriceTableRepository,
+    private val alarmScheduler: AlarmScheduler
 ) : ViewModel() {
 
     companion object {
@@ -208,6 +210,7 @@ class NewOrderViewModel(
                 }
                 
                 Log.d(TAG, "Full recursive save complete. Resetting draft and calling onSuccess.")
+                scheduleOrderAlarms(orderId.toString(), orderDraft.deliveryDate)
                 resetDraft()
                 onSuccess()
             } catch (e: Exception) {
@@ -231,5 +234,47 @@ class NewOrderViewModel(
 
     private fun colorToHexString(color: Color): String {
         return String.format("#%06X", (0xFFFFFF and color.toArgb()))
+    }
+
+    private fun scheduleOrderAlarms(orderId: String, deliveryDateStr: String) {
+        if (deliveryDateStr.isBlank()) return
+        
+        try {
+            val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
+            val date = format.parse(deliveryDateStr) ?: return
+            
+            val timeInMillis = date.time
+            val thirtyMinsInMillis = 30 * 60 * 1000L
+            
+            val messageExact = "Order #$orderId is scheduled for delivery/pickup NOW!"
+            val message30 = "Order #$orderId is scheduled for delivery/pickup in 30 minutes."
+            
+            alarmScheduler.scheduleAlarm(orderId, timeInMillis, messageExact, true)
+            alarmScheduler.scheduleAlarm(orderId, timeInMillis - thirtyMinsInMillis, message30, false)
+            
+            Log.d(TAG, "Alarms scheduled for Order ID: $orderId at $deliveryDateStr")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error scheduling alarms: ${e.message}", e)
+        }
+    }
+
+    /**
+     * TESTING UTILITY:
+     * This function is strictly for debugging and UI testing purposes. 
+     * It schedules a dummy notification to fire exactly 5 seconds from when it is called.
+     * 
+     * How to test: 
+     * Temporarily attach this function to any onClick event in the UI (e.g., a "Test Alarm" button).
+     * Click the button, minimize the app, and wait 5 seconds to verify that the NotificationReceiver
+     * and AlarmManager are functioning properly and bypassing battery optimizations.
+     */
+    fun testNotification() {
+        // Schedules an alarm to fire 5 seconds from now for immediate UI testing
+        val timeInMillis = System.currentTimeMillis() + 5000L
+        val testOrderId = "TEST_999"
+        val message = "This is a 5-second test notification!"
+        
+        alarmScheduler.scheduleAlarm(testOrderId, timeInMillis, message, true)
+        Log.d(TAG, "Test notification scheduled for 5 seconds from now.")
     }
 }

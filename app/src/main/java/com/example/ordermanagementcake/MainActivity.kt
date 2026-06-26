@@ -39,10 +39,43 @@ import com.example.ordermanagementcake.ui.settings.PriceTableViewModelFactory
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 import kotlin.getValue
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+
 class MainActivity : ComponentActivity() {
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // Permission granted, notifications will work
+        } else {
+            // Permission denied, notifications won't work
+        }
+    }
+
+    private fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                // Request the permission
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        askNotificationPermission()
+
+        val notificationHelper = com.example.ordermanagementcake.notifications.NotificationHelper(this)
+        notificationHelper.createNotificationChannel()
 
         val db = OrderDatabase.getInstance(this)
 
@@ -73,7 +106,8 @@ class MainActivity : ComponentActivity() {
                 ShapeRepository(db.shapeDao()),
                 SizeRepository(db.sizeDao()),
                 ClientRepository(db.clientDao()),
-                PriceTableRepository(db.priceTableDao())
+                PriceTableRepository(db.priceTableDao()),
+                com.example.ordermanagementcake.notifications.AlarmSchedulerImpl(this)
             )
         }
 
