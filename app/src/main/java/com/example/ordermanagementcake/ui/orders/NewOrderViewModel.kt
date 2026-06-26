@@ -258,6 +258,16 @@ class NewOrderViewModel(
         }
     }
 
+    /**
+     * TESTING UTILITY:
+     * This function is strictly for debugging and UI testing purposes. 
+     * It schedules a dummy notification to fire exactly 5 seconds from when it is called.
+     * 
+     * How to test: 
+     * Temporarily attach this function to any onClick event in the UI (e.g., a "Test Alarm" button).
+     * Click the button, minimize the app, and wait 5 seconds to verify that the NotificationReceiver
+     * and AlarmManager are functioning properly and bypassing battery optimizations.
+     */
     fun testNotification() {
         // Schedules an alarm to fire 5 seconds from now for immediate UI testing
         val timeInMillis = System.currentTimeMillis() + 5000L
