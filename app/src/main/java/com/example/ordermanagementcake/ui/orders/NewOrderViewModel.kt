@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ordermanagementcake.data.draft.CakeDraft
 import com.example.ordermanagementcake.data.draft.OrderDraft
+import com.example.ordermanagementcake.data.draft.TierDraft
 import com.example.ordermanagementcake.data.local.entities.CakeEntity
 import com.example.ordermanagementcake.data.local.entities.ClientEntity
 import com.example.ordermanagementcake.data.local.entities.OrderEntity
@@ -137,6 +138,47 @@ class NewOrderViewModel(
         orderDraft = orderDraft.copy(totalPrice = orderDraft.calculateTotal())
     }
 
+    fun initForEdit(orderId: Int) {
+        viewModelScope.launch {
+            try {
+                val orderDetail = orderRepository.getOrderFullDetail(orderId).first() ?: return@launch
+                val allShapes = shapeRepository.getAllShapes().first()
+                val allSizes = sizeRepository.getAllSizes().first()
+
+                val cakeDrafts = orderDetail.cakes.map { cakeWithTiers ->
+                    CakeDraft(
+                        cakeTitle = cakeWithTiers.cake.cakeTitle,
+                        cakeNotes = cakeWithTiers.cake.cakeNotes,
+                        imageUri = cakeWithTiers.cake.imageUri,
+                        bakingDate = cakeWithTiers.cake.bakingDate,
+                        tiers = cakeWithTiers.tiers.map { tier ->
+                            TierDraft(
+                                level = tier.level,
+                                shape = allShapes.find { it.id == tier.shapeId }?.shapeName ?: "Circle",
+                                size = "${allSizes.find { it.id == tier.sizeId }?.inches ?: tier.sizeId}\"",
+                                color = try { Color(android.graphics.Color.parseColor(tier.colorHex)) } catch (e: Exception) { Color.Gray },
+                                price = tier.price
+                            )
+                        }
+                    )
+                }
+
+                orderDraft = OrderDraft(
+                    orderId = orderDetail.order.id,
+                    clientId = orderDetail.client.id,
+                    clientName = orderDetail.client.name,
+                    deliveryDate = orderDetail.order.deliveryDate,
+                    orderNotes = orderDetail.order.orderNotes,
+                    totalPrice = orderDetail.order.totalPrice,
+                    cakes = cakeDrafts
+                )
+                _searchQuery.value = orderDetail.client.name
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loading order for edit: ${e.message}", e)
+            }
+        }
+    }
+
     fun resetDraft() {
         orderDraft = OrderDraft()
         _searchQuery.value = ""
@@ -144,12 +186,11 @@ class NewOrderViewModel(
 
     fun saveOrder(onSuccess: () -> Unit = {}) {
         Log.d(TAG, "Starting saveOrder process...")
-        
+
         viewModelScope.launch {
             try {
-                // 1. Resolve a valid Client ID
                 var finalClientId = orderDraft.clientId
-                
+
                 if (finalClientId == null || finalClientId == 0) {
                     Log.d(TAG, "No Client ID in draft. Searching for existing clients...")
                     val allClients = clientRepository.getAllClients().first()
@@ -162,21 +203,46 @@ class NewOrderViewModel(
                     }
                 }
 
-                Log.d(TAG, "Inserting Order for client ID: $finalClientId")
-                // A. Save Order (Get ID)
-                val orderId = orderRepository.insertOrder(
-                    OrderEntity(
-                        customerId = finalClientId!!,
-                        orderDate = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).format(Date()),
-                        deliveryDate = orderDraft.deliveryDate,
-                        totalPrice = orderDraft.totalPrice,
-                        orderNotes = orderDraft.orderNotes,
-                        status = OrderStatus.PENDING
-                    )
-                ).toInt()
-                Log.d(TAG, "Order inserted successfully. ID: $orderId")
+                val isEditing = orderDraft.orderId != null
+                val orderId: Int
 
-                // B. Loop Cakes
+                if (isEditing) {
+                    // === EDIT MODE ===
+                    orderId = orderDraft.orderId!!
+                    val existing = orderRepository.getOrderFullDetail(orderId).first()
+                    if (existing == null) {
+                        Log.e(TAG, "Order to edit not found: $orderId")
+                        return@launch
+                    }
+
+                    Log.d(TAG, "Updating Order ID: $orderId")
+                    orderRepository.updateOrder(
+                        existing.order.copy(
+                            customerId = finalClientId!!,
+                            deliveryDate = orderDraft.deliveryDate,
+                            totalPrice = orderDraft.totalPrice,
+                            orderNotes = orderDraft.orderNotes
+                        )
+                    )
+
+                    cakeRepository.deleteCakesForOrder(orderId)
+                } else {
+                    // === CREATE MODE ===
+                    Log.d(TAG, "Inserting Order for client ID: $finalClientId")
+                    orderId = orderRepository.insertOrder(
+                        OrderEntity(
+                            customerId = finalClientId!!,
+                            orderDate = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).format(Date()),
+                            deliveryDate = orderDraft.deliveryDate,
+                            totalPrice = orderDraft.totalPrice,
+                            orderNotes = orderDraft.orderNotes,
+                            status = OrderStatus.PENDING
+                        )
+                    ).toInt()
+                    Log.d(TAG, "Order inserted successfully. ID: $orderId")
+                }
+
+                // Insert cakes and tiers (same for both modes)
                 orderDraft.cakes.forEachIndexed { index, cakeDraft ->
                     Log.d(TAG, "Inserting Cake #$index: ${cakeDraft.cakeTitle}")
                     val cakeId = cakeRepository.insertCake(
@@ -190,7 +256,6 @@ class NewOrderViewModel(
                     ).toInt()
                     Log.d(TAG, "Cake inserted successfully. ID: $cakeId")
 
-                    // C. Loop Tiers
                     cakeDraft.tiers.forEach { tierDraft ->
                         Log.d(TAG, "Inserting Tier level ${tierDraft.level} for Cake ID: $cakeId")
                         val shapeId = getShapeId(tierDraft.shape)
@@ -208,8 +273,8 @@ class NewOrderViewModel(
                         )
                     }
                 }
-                
-                Log.d(TAG, "Full recursive save complete. Resetting draft and calling onSuccess.")
+
+                Log.d(TAG, "Save complete. Resetting draft and calling onSuccess.")
                 scheduleOrderAlarms(orderId.toString(), orderDraft.deliveryDate)
                 resetDraft()
                 onSuccess()

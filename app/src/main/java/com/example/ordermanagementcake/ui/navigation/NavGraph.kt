@@ -80,10 +80,12 @@ object Routes {
     const val NEW_CAKE = "new_cake"
     const val SETTINGS = "settings"
     const val PRICE_LIST = "price_list"
+    const val EDIT_ORDER = "edit_order/{orderID}"
 
 
     fun clientDetail(clientId: Int) = "client_detail/$clientId"
     fun orderDetail(orderId: Int) = "order_detail/$orderId"
+    fun editOrder(orderId: Int) = "edit_order/$orderId"
 
 }
 
@@ -207,6 +209,8 @@ fun AppNavHost(
                     }
                 } else if (currentRoute == Routes.NEW_ORDER) {
                     AppTopBarNewOrder(onBackClick = { navController.popBackStack()}, title = "Pedidu Foun")
+                } else if (currentRoute?.startsWith("edit_order/") == true) {
+                    AppTopBarNewOrder(onBackClick = { navController.popBackStack()}, title = "Edita Pedidu")
                 } else if (currentRoute == Routes.SETTINGS) {
                     AppTopBarMuted(onBackClick = { navController.popBackStack()}, title = "Configurasaun")
                 }
@@ -392,9 +396,27 @@ fun AppNavHost(
                     OrderDetailScreen(
                         orderDetail = uiState.selectedOrderDetail,
                         onBackClick = { navController.popBackStack() },
-                        onEditOrder = { /* TODO: Implement Edit Order */ },
+                        onEditOrder = { id ->
+                            navController.navigate(Routes.editOrder(id))
+                        },
                         onStatusChange = { newStatus ->
                             orderId?.let { orderViewModel.updateStatus(it, newStatus) }
+                        }
+                    )
+                }
+                composable(route = Routes.EDIT_ORDER) { navBackStackEntry ->
+                    val editOrderId = navBackStackEntry.arguments?.getString("orderID")?.toIntOrNull()
+
+                    LaunchedEffect(editOrderId) {
+                        editOrderId?.let { newOrderViewModel.initForEdit(it) }
+                    }
+
+                    NewOrderForm(
+                        viewModel = newOrderViewModel,
+                        onAddNewClient = { navController.navigate(Routes.NEW_CLIENT) },
+                        onNewCake = { navController.navigate(Routes.NEW_CAKE) },
+                        onSaveOrder = {
+                            navController.popBackStack()
                         }
                     )
                 }
