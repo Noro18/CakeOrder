@@ -285,8 +285,95 @@ fun StatusControlCard(
 ) {
     val nextStatus = currentStatus.nextStatus()
     if (nextStatus == null && currentStatus != OrderStatus.PENDING && currentStatus != OrderStatus.IN_PROGRESS && currentStatus != OrderStatus.READY) {
-        // Terminal state, do not show change options
         return
+    }
+
+    var showAdvanceDialog by remember { mutableStateOf(false) }
+    var showCancelDialog by remember { mutableStateOf(false) }
+
+    if (showAdvanceDialog && nextStatus != null) {
+        AlertDialog(
+            onDismissRequest = { showAdvanceDialog = false },
+            title = {
+                Text(
+                    text = "Konfirma mudansa estadu",
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "Ita sei mudansa estadu pedidu ba ${nextStatus.name.replace("_", " ")}?"
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onStatusChange(nextStatus)
+                        showAdvanceDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = when (nextStatus) {
+                            OrderStatus.IN_PROGRESS -> Color(0xFFF87146)
+                            OrderStatus.READY -> Color(0xFF31912E)
+                            OrderStatus.COMPLETED -> Color(0xFF3B82F6)
+                            else -> MaterialTheme.colorScheme.primary
+                        }
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("Sim, Konfirma", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                OutlinedButton(
+                    onClick = { showAdvanceDialog = false },
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("Kansela")
+                }
+            },
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
+
+    if (showCancelDialog) {
+        AlertDialog(
+            onDismissRequest = { showCancelDialog = false },
+            title = {
+                Text(
+                    text = "Konfirma Kanselamentu",
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "Ita tem certeza atu kansela order ida ne'e? Aksaun ne'e la bele desfaze."
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onStatusChange(OrderStatus.CANCELLED)
+                        showCancelDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("Sim, Kansela", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                OutlinedButton(
+                    onClick = { showCancelDialog = false },
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("Kansela")
+                }
+            },
+            shape = RoundedCornerShape(16.dp)
+        )
     }
 
     Card(
@@ -324,7 +411,7 @@ fun StatusControlCard(
                     }
                     
                     Button(
-                        onClick = { onStatusChange(nextStatus) },
+                        onClick = { showAdvanceDialog = true },
                         modifier = Modifier
                             .weight(1f)
                             .height(48.dp),
@@ -343,7 +430,7 @@ fun StatusControlCard(
                 // Show Cancel option if not cancelled or completed
                 if (currentStatus != OrderStatus.CANCELLED && currentStatus != OrderStatus.COMPLETED) {
                     OutlinedButton(
-                        onClick = { onStatusChange(OrderStatus.CANCELLED) },
+                        onClick = { showCancelDialog = true },
                         modifier = Modifier.height(48.dp),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.outlinedButtonColors(
