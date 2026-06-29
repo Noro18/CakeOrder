@@ -111,7 +111,6 @@ fun AppDrawer(
 
         // ── Navigation items ───────────────────────────────────
         items.forEachIndexed { index, item ->
-            val isSelected = selectedItem == index
             NavigationDrawerItem(
                 icon = {
                     Icon(
@@ -123,16 +122,13 @@ fun AppDrawer(
                 label = {
                     Text(
                         text = item.label,
-                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+                        fontWeight = FontWeight.Normal
                     )
                 },
-                selected = isSelected,
+                selected = false,
                 onClick = item.onClick,
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
                 colors = NavigationDrawerItemDefaults.colors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    selectedIconColor      = MaterialTheme.colorScheme.onPrimaryContainer,
-                    selectedTextColor      = MaterialTheme.colorScheme.onPrimaryContainer,
                     unselectedIconColor    = MaterialTheme.colorScheme.onSurfaceVariant,
                     unselectedTextColor    = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
