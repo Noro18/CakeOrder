@@ -99,7 +99,9 @@ fun AppNavHost(
     clientViewModel: ClientViewModel,
     scheduleViewModel: ScheduleViewModel,
     newOrderViewModel: NewOrderViewModel,
-    priceTableViewModel: PriceTableViewModel
+    priceTableViewModel: PriceTableViewModel,
+    currentTheme: String = "Sistems default",
+    onThemeChange: (String) -> Unit = {}
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -408,7 +410,11 @@ fun AppNavHost(
                     )
                 }
                 composable(route = Routes.SETTINGS) {
-                    SettingsScreen(onPriceTableClick = { navController.navigate(Routes.PRICE_LIST) })
+                    SettingsScreen(
+                        currentTheme = currentTheme,
+                        onThemeChange = onThemeChange,
+                        onPriceTableClick = { navController.navigate(Routes.PRICE_LIST) }
+                    )
                 }
                 composable(route = Routes.PRICE_LIST) {
                     PriceTableScreen(

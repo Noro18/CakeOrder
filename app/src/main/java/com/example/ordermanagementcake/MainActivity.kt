@@ -11,6 +11,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
@@ -114,7 +118,18 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            OrderManagementCakeTheme {
+            val sharedPreferences = remember { getSharedPreferences("app_settings", MODE_PRIVATE) }
+            var themeMode by remember {
+                mutableStateOf(sharedPreferences.getString("theme_mode", "Sistems default") ?: "Sistems default")
+            }
+
+            val darkTheme = when (themeMode) {
+                "Naroman" -> false
+                "Nakukun" -> true
+                else -> androidx.compose.foundation.isSystemInDarkTheme()
+            }
+
+            OrderManagementCakeTheme(darkTheme = darkTheme) {
                 val navController = rememberNavController()
                 AppNavHost(
                     navController = navController,
@@ -122,7 +137,12 @@ class MainActivity : ComponentActivity() {
                     clientViewModel = clientViewModel,
                     scheduleViewModel = scheduleViewModel,
                     newOrderViewModel = newOrderViewModel,
-                    priceTableViewModel = priceTableViewModel
+                    priceTableViewModel = priceTableViewModel,
+                    currentTheme = themeMode,
+                    onThemeChange = { newTheme ->
+                        themeMode = newTheme
+                        sharedPreferences.edit().putString("theme_mode", newTheme).apply()
+                    }
                 )
             }
         }
