@@ -19,6 +19,7 @@ data class CakeDraft(
 )
 
 data class OrderDraft(
+    val orderId: Int? = null,
     val clientId: Int? = null,
     val clientName: String? = null,
     val orderDate: String = "",

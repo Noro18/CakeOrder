@@ -26,6 +26,9 @@ class OrderRepository(private val orderDao: OrderDao) {
     suspend fun insertOrder(order: OrderEntity): Long =
         orderDao.insertOrder(order)
 
+    suspend fun updateOrder(order: OrderEntity) =
+        orderDao.updateOrder(order)
+
     suspend fun updateStatus(orderId: Int, status: OrderStatus) =
         orderDao.updateStatus(orderId, status)
 

@@ -537,7 +537,7 @@ fun NewOrderForm(
                                 cornerRadius = CornerRadius(12.dp.toPx())
                             )
                         }
-                        .clickable { onNewCake() },
+                        .clickable { viewModel.clearEditingCake(); onNewCake() },
                     contentAlignment = Alignment.Center
                 ) {
                     Column(
@@ -576,10 +576,13 @@ fun NewOrderForm(
             } else {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     draft.cakes.forEachIndexed { index, cake ->
-                        CakeDraftItem(cake, onDelete = { viewModel.removeCakeFromDraft(index) })
+                        CakeDraftItem(cake, onDelete = { viewModel.removeCakeFromDraft(index) }, onEdit = {
+                            viewModel.startEditingCake(index)
+                            onNewCake()
+                        })
                     }
                     Button(
-                        onClick = onNewCake,
+                        onClick = { viewModel.clearEditingCake(); onNewCake() },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
                     ) {
@@ -674,9 +677,11 @@ fun NewOrderForm(
 }
 
 @Composable
-fun CakeDraftItem(cake: CakeDraft, onDelete: () -> Unit) {
+fun CakeDraftItem(cake: CakeDraft, onDelete: () -> Unit, onEdit: () -> Unit = {}) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onEdit() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.extendedColors.surfaceContainerLow)
     ) {

@@ -88,14 +88,15 @@ fun NewCakeForm(
     onSaveCake: (CakeDraft) -> Unit = {},
     onBack: () -> Unit = {},
     clientName: String = "Sophie Chen",
-    viewModel: NewOrderViewModel? = null
+    viewModel: NewOrderViewModel? = null,
+    initialCake: CakeDraft? = null
 ) {
-    var cakeTitle by remember { mutableStateOf("") }
-    var cakeNotes by remember { mutableStateOf("") }
-    var imageUri by remember { mutableStateOf<String?>(null) }
-    var bakingDate by remember { mutableStateOf<String?>(null) }
+    var cakeTitle by remember { mutableStateOf(initialCake?.cakeTitle ?: "") }
+    var cakeNotes by remember { mutableStateOf(initialCake?.cakeNotes ?: "") }
+    var imageUri by remember { mutableStateOf(initialCake?.imageUri) }
+    var bakingDate by remember { mutableStateOf(initialCake?.bakingDate) }
     var showDatePicker by remember { mutableStateOf(false) }
-    var tiers by remember { mutableStateOf(emptyList<TierDraft>()) }
+    var tiers by remember { mutableStateOf(initialCake?.tiers ?: emptyList()) }
     var showTierForm by remember { mutableStateOf(false) }
     var showImageSourceDialog by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
