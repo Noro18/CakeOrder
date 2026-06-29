@@ -33,6 +33,9 @@ interface ClientDao {
     @Update
     suspend fun updateClient(client: ClientEntity)
 
+    @Query("SELECT COUNT(*) FROM clients")
+    fun countClients(): Flow<Int>
+
     @Delete
     suspend fun deleteClient(client: ClientEntity)
 }

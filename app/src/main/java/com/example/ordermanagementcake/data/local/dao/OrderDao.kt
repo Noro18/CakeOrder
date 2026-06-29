@@ -55,4 +55,18 @@ interface OrderDao {
     // 2. For the list below — fetches orders for a specific tapped day e.g. "2026-05-24"
     @Query("SELECT * FROM orders WHERE delivery_date LIKE :datePrefix || '%'")
     fun getOrdersByDate(datePrefix: String): Flow<List<OrderEntity>>
+
+    @Query("SELECT COUNT(*) FROM orders WHERE status = :status")
+    fun countOrdersByStatus(status: OrderStatus): Flow<Int>
+
+    @Query("SELECT COALESCE(SUM(total_price), 0) FROM orders")
+    fun getTotalRevenue(): Flow<Double>
+
+    @Transaction
+    @Query("SELECT * FROM orders WHERE delivery_date LIKE :datePrefix || '%'")
+    fun getOrdersWithCakesByDate(datePrefix: String): Flow<List<OrderWithCakes>>
+
+    @Transaction
+    @Query("SELECT * FROM orders WHERE delivery_date > :date ORDER BY delivery_date ASC LIMIT :limit")
+    fun getUpcomingOrdersWithCakes(date: String, limit: Int): Flow<List<OrderWithCakes>>
 }

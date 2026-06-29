@@ -33,4 +33,7 @@ class ClientRepository(private val clientDao: ClientDao) {
 
     suspend fun deleteClient(client: ClientEntity) =
         clientDao.deleteClient(client)
+
+    fun countClients(): Flow<Int> =
+        clientDao.countClients()
 }

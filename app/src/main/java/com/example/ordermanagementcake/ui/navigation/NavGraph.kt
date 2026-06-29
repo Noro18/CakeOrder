@@ -51,6 +51,7 @@ import com.example.ordermanagementcake.ui.components.AppTopBarMuted
 import com.example.ordermanagementcake.ui.components.AppTopBarNewOrder
 import com.example.ordermanagementcake.ui.components.BottomNavigationBar
 import com.example.ordermanagementcake.ui.dashboard.DashboardScreen
+import com.example.ordermanagementcake.ui.dashboard.DashboardViewModel
 import com.example.ordermanagementcake.ui.forms.cakes.NewCakeForm
 import com.example.ordermanagementcake.ui.forms.clients.NewClientForm
 import com.example.ordermanagementcake.ui.forms.orders.NewOrderForm
@@ -95,6 +96,7 @@ data class TopBarConfig (
 fun AppNavHost(
     navController: NavHostController,
     startDestination: String = Routes.DASHBOARD,
+    dashboardViewModel: DashboardViewModel,
     orderViewModel: OrderViewModel,
     clientViewModel: ClientViewModel,
     scheduleViewModel: ScheduleViewModel,
@@ -315,6 +317,7 @@ fun AppNavHost(
                     }
                 }
                 composable(Routes.DASHBOARD) { DashboardScreen(
+                    viewModel = dashboardViewModel,
                     onAddClient  = {
                         navController.navigate(Routes.NEW_CLIENT)
                     },
