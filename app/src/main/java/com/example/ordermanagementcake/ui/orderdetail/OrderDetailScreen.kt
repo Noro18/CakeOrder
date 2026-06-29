@@ -1009,7 +1009,11 @@ private fun formatDisplayDate(dateString: String): String {
                     day % 10 == 3 -> "rd"
                     else -> "th"
                 }
-                return "$month $day$suffix, $year"
+                val time = if (dateString.contains(":")) {
+                    val timeSdf = java.text.SimpleDateFormat("HH:mm", Locale.US)
+                    " at ${timeSdf.format(date)}"
+                } else ""
+                return "$month $day$suffix, $year$time"
             }
         } catch (_: Exception) { }
     }

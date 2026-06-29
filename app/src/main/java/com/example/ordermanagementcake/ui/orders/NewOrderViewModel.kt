@@ -60,6 +60,8 @@ class NewOrderViewModel(
     var editingCakeIndex: Int? by mutableStateOf(null)
         private set
 
+    private var initializedEditOrderId: Int? = null
+
     // Auto-pricing data
     val shapes: StateFlow<List<ShapeEntity>> = shapeRepository.getAllShapes()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -168,6 +170,8 @@ class NewOrderViewModel(
     }
 
     fun initForEdit(orderId: Int) {
+        if (initializedEditOrderId == orderId) return
+        initializedEditOrderId = orderId
         viewModelScope.launch {
             try {
                 val orderDetail = orderRepository.getOrderFullDetail(orderId).first() ?: return@launch
@@ -212,6 +216,7 @@ class NewOrderViewModel(
         orderDraft = OrderDraft()
         _searchQuery.value = ""
         editingCakeIndex = null
+        initializedEditOrderId = null
     }
 
     fun saveOrder(onSuccess: () -> Unit = {}) {
