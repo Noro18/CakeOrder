@@ -139,6 +139,15 @@ fun AppNavHost(
         drawerState = drawerState,
         drawerContent = {
             AppDrawer(
+                onNavigate = { route ->
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
                 onSettingsClick = { navController.navigate(Routes.SETTINGS) },
                 onClose = { scope.launch { drawerState.close() } }
             )
