@@ -398,7 +398,9 @@ fun StatusControlCard(
             Spacer(modifier = Modifier.height(12.dp))
             
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 // If there's a next status, show the primary action button
@@ -414,7 +416,7 @@ fun StatusControlCard(
                         onClick = { showAdvanceDialog = true },
                         modifier = Modifier
                             .weight(1f)
-                            .height(48.dp),
+                            .fillMaxHeight(),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = buttonColor,
@@ -431,7 +433,7 @@ fun StatusControlCard(
                 if (currentStatus != OrderStatus.CANCELLED && currentStatus != OrderStatus.COMPLETED) {
                     OutlinedButton(
                         onClick = { showCancelDialog = true },
-                        modifier = Modifier.height(48.dp),
+                        modifier = Modifier.fillMaxHeight(),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = MaterialTheme.colorScheme.error
