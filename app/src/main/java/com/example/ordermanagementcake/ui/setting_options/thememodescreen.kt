@@ -36,11 +36,13 @@ import androidx.compose.ui.window.Dialog
  */
 @Composable
 fun ThemeModeDialog(
+    currentTheme: String,
     onDismissRequest: () -> Unit,
     onThemeSelected: (String) -> Unit
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         ThemeModeDialogContent(
+            initialTheme = currentTheme,
             onDismiss = onDismissRequest,
             onSelect = onThemeSelected
         )
@@ -49,10 +51,11 @@ fun ThemeModeDialog(
 
 @Composable
 fun ThemeModeDialogContent(
+    initialTheme: String = "Sistems default",
     onDismiss: () -> Unit = {},
     onSelect: (String) -> Unit = {}
 ) {
-    var selectedOption by remember { mutableStateOf("Naroman") }
+    var selectedOption by remember { mutableStateOf(initialTheme) }
     val options = listOf("Naroman", "Nakukun", "Sistems default")
 
     Surface(

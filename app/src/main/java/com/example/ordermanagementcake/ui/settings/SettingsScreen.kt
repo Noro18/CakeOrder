@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.ordermanagementcake.ui.components.AppTopBarMuted
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
+import com.example.ordermanagementcake.ui.setting_options.ThemeModeDialog
 
 data class SettingsItem(
     val title: String,
@@ -27,13 +28,29 @@ data class SettingsItem(
 )
 
 @Composable
-fun SettingsScreen(onPriceTableClick: () -> Unit = {}) {
+fun SettingsScreen(
+    currentTheme: String = "Sistems default",
+    onThemeChange: (String) -> Unit = {},
+    onPriceTableClick: () -> Unit = {}
+) {
     val context = LocalContext.current
     var notificationsEnabled by remember { mutableStateOf(false) }
+    var showThemeDialog by remember { mutableStateOf(false) }
+
+    if (showThemeDialog) {
+        ThemeModeDialog(
+            currentTheme = currentTheme,
+            onDismissRequest = { showThemeDialog = false },
+            onThemeSelected = { newTheme ->
+                onThemeChange(newTheme)
+                showThemeDialog = false
+            }
+        )
+    }
 
     val preferenceItems = listOf(
         SettingsItem("Theme Mode", Icons.Default.Palette) { 
-            Toast.makeText(context, "Theme Mode clicked", Toast.LENGTH_SHORT).show() 
+            showThemeDialog = true
         },
         SettingsItem("Language", Icons.Default.Language) { 
             Toast.makeText(context, "Language clicked", Toast.LENGTH_SHORT).show() 
