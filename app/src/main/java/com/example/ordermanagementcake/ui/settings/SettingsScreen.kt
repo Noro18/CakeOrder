@@ -69,7 +69,8 @@ fun SettingsScreen(
 
     if (showBackupSheet) {
         ModalBottomSheet(
-            onDismissRequest = { showBackupSheet = false }
+            onDismissRequest = { showBackupSheet = false },
+            dragHandle = null
         ) {
             BackupRestoreSheet(
                 onBackupClick = {
@@ -86,7 +87,8 @@ fun SettingsScreen(
 
     if (showPrivacySheet) {
         ModalBottomSheet(
-            onDismissRequest = { showPrivacySheet = false }
+            onDismissRequest = { showPrivacySheet = false },
+            dragHandle = null
         ) {
             PrivacyPolicySheet()
         }
