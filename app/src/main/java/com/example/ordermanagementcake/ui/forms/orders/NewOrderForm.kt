@@ -309,7 +309,7 @@ fun NewOrderForm(
                                 .menuAnchor(),
                             placeholder = {
                                 Text(
-                                    text = "buka clinet ne'ebe eziste...",
+                                    text = "Naran kliente",
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             },
