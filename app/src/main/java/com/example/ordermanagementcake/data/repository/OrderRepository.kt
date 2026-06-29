@@ -37,4 +37,16 @@ class OrderRepository(private val orderDao: OrderDao) {
 
     fun getOrdersByDate(datePrefix: String): Flow<List<OrderEntity>> =
         orderDao.getOrdersByDate(datePrefix)
+
+    fun countOrdersByStatus(status: OrderStatus): Flow<Int> =
+        orderDao.countOrdersByStatus(status)
+
+    fun getTotalRevenue(): Flow<Double> =
+        orderDao.getTotalRevenue()
+
+    fun getOrdersWithCakesByDate(datePrefix: String): Flow<List<OrderWithCakes>> =
+        orderDao.getOrdersWithCakesByDate(datePrefix)
+
+    fun getUpcomingOrdersWithCakes(date: String, limit: Int = 10): Flow<List<OrderWithCakes>> =
+        orderDao.getUpcomingOrdersWithCakes(date, limit)
 }
