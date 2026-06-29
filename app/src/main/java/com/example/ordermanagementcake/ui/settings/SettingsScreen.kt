@@ -23,6 +23,7 @@ import com.example.ordermanagementcake.ui.setting_options.ThemeModeDialog
 import com.example.ordermanagementcake.ui.setting_options.LanguageDialog
 import com.example.ordermanagementcake.ui.setting_options.BackupRestoreSheet
 import com.example.ordermanagementcake.ui.setting_options.PrivacyPolicySheet
+import com.example.ordermanagementcake.ui.setting_options.HelpSupportSheet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 
@@ -45,6 +46,7 @@ fun SettingsScreen(
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showBackupSheet by remember { mutableStateOf(false) }
     var showPrivacySheet by remember { mutableStateOf(false) }
+    var showHelpSheet by remember { mutableStateOf(false) }
 
     if (showThemeDialog) {
         ThemeModeDialog(
@@ -94,28 +96,37 @@ fun SettingsScreen(
         }
     }
 
+    if (showHelpSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showHelpSheet = false },
+            dragHandle = null
+        ) {
+            HelpSupportSheet()
+        }
+    }
+
     val preferenceItems = listOf(
         SettingsItem("Theme Mode", Icons.Default.Palette) { 
             showThemeDialog = true
         },
-        SettingsItem("Language", Icons.Default.Language) { 
-            showLanguageDialog = true
-        },
+        // SettingsItem("Language", Icons.Default.Language) { 
+        //     showLanguageDialog = true
+        // },
         SettingsItem("Price Table", Icons.Default.AttachMoney) {
             onPriceTableClick()
         }
     )
 
     val supportItems = listOf(
-        SettingsItem("Backup & Restore", Icons.Default.Backup) { 
-            showBackupSheet = true
-        },
+        // SettingsItem("Backup & Restore", Icons.Default.Backup) { 
+        //     showBackupSheet = true
+        // },
         SettingsItem("Help & Support", Icons.Default.Help) { 
-            Toast.makeText(context, "Help clicked", Toast.LENGTH_SHORT).show() 
+            showHelpSheet = true
         },
-        SettingsItem("Privacy Policy", Icons.Default.PrivacyTip) { 
-            showPrivacySheet = true
-        }
+        // SettingsItem("Privacy Policy", Icons.Default.PrivacyTip) { 
+        //     showPrivacySheet = true
+        // }
     )
 
     LazyColumn(
