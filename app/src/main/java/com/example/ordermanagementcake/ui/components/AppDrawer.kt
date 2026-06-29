@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+import com.example.ordermanagementcake.ui.navigation.Routes
 import com.example.ordermanagementcake.ui.theme.extendedColors
 
 data class DrawerItem(
@@ -27,16 +28,17 @@ data class DrawerItem(
 @Composable
 fun AppDrawer(
     selectedItem: Int = 0,
+    onNavigate: (String) -> Unit = {},
     onSettingsClick: () -> Unit = {},
     onAboutClick: () -> Unit = {},
     onClose: () -> Unit
 ) {
     val extendedColors = MaterialTheme.extendedColors
     val items = listOf(
-        DrawerItem("Dashboard",  Icons.Default.Dashboard)        { onClose() },
-        DrawerItem("Pedidu",     Icons.Default.AddShoppingCart)  { onClose() },
-        DrawerItem("Kliente",    Icons.Default.People)           { onClose() },
-        DrawerItem("Orario",  Icons.Default.CalendarMonth)    { onClose() },
+        DrawerItem("Dashboard",  Icons.Default.Dashboard)        { onNavigate(Routes.DASHBOARD); onClose() },
+        DrawerItem("Pedidu",     Icons.Default.AddShoppingCart)  { onNavigate(Routes.ORDERS); onClose() },
+        DrawerItem("Kliente",    Icons.Default.People)           { onNavigate(Routes.CLIENTS); onClose() },
+        DrawerItem("Orario",  Icons.Default.CalendarMonth)    { onNavigate(Routes.SCHEDULES); onClose() },
     )
 
     val bottomItems = listOf(
