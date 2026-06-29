@@ -29,6 +29,8 @@ import com.example.ordermanagementcake.data.repository.TierRepository
 import com.example.ordermanagementcake.ui.clients.ClientViewModel
 import com.example.ordermanagementcake.ui.clients.ClientViewModelFactory
 import com.example.ordermanagementcake.ui.clients.ClientsListScreen
+import com.example.ordermanagementcake.ui.dashboard.DashboardViewModel
+import com.example.ordermanagementcake.ui.dashboard.DashboardViewModelFactory
 import com.example.ordermanagementcake.ui.navigation.AppNavHost
 import com.example.ordermanagementcake.ui.navigation.Routes
 import com.example.ordermanagementcake.ui.orders.NewOrderViewModel
@@ -102,6 +104,13 @@ class MainActivity : ComponentActivity() {
             ScheduleViewModelFactory(OrderRepository(db.orderDao()))
         }
 
+        val dashboardViewModel: DashboardViewModel by viewModels {
+            DashboardViewModelFactory(
+                OrderRepository(db.orderDao()),
+                ClientRepository(db.clientDao())
+            )
+        }
+
         val newOrderViewModel: NewOrderViewModel by viewModels {
             NewOrderViewModelFactory(
                 OrderRepository(db.orderDao()),
@@ -133,6 +142,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 AppNavHost(
                     navController = navController,
+                    dashboardViewModel = dashboardViewModel,
                     orderViewModel = orderViewModel,
                     clientViewModel = clientViewModel,
                     scheduleViewModel = scheduleViewModel,
