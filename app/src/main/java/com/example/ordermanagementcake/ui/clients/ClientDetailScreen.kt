@@ -1,5 +1,7 @@
 package com.example.ordermanagementcake.ui.clients
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -7,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,6 +44,7 @@ fun ClientDetail(
 
     val client = clientWithOrders.client
     val orders = clientWithOrders.orders
+    val context = LocalContext.current
     var showEditForm by remember { mutableStateOf(false) }
 
     Column(
@@ -130,11 +135,18 @@ fun ClientDetail(
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
             ActionButton(
-                icon = Icons.Default.Email,
-                label = "Kontaktu",
+                icon = Icons.AutoMirrored.Filled.Chat,
+                label = "WhatsApp",
+                onClick = {
+                    val phoneClean = client.phone.replace(Regex("[^\\d+]"), "").removePrefix("+")
+                    try {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/$phoneClean"))
+                        context.startActivity(intent)
+                    } catch (_: Exception) { }
+                },
                 modifier = Modifier.weight(1f),
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                contentColor = MaterialTheme.colorScheme.primary
+                containerColor = Color(0xFF25D366),
+                contentColor = Color.White
             )
         }
     }
@@ -361,12 +373,13 @@ fun OrderItem(title: String, date: String, time: String, price: String, status: 
 fun ActionButton(
     icon: ImageVector,
     label: String,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
     containerColor: Color,
     contentColor: Color
 ) {
     Button(
-        onClick = { },
+        onClick = onClick,
         modifier = modifier.height(50.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
