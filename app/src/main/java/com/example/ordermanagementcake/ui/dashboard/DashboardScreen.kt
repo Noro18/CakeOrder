@@ -11,26 +11,27 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ordermanagementcake.R
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ordermanagementcake.ui.theme.extendedColors
+import java.util.Locale
 
 @Composable
 fun DashboardScreen(
+    viewModel: DashboardViewModel,
     onAddClient: () -> Unit,
     onAddOrder: () -> Unit
-
 ) {
-    val extendedColors = MaterialTheme.extendedColors
-    
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,26 +40,26 @@ fun DashboardScreen(
             .padding(top = 16.dp, bottom = 24.dp)
     ) {
         Column(modifier = Modifier.padding(horizontal = 20.dp)) {
-            
-            // ── 2. STATS GRID (COMPACT) ───────────────────────
+
+            // ── STATS GRID ───────────────────────────────
             Text(
                 text = "Dadus Jerál",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-            
+
             Row(modifier = Modifier.fillMaxWidth()) {
                 CompactStatCard(
                     label = "Loron Ohin",
-                    value = "12",
+                    value = state.todayOrderCount.toString(),
                     icon = Icons.Default.Today,
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 CompactStatCard(
                     label = "Hein-hela",
-                    value = "4",
+                    value = state.pendingCount.toString(),
                     icon = Icons.Default.PendingActions,
                     modifier = Modifier.weight(1f)
                 )
@@ -67,14 +68,14 @@ fun DashboardScreen(
             Row(modifier = Modifier.fillMaxWidth()) {
                 CompactStatCard(
                     label = "Pronto",
-                    value = "8",
+                    value = state.readyCount.toString(),
                     icon = Icons.Default.CheckCircle,
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 CompactStatCard(
                     label = "Kliente",
-                    value = "142",
+                    value = state.totalClients.toString(),
                     icon = Icons.Default.Group,
                     modifier = Modifier.weight(1f)
                 )
@@ -82,7 +83,7 @@ fun DashboardScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // ── 3. QUICK ACTIONS ──────────────────────────────
+            // ── QUICK ACTIONS ────────────────────────────
             Text(
                 text = "Asaun Lais",
                 style = MaterialTheme.typography.titleMedium,
@@ -109,12 +110,12 @@ fun DashboardScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // ── 4. REVENUE SUMMARY CARD ───────────────────────
-            RevenueCard()
+            // ── REVENUE SUMMARY CARD ─────────────────────
+            RevenueCard(revenue = state.totalRevenue)
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // ── 5. UPCOMING DEADLINES (HORIZONTAL) ────────────
+            // ── UPCOMING DEADLINES ────────────────────────
             SectionHeader(title = "Rekolla tuir mai", actionText = "Haree hotu")
             Spacer(modifier = Modifier.height(12.dp))
             Row(
@@ -123,46 +124,49 @@ fun DashboardScreen(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                UpcomingPickupCard(
-                    client = "Abinda Carmo",
-                    cake = "Wedding 3-Tier",
-                    daysLeft = "Aban",
-                    isUrgent = true
-                )
-                UpcomingPickupCard(
-                    client = "Chrismerry",
-                    cake = "Birthday Custom",
-                    daysLeft = " Loron 2 tan",
-                    isUrgent = false
-                )
-                UpcomingPickupCard(
-                    client = "Joana Rosa",
-                    cake = "Anniversary Set",
-                    daysLeft = " Loron 5 tan",
-                    isUrgent = false
-                )
+                if (state.pickupItems.isEmpty()) {
+                    Text(
+                        text = "Liha rekolla ne'ebe mai",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                } else {
+                    state.pickupItems.forEach { item ->
+                        UpcomingPickupCard(
+                            client = item.client,
+                            cake = item.cake,
+                            daysLeft = item.daysLeft,
+                            isUrgent = item.isUrgent
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // ── 6. TODAY'S TIMELINE ───────────────────────────
+            // ── TODAY'S TIMELINE ─────────────────────────
             SectionHeader(title = "Orario Ohin", actionText = "Kalendario")
             Spacer(modifier = Modifier.height(16.dp))
-            
-            TimelineItem(
-                time = "09:00 AM",
-                client = "Eleanor Shellstrop",
-                cake = "Caramel Macaron Tower",
-                status = "Pronto",
-                isLast = false
-            )
-            TimelineItem(
-                time = "02:30 PM",
-                client = "Jason Mendoza",
-                cake = "6x Jalapeno Cornbread",
-                status = "Hein-hela",
-                isLast = true
-            )
+
+            if (state.timelineItems.isEmpty()) {
+                Text(
+                    text = "Liha servisu ohin",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(16.dp)
+                )
+            } else {
+                state.timelineItems.forEachIndexed { index, item ->
+                    TimelineItem(
+                        time = item.time,
+                        client = item.client,
+                        cake = item.cake,
+                        status = item.status,
+                        isLast = index == state.timelineItems.lastIndex
+                    )
+                }
+            }
         }
     }
 }
@@ -211,7 +215,7 @@ fun CompactStatCard(label: String, value: String, icon: ImageVector, modifier: M
 }
 
 @Composable
-fun RevenueCard() {
+fun RevenueCard(revenue: Double) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
@@ -219,7 +223,6 @@ fun RevenueCard() {
         tonalElevation = 1.dp
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
-            // Background decoration
             Icon(
                 imageVector = Icons.Default.TrendingUp,
                 contentDescription = null,
@@ -229,7 +232,7 @@ fun RevenueCard() {
                     .offset(x = 20.dp, y = 20.dp),
                 tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
             )
-            
+
             Column(modifier = Modifier.padding(24.dp)) {
                 Text(
                     text = "Total Rendimentu",
@@ -237,25 +240,11 @@ fun RevenueCard() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "$1,248.50",
+                    text = "$${String.format(Locale.US, "%,.2f", revenue)}",
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.primary
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowUpward,
-                        contentDescription = null,
-                        tint = Color(0xFF4D662A),
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                        text = "+12% husi semana kotuk",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color(0xFF4D662A)
-                    )
-                }
             }
         }
     }
@@ -288,9 +277,8 @@ fun UpcomingPickupCard(client: String, cake: String, daysLeft: String, isUrgent:
         tonalElevation = 1.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            // Deadline Badge
             Surface(
-                color = if (isUrgent) MaterialTheme.colorScheme.errorContainer 
+                color = if (isUrgent) MaterialTheme.colorScheme.errorContainer
                         else MaterialTheme.colorScheme.secondaryContainer,
                 shape = CircleShape
             ) {
@@ -299,13 +287,13 @@ fun UpcomingPickupCard(client: String, cake: String, daysLeft: String, isUrgent:
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
-                    color = if (isUrgent) MaterialTheme.colorScheme.onErrorContainer 
+                    color = if (isUrgent) MaterialTheme.colorScheme.onErrorContainer
                             else MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = client,
                 style = MaterialTheme.typography.titleMedium,
@@ -318,9 +306,9 @@ fun UpcomingPickupCard(client: String, cake: String, daysLeft: String, isUrgent:
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Event,
@@ -347,16 +335,16 @@ fun TimelineItem(time: String, client: String, cake: String, status: String, isL
             modifier = Modifier.width(60.dp)
         ) {
             Text(
-                text = time.split(" ")[0],
+                text = time.take(10),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = time.split(" ")[1],
+                text = status,
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             if (!isLast) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Box(
@@ -367,9 +355,9 @@ fun TimelineItem(time: String, client: String, cake: String, status: String, isL
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.width(16.dp))
-        
+
         Card(
             modifier = Modifier
                 .weight(1f)
@@ -391,9 +379,9 @@ fun TimelineItem(time: String, client: String, cake: String, status: String, isL
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                
+
                 Surface(
-                    color = if (status == "Pronto") MaterialTheme.extendedColors.successContainer 
+                    color = if (status == "Pronto") MaterialTheme.extendedColors.successContainer
                             else MaterialTheme.colorScheme.primaryContainer,
                     shape = CircleShape
                 ) {
@@ -422,11 +410,3 @@ fun SectionHeader(title: String, actionText: String) {
         }
     }
 }
-
-/*@Preview(showBackground = true)
-@Composable
-fun DashboardScreenPreview() {
-    MaterialTheme {
-        DashboardScreen()
-    }
-}*/
