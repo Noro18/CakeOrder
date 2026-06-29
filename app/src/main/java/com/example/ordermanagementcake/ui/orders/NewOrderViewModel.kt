@@ -57,6 +57,9 @@ class NewOrderViewModel(
     var orderDraft by mutableStateOf(OrderDraft())
         private set
 
+    var editingCakeIndex: Int? by mutableStateOf(null)
+        private set
+
     // Auto-pricing data
     val shapes: StateFlow<List<ShapeEntity>> = shapeRepository.getAllShapes()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -134,6 +137,32 @@ class NewOrderViewModel(
         }
     }
 
+    fun startEditingCake(index: Int) {
+        editingCakeIndex = index
+    }
+
+    fun clearEditingCake() {
+        editingCakeIndex = null
+    }
+
+    fun getEditingCake(): CakeDraft? {
+        val index = editingCakeIndex ?: return null
+        return orderDraft.cakes.getOrNull(index)
+    }
+
+    fun addOrUpdateCake(cake: CakeDraft) {
+        val index = editingCakeIndex
+        if (index != null && index in orderDraft.cakes.indices) {
+            val newCakes = orderDraft.cakes.toMutableList()
+            newCakes[index] = cake
+            orderDraft = orderDraft.copy(cakes = newCakes)
+            editingCakeIndex = null
+        } else {
+            orderDraft = orderDraft.copy(cakes = orderDraft.cakes + cake)
+        }
+        calculateTotalPrice()
+    }
+
     private fun calculateTotalPrice() {
         orderDraft = orderDraft.copy(totalPrice = orderDraft.calculateTotal())
     }
@@ -182,6 +211,7 @@ class NewOrderViewModel(
     fun resetDraft() {
         orderDraft = OrderDraft()
         _searchQuery.value = ""
+        editingCakeIndex = null
     }
 
     fun saveOrder(onSuccess: () -> Unit = {}) {

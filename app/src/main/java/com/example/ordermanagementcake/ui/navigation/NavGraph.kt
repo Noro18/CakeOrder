@@ -421,14 +421,16 @@ fun AppNavHost(
                     )
                 }
                 composable(route = Routes.NEW_CAKE) {
+                    val editingCake = newOrderViewModel.getEditingCake()
                     NewCakeForm(
                         onSaveCake = { cakeDraft ->
-                            newOrderViewModel.addCakeToDraft(cakeDraft)
+                            newOrderViewModel.addOrUpdateCake(cakeDraft)
                             navController.popBackStack()
                         },
                         onBack = { navController.popBackStack() },
                         clientName = newOrderViewModel.orderDraft.clientName ?: "Kliente foun",
-                        viewModel = newOrderViewModel
+                        viewModel = newOrderViewModel,
+                        initialCake = editingCake
                     )
                 }
                 composable(route = Routes.SETTINGS) {
