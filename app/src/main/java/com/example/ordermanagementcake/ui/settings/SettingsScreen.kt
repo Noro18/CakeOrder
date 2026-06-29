@@ -20,6 +20,11 @@ import androidx.compose.ui.unit.dp
 import com.example.ordermanagementcake.ui.components.AppTopBarMuted
 import com.example.ordermanagementcake.ui.theme.OrderManagementCakeTheme
 import com.example.ordermanagementcake.ui.setting_options.ThemeModeDialog
+import com.example.ordermanagementcake.ui.setting_options.LanguageDialog
+import com.example.ordermanagementcake.ui.setting_options.BackupRestoreSheet
+import com.example.ordermanagementcake.ui.setting_options.PrivacyPolicySheet
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 
 data class SettingsItem(
     val title: String,
@@ -27,6 +32,7 @@ data class SettingsItem(
     val onClick: () -> Unit = {}
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     currentTheme: String = "Sistems default",
@@ -36,6 +42,9 @@ fun SettingsScreen(
     val context = LocalContext.current
     var notificationsEnabled by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
+    var showLanguageDialog by remember { mutableStateOf(false) }
+    var showBackupSheet by remember { mutableStateOf(false) }
+    var showPrivacySheet by remember { mutableStateOf(false) }
 
     if (showThemeDialog) {
         ThemeModeDialog(
@@ -48,12 +57,47 @@ fun SettingsScreen(
         )
     }
 
+    if (showLanguageDialog) {
+        LanguageDialog(
+            onDismissRequest = { showLanguageDialog = false },
+            onLanguageSelected = { selectedLanguage ->
+                Toast.makeText(context, "Language changed to: $selectedLanguage", Toast.LENGTH_SHORT).show()
+                showLanguageDialog = false
+            }
+        )
+    }
+
+    if (showBackupSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showBackupSheet = false }
+        ) {
+            BackupRestoreSheet(
+                onBackupClick = {
+                    Toast.makeText(context, "Backup initiated", Toast.LENGTH_SHORT).show()
+                    showBackupSheet = false
+                },
+                onRestoreClick = {
+                    Toast.makeText(context, "Restore initiated", Toast.LENGTH_SHORT).show()
+                    showBackupSheet = false
+                }
+            )
+        }
+    }
+
+    if (showPrivacySheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showPrivacySheet = false }
+        ) {
+            PrivacyPolicySheet()
+        }
+    }
+
     val preferenceItems = listOf(
         SettingsItem("Theme Mode", Icons.Default.Palette) { 
             showThemeDialog = true
         },
         SettingsItem("Language", Icons.Default.Language) { 
-            Toast.makeText(context, "Language clicked", Toast.LENGTH_SHORT).show() 
+            showLanguageDialog = true
         },
         SettingsItem("Price Table", Icons.Default.AttachMoney) {
             onPriceTableClick()
@@ -62,13 +106,13 @@ fun SettingsScreen(
 
     val supportItems = listOf(
         SettingsItem("Backup & Restore", Icons.Default.Backup) { 
-            Toast.makeText(context, "Backup clicked", Toast.LENGTH_SHORT).show() 
+            showBackupSheet = true
         },
         SettingsItem("Help & Support", Icons.Default.Help) { 
             Toast.makeText(context, "Help clicked", Toast.LENGTH_SHORT).show() 
         },
         SettingsItem("Privacy Policy", Icons.Default.PrivacyTip) { 
-            Toast.makeText(context, "Privacy Policy clicked", Toast.LENGTH_SHORT).show() 
+            showPrivacySheet = true
         }
     )
 
