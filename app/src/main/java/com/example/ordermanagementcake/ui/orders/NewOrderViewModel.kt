@@ -121,6 +121,14 @@ class NewOrderViewModel(
         updateOrderDraft { it.copy(clientId = client.id, clientName = client.name) }
     }
 
+    fun setInitialClientName(clientName: String) {
+        _searchQuery.value = clientName
+        updateOrderDraft { it.copy(clientName = clientName) }
+        viewModelScope.launch {
+            clientRepository.getClientByName(clientName)?.let { selectClient(it) }
+        }
+    }
+
     fun updateOrderDraft(update: (OrderDraft) -> OrderDraft) {
         orderDraft = update(orderDraft)
     }

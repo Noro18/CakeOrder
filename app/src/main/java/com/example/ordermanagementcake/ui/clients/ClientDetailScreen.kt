@@ -33,7 +33,8 @@ fun ClientDetail(
     clientWithOrders: ClientWithOrders?,
     onBackClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {},
-    onUpdateClient: (ClientEntity) -> Unit = {}
+    onUpdateClient: (ClientEntity) -> Unit = {},
+    onNewOrderClick: (clientName: String) -> Unit = {}
 ) {
     if (clientWithOrders == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -130,6 +131,7 @@ fun ClientDetail(
             ActionButton(
                 icon = Icons.Default.Add,
                 label = "Enkomenda",
+                onClick = { onNewOrderClick(client.name) },
                 modifier = Modifier.weight(1f),
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
