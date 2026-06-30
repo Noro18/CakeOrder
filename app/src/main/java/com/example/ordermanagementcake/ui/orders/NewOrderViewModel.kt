@@ -354,8 +354,8 @@ class NewOrderViewModel(
             val timeInMillis = date.time
             val thirtyMinsInMillis = 30 * 60 * 1000L
             
-            val messageExact = "Order #$orderId is scheduled for delivery/pickup NOW!"
-            val message30 = "Order #$orderId is scheduled for delivery/pickup in 30 minutes."
+            val messageExact = "Pedidu #$orderId prontu atu entrega!"
+            val message30 = "Pedidu #$orderId tenki entrega iha minutu 30."
             
             alarmScheduler.scheduleAlarm(orderId, timeInMillis, messageExact, true)
             alarmScheduler.scheduleAlarm(orderId, timeInMillis - thirtyMinsInMillis, message30, false)
