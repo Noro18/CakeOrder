@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.ordermanagementcake.MainActivity
@@ -39,9 +40,11 @@ class NotificationHelper(private val context: Context) {
         )
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_launcher) // Note: normally should be a transparent vector drawable
-            .setContentTitle("Order Reminder: $orderId")
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle("Encomenda #$orderId")
             .setContentText(message)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+            .setColor(Color.parseColor("#8F4C34"))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
