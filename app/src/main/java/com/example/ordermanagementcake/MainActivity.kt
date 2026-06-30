@@ -49,9 +49,13 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.content.ContextCompat
+import com.example.ordermanagementcake.notifications.AlarmSchedulerImpl
 
 class MainActivity : ComponentActivity() {
+
+    private var pendingNavigation by mutableStateOf<String?>(null)
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -74,11 +78,22 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        handleNotificationIntent(intent)
+    }
+
+    private fun handleNotificationIntent(intent: android.content.Intent?) {
+        val orderId = intent?.getStringExtra(AlarmSchedulerImpl.EXTRA_ORDER_ID)?.toIntOrNull() ?: return
+        pendingNavigation = Routes.orderDetail(orderId)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         askNotificationPermission()
+        handleNotificationIntent(intent)
 
         val notificationHelper = com.example.ordermanagementcake.notifications.NotificationHelper(this)
         notificationHelper.createNotificationChannel()
@@ -140,6 +155,16 @@ class MainActivity : ComponentActivity() {
 
             OrderManagementCakeTheme(darkTheme = darkTheme) {
                 val navController = rememberNavController()
+
+                LaunchedEffect(pendingNavigation) {
+                    pendingNavigation?.let { route ->
+                        navController.navigate(route) {
+                            popUpTo(Routes.DASHBOARD)
+                        }
+                        pendingNavigation = null
+                    }
+                }
+
                 AppNavHost(
                     navController = navController,
                     dashboardViewModel = dashboardViewModel,
