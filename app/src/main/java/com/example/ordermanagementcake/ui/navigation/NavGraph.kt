@@ -384,6 +384,11 @@ fun AppNavHost(
                         onBackClick = { navController.popBackStack() },
                         onUpdateClient = { updatedClient ->
                             clientViewModel.updateClient(updatedClient)
+                        },
+                        onNewOrderClick = { clientName ->
+                            newOrderViewModel.resetDraft()
+                            newOrderViewModel.setInitialClientName(clientName)
+                            navController.navigate(Routes.NEW_ORDER)
                         }
                     )
                 }
