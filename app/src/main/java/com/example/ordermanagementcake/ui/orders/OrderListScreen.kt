@@ -96,14 +96,17 @@ fun OrderListScreen(
         focusManager.clearFocus()
     }
 
-    val filteredOrders = remember(uiState.orders, searchText) {
-        if (searchText.isBlank()) uiState.orders
-        else uiState.orders.filter { owc ->
-            val o = owc.orders
-            val cake = owc.cakes.firstOrNull()
-            o.id.toString().contains(searchText, ignoreCase = true) ||
-            cake?.cakeTitle?.contains(searchText, ignoreCase = true) == true ||
-            o.orderNotes.contains(searchText, ignoreCase = true)
+    val filteredOrders = remember(uiState.orders, searchText, uiState.selectedStatus) {
+        if (searchText.isBlank()) {
+            uiState.orders.filter { it.orders.status == uiState.selectedStatus }
+        } else {
+            uiState.orders.filter { owc ->
+                val o = owc.orders
+                val cake = owc.cakes.firstOrNull()
+                o.id.toString().contains(searchText, ignoreCase = true) ||
+                cake?.cakeTitle?.contains(searchText, ignoreCase = true) == true ||
+                o.orderNotes.contains(searchText, ignoreCase = true)
+            }
         }
     }
 
@@ -172,7 +175,7 @@ fun OrderListScreen(
                         val isSelected = uiState.selectedStatus == status
                         FilterChip(
                             selected = isSelected,
-                            onClick = { viewModel.loadOrders(status) },
+                            onClick = { viewModel.selectStatus(status) },
                             label = { Text(statusLabels[index]) },
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = Color(0xFFF87146),
@@ -231,7 +234,8 @@ fun OrderListScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "La iha order ba estadu ne'e.",
+                            text = if (searchText.isBlank()) "La iha order ba estadu ne'e."
+                                   else "La iha order ne'e koresponde ba buka.",
                             style = MaterialTheme.typography.bodyLarge,
                             color = Color.Gray
                         )
