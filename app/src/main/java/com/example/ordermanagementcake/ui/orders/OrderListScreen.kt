@@ -86,6 +86,17 @@ fun OrderListScreen(
 
     var searchText by remember { mutableStateOf("") }
 
+    val filteredOrders = remember(uiState.orders, searchText) {
+        if (searchText.isBlank()) uiState.orders
+        else uiState.orders.filter { owc ->
+            val o = owc.orders
+            val cake = owc.cakes.firstOrNull()
+            o.id.toString().contains(searchText, ignoreCase = true) ||
+            cake?.cakeTitle?.contains(searchText, ignoreCase = true) == true ||
+            o.orderNotes.contains(searchText, ignoreCase = true)
+        }
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -196,7 +207,7 @@ fun OrderListScreen(
                     }
                 }
             }
-            uiState.orders.isEmpty() -> {
+            filteredOrders.isEmpty() -> {
                 item {
                     Column(
                         modifier = Modifier
@@ -213,7 +224,7 @@ fun OrderListScreen(
                 }
             }
             else -> {
-                items(uiState.orders, key = { it.orders.id }) { orderWithCakes ->
+                items(filteredOrders, key = { it.orders.id }) { orderWithCakes ->
                     Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)) {
                         OrderCard(
                             orderWithCakes = orderWithCakes,
