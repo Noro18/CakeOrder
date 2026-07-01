@@ -1,6 +1,7 @@
 package com.example.ordermanagementcake.ui.orders
 
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -88,6 +90,11 @@ fun OrderListScreen(
 
     var searchText by remember { mutableStateOf("") }
     var isSearchFocused by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
+    BackHandler(enabled = isSearchFocused) {
+        focusManager.clearFocus()
+    }
 
     val filteredOrders = remember(uiState.orders, searchText) {
         if (searchText.isBlank()) uiState.orders
