@@ -17,14 +17,18 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
     val uiState: StateFlow<OrderUiState> = _uiState.asStateFlow() // StateFlow, Immutable expose ba iha View
 
     init {
-        loadOrders(OrderStatus.PENDING)
+        loadAllOrders()
     }
 
-    fun loadOrders(status: OrderStatus) {
-        _uiState.update { it.copy(isLoading = it.orders.isEmpty(), selectedStatus = status, errorMessage = null) }
+    fun selectStatus(status: OrderStatus) {
+        _uiState.update { it.copy(selectedStatus = status) }
+    }
+
+    fun loadAllOrders() {
+        _uiState.update { it.copy(isLoading = true, errorMessage = null) }
         viewModelScope.launch {
-            repository.getOrdersWithCakesByStatus(status)
-                .catch { e -> // Erro message
+            repository.getAllOrdersWithCakes()
+                .catch { e ->
                     _uiState.update { it.copy(isLoading = false, errorMessage = e.message) }
                 }
                 .collect { ordersWithCakes ->

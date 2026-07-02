@@ -1,6 +1,8 @@
 package com.example.ordermanagementcake.ui.orders
 
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -19,7 +21,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -85,15 +89,24 @@ fun OrderListScreen(
     val statusLabels = listOf("Pendente", "Prosesu", "Prontu", "Kompleta")
 
     var searchText by remember { mutableStateOf("") }
+    var isSearchFocused by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
 
-    val filteredOrders = remember(uiState.orders, searchText) {
-        if (searchText.isBlank()) uiState.orders
-        else uiState.orders.filter { owc ->
-            val o = owc.orders
-            val cake = owc.cakes.firstOrNull()
-            o.id.toString().contains(searchText, ignoreCase = true) ||
-            cake?.cakeTitle?.contains(searchText, ignoreCase = true) == true ||
-            o.orderNotes.contains(searchText, ignoreCase = true)
+    BackHandler(enabled = isSearchFocused) {
+        focusManager.clearFocus()
+    }
+
+    val filteredOrders = remember(uiState.orders, searchText, uiState.selectedStatus) {
+        if (searchText.isBlank()) {
+            uiState.orders.filter { it.orders.status == uiState.selectedStatus }
+        } else {
+            uiState.orders.filter { owc ->
+                val o = owc.orders
+                val cake = owc.cakes.firstOrNull()
+                o.id.toString().contains(searchText, ignoreCase = true) ||
+                cake?.cakeTitle?.contains(searchText, ignoreCase = true) == true ||
+                o.orderNotes.contains(searchText, ignoreCase = true)
+            }
         }
     }
 
@@ -105,21 +118,23 @@ fun OrderListScreen(
     ) {
         // Header
         item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 24.dp)
-            ) {
-                Text(
-                    text = "Pedidu sira iha agora",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.ExtraBold
-                )
-                Text(
-                    text = "Jestiona ita-nia kriasaun kulinária",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.secondary
-                )
+            AnimatedVisibility(visible = !isSearchFocused) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 24.dp)
+                ) {
+                    Text(
+                        text = "Pedidu sira iha agora",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text(
+                        text = "Jestiona ita-nia kriasaun kulinária",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
             }
         }
 
@@ -133,7 +148,8 @@ fun OrderListScreen(
                 shape = RoundedCornerShape(28.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .onFocusChanged { isSearchFocused = it.isFocused },
                 colors = TextFieldDefaults.colors(
                     unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
                     focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
@@ -146,30 +162,32 @@ fun OrderListScreen(
 
         // Filter Chips
         item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                statusFilters.forEachIndexed { index, status ->
-                    val isSelected = uiState.selectedStatus == status
-                    FilterChip(
-                        selected = isSelected,
-                        onClick = { viewModel.loadOrders(status) },
-                        label = { Text(statusLabels[index]) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color(0xFFF87146),
-                            selectedLabelColor = Color.White
-                        ),
-                        border = if (!isSelected) FilterChipDefaults.filterChipBorder(
-                            borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-                            enabled = true,
-                            selected = false
-                        ) else null
-                    )
+            AnimatedVisibility(visible = !isSearchFocused) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
+                        .horizontalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    statusFilters.forEachIndexed { index, status ->
+                        val isSelected = uiState.selectedStatus == status
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = { viewModel.selectStatus(status) },
+                            label = { Text(statusLabels[index]) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Color(0xFFF87146),
+                                selectedLabelColor = Color.White
+                            ),
+                            border = if (!isSelected) FilterChipDefaults.filterChipBorder(
+                                borderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+                                enabled = true,
+                                selected = false
+                            ) else null
+                        )
+                    }
                 }
             }
         }
@@ -216,7 +234,8 @@ fun OrderListScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "La iha order ba estadu ne'e.",
+                            text = if (searchText.isBlank()) "La iha order ba estadu ne'e."
+                                   else "La iha order ne'e koresponde ba buka.",
                             style = MaterialTheme.typography.bodyLarge,
                             color = Color.Gray
                         )
